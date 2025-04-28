@@ -1,0 +1,20 @@
+<resources>
+    <!-- ya existentes -->
+    <string name="app_name">Login</string>
+
+    <!-- nuevos -->
+    <string-array name="nacionalidades">
+        <item>Seleccione</item>
+        <item>Ecuatoriana</item>
+        <item>Colombiana</item>
+        <item>Peruana</item>
+        <item>Venezolana</item>
+    </string-array>
+
+    <string-array name="generos">
+        <item>Seleccione</item>
+        <item>Masculino</item>
+        <item>Femenino</item>
+        <item>Otro</item>
+    </string-array>
+</resources>
