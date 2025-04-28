@@ -52,4 +52,20 @@
     <string name="iniciar_sesion_con">o iniciar sesión con</string>
     <string name="google_btn">Iniciar sesión con Google</string>
     <string name="facebook_btn">Iniciar sesión con Facebook</string>
+
+    <string name="formulario_registro">Formulario de Registro</string>
+    <string name="hint_cedula">Cédula</string>
+    <string name="hint_nombres">Nombres</string>
+    <string name="hint_apellidos">Apellidos</string>
+    <string name="hint_edad">Edad</string>
+    <string name="estado_soltero">Soltero</string>
+    <string name="estado_casado">Casado</string>
+    <string name="seleccionar_fecha">Seleccionar Fecha de Nacimiento</string>
+    <string name="fecha_no_seleccionada">Fecha no seleccionada</string>
+    <string name="nivel_ingles">Nivel de Inglés:</string>
+    <string name="btn_registrar">Registrar</string>
+    <string name="btn_borrar">Borrar</string>
+    <string name="btn_cancelar">Cancelar</string>
+
+
 </resources>

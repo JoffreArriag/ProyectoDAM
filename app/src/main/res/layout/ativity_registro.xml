@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Formulario de Registro"
+            android:text="@string/formulario_registro"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -25,66 +25,84 @@
             android:id="@+id/cedula"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Cédula"
+            android:hint="@string/hint_cedula"
             android:inputType="number"
-            android:background="#30ffffff"
+            android:background="#80ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:layout_marginBottom="12dp"/>
+            android:autofillHints="username"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Nombres -->
         <EditText
             android:id="@+id/nombres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombres"
+            android:hint="@string/hint_nombres"
             android:inputType="textPersonName"
-            android:background="#30ffffff"
+            android:background="#80ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:layout_marginBottom="12dp"/>
+            android:autofillHints="name"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Apellidos -->
         <EditText
             android:id="@+id/apellidos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Apellidos"
+            android:hint="@string/hint_apellidos"
             android:inputType="textPersonName"
-            android:background="#30ffffff"
+            android:background="#80ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:layout_marginBottom="12dp"/>
+            android:autofillHints="familyName"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Edad -->
         <EditText
             android:id="@+id/edad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Edad"
+            android:hint="@string/hint_edad"
             android:inputType="number"
-            android:background="#30ffffff"
+            android:background="#80ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:layout_marginBottom="12dp"/>
+            android:autofillHints="postalAddress"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Nacionalidad -->
         <Spinner
             android:id="@+id/spinnerNacionalidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="48dp"/>
 
         <!-- Género -->
         <Spinner
             android:id="@+id/spinnerGenero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="48dp"/>
 
         <!-- Estado civil -->
         <RadioGroup
@@ -92,19 +110,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
             <RadioButton
                 android:id="@+id/radioSoltero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Soltero" />
+                android:text="@string/estado_soltero"
+                android:minHeight="48dp"/>
 
             <RadioButton
                 android:id="@+id/radioCasado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Casado" />
+                android:text="@string/estado_casado"
+                android:minHeight="48dp"/>
         </RadioGroup>
 
         <!-- Fecha de nacimiento -->
@@ -112,23 +134,31 @@
             android:id="@+id/btnSeleccionarFecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccionar Fecha de Nacimiento"
-            android:layout_marginBottom="12dp" />
+            android:text="@string/seleccionar_fecha"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            style="?attr/borderlessButtonStyle"
+            android:minHeight="48dp"/>
 
         <TextView
             android:id="@+id/txtFechaSeleccionada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fecha no seleccionada"
+            android:text="@string/fecha_no_seleccionada"
             android:textColor="@color/black"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Nivel de inglés -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nivel de Inglés:"
-            android:textColor="@color/black" />
+            android:text="@string/nivel_ingles"
+            android:textColor="@color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <RatingBar
             android:id="@+id/ratingIngles"
@@ -136,7 +166,9 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="1.0"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
 
         <!-- Botones -->
         <LinearLayout
@@ -146,14 +178,15 @@
             android:gravity="center"
             android:weightSum="3"
             android:paddingHorizontal="16dp"
-            android:layout_below="@id/ratingIngles">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
             <Button
                 android:id="@+id/btnRegistrar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Registrar"
+                android:text="@string/btn_registrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -163,7 +196,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Borrar"
+                android:text="@string/btn_borrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -173,12 +206,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancelar"
+                android:text="@string/btn_cancelar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
         </LinearLayout>
-
 
     </LinearLayout>
 </ScrollView>
