@@ -27,14 +27,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_cedula"
             android:inputType="number"
-            android:background="#80ffffff"
+            android:background="#30ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:autofillHints="username"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Nombres -->
         <EditText
@@ -43,14 +41,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_nombres"
             android:inputType="textPersonName"
-            android:background="#80ffffff"
+            android:background="#30ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:autofillHints="name"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Apellidos -->
         <EditText
@@ -59,14 +55,12 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_apellidos"
             android:inputType="textPersonName"
-            android:background="#80ffffff"
+            android:background="#30ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:autofillHints="familyName"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Edad -->
         <EditText
@@ -75,34 +69,25 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_edad"
             android:inputType="number"
-            android:background="#80ffffff"
+            android:background="#30ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
-            android:autofillHints="postalAddress"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Nacionalidad -->
         <Spinner
             android:id="@+id/spinnerNacionalidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Género -->
         <Spinner
             android:id="@+id/spinnerGenero"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"/>
+            android:layout_marginBottom="12dp"/>
 
         <!-- Estado civil -->
         <RadioGroup
@@ -110,23 +95,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginBottom="12dp">
 
             <RadioButton
                 android:id="@+id/radioSoltero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/estado_soltero"
-                android:minHeight="48dp"/>
+                android:text="Soltero" />
 
             <RadioButton
                 android:id="@+id/radioCasado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/estado_casado"
-                android:minHeight="48dp"/>
+                android:text="Casado" />
         </RadioGroup>
 
         <!-- Fecha de nacimiento -->
@@ -134,31 +115,23 @@
             android:id="@+id/btnSeleccionarFecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/seleccionar_fecha"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            style="?attr/borderlessButtonStyle"
-            android:minHeight="48dp"/>
+            android:text="Seleccionar Fecha de Nacimiento"
+            android:layout_marginBottom="12dp" />
 
         <TextView
             android:id="@+id/txtFechaSeleccionada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fecha_no_seleccionada"
+            android:text="Fecha no seleccionada"
             android:textColor="@color/black"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="12dp" />
 
         <!-- Nivel de inglés -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nivel_ingles"
-            android:textColor="@color/black"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:text="Nivel de Inglés:"
+            android:textColor="@color/black" />
 
         <RatingBar
             android:id="@+id/ratingIngles"
@@ -166,9 +139,7 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="1.0"
-            android:layout_marginBottom="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginBottom="24dp" />
 
         <!-- Botones -->
         <LinearLayout
@@ -178,15 +149,14 @@
             android:gravity="center"
             android:weightSum="3"
             android:paddingHorizontal="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_below="@id/ratingIngles">
 
             <Button
                 android:id="@+id/btnRegistrar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_registrar"
+                android:text="Registrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -196,7 +166,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_borrar"
+                android:text="Borrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -206,11 +176,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_cancelar"
+                android:text="Cancelar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>
