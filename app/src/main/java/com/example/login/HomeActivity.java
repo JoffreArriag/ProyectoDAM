@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
+import androidx.cardview.widget.CardView;
 
 public class HomeActivity extends AppCompatActivity {
 
     TextView usernameTextView;
     ImageView notificationIcon, logoutIcon;
+    CardView cardCultivos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,7 @@ public class HomeActivity extends AppCompatActivity {
         usernameTextView = findViewById(R.id.usernameTextView);
         notificationIcon = findViewById(R.id.notificationIcon);
         logoutIcon = findViewById(R.id.logoutIcon);
+        cardCultivos = findViewById(R.id.cardCultivos);
 
         // Obtener nombre de usuario enviado desde MainActivity
         String username = getIntent().getStringExtra("username");
@@ -38,6 +41,12 @@ public class HomeActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        });
+
+        //Interacción con Card de Cultivos
+        cardCultivos.setOnClickListener(v -> {
+        Intent intent = new Intent(HomeActivity.this, CultivosActivity.class); // Aún no creada
+        startActivity(intent);
         });
     }
 }
