@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Mis Cultivos"
+            android:text="@string/mis_cultivos"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -31,7 +31,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_input_add"
-            android:contentDescription="Agregar"
+            android:contentDescription="@string/agregar"
             app:tint="#FFFFFF"
             android:padding="8dp" />
     </LinearLayout>
@@ -40,7 +40,7 @@
     <ListView
         android:id="@+id/listViewCultivos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@id/header"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"

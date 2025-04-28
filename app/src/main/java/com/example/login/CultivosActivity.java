@@ -1,9 +1,7 @@
 package com.example.login;
 
-import android.content.DialogInterface;
+
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -14,8 +12,6 @@ import java.util.ArrayList;
 
 public class CultivosActivity extends AppCompatActivity {
 
-    private ListView listViewCultivos;
-    private ImageButton btnAgregar;
     private ArrayList<String> listaCultivos;
     private ArrayAdapter<String> adaptador;
 
@@ -24,28 +20,20 @@ public class CultivosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cultivos);
 
-        listViewCultivos = findViewById(R.id.listViewCultivos);
-        btnAgregar = findViewById(R.id.btnAgregar);
+        // Declaración local de las vistas
+        ListView listViewCultivos = findViewById(R.id.listViewCultivos);
+        ImageButton btnAgregar = findViewById(R.id.btnAgregar);
 
+        // Lista de cultivos y adaptador
         listaCultivos = new ArrayList<>();
         adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaCultivos);
         listViewCultivos.setAdapter(adaptador);
 
         // Botón para agregar nuevo cultivo
-        btnAgregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                agregarCultivo();
-            }
-        });
+        btnAgregar.setOnClickListener(v -> agregarCultivo());
 
         // Click para editar o eliminar cultivo
-        listViewCultivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mostrarOpciones(position);
-            }
-        });
+        listViewCultivos.setOnItemClickListener((parent, view, position, id) -> mostrarOpciones(position));
     }
 
     // Método para agregar cultivo
@@ -58,17 +46,15 @@ public class CultivosActivity extends AppCompatActivity {
     private void mostrarOpciones(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Opciones")
-                .setItems(new CharSequence[]{"Editar", "Eliminar"}, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setItems(new CharSequence[]{"Editar", "Eliminar"}, (dialog, which) -> {
                         switch (which) {
-                            case 0: // Editar
+                            case 0:
                                 editarCultivo(position);
                                 break;
-                            case 1: // Eliminar
+                            case 1:
                                 eliminarCultivo(position);
                                 break;
                         }
-                    }
                 });
         builder.show();
     }

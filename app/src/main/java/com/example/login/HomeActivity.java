@@ -27,13 +27,11 @@ public class HomeActivity extends AppCompatActivity {
         // Obtener nombre de usuario enviado desde MainActivity
         String username = getIntent().getStringExtra("username");
         if (username != null) {
-            usernameTextView.setText("Bienvenido, " + username);
+            usernameTextView.setText(getString(R.string.welcome_message, username));
         }
 
         // Interacción con campana de notificaciones
-        notificationIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "No tienes notificaciones nuevas.", Toast.LENGTH_SHORT).show();
-        });
+        notificationIcon.setOnClickListener(v -> Toast.makeText(this, R.string.no_notifications, Toast.LENGTH_SHORT).show());
 
         // Interacción con botón de salir
         logoutIcon.setOnClickListener(v -> {
@@ -44,10 +42,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         //Interacción con Card de Cultivos
-        cardCultivos.setOnClickListener(v -> {
-        Intent intent = new Intent(HomeActivity.this, CultivosActivity.class); // Aún no creada
-        startActivity(intent);
-        });
+        cardCultivos.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, CultivosActivity.class)));
     }
 }
 

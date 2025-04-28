@@ -17,4 +17,39 @@
         <item>Femenino</item>
         <item>Otro</item>
     </string-array>
+
+    <string name="mis_cultivos">Mis Cultivos</string>
+    <string name="agregar">Agregar</string>
+
+    <string name="bienvenido_usuario">Bienvenido, Usuario</string>
+    <string name="campana_notificacion">Campana de Notificación</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="agricultor_icon">Icono de Agricultor</string>
+    <string name="agricultores">Agricultores</string>
+    <string name="gestion_agricultores">Gestión de agricultores.</string>
+    <string name="cultivo_icon">Icono de Cultivo</string>
+    <string name="cultivos">Cultivos</string>
+    <string name="control_cultivos">Control y monitoreo de cultivos.</string>
+    <string name="inventario_icon">Icono de Inventario</string>
+    <string name="inventario_agricola">Inventario Agrícola</string>
+    <string name="registro_insumos">Registro de insumos agrícolas.</string>
+    <string name="riego_icon">Icono de Riego</string>
+    <string name="tareas_riego">Tareas de Riego y Fertilización</string>
+    <string name="programacion_riego">Programación de tareas.</string>
+    <string name="mercado_icon">Icono de Mercado</string>
+    <string name="mercado_ventas">Mercado y Ventas</string>
+    <string name="compra_venta">Compra y venta de productos.</string>
+
+    <string name="welcome_message">Bienvenido, %1$s</string>
+    <string name="no_notifications">No tienes notificaciones nuevas.</string>
+
+    <string name="info_proyecto">Grupo #2\nAplicación para el sector agrícola\nUsuario/contraseña: admin</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="usuario">Usuario</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="crear_cuenta">Crear Cuenta</string>
+    <string name="olvidar_contraseña">Olvidé mi contraseña</string>
+    <string name="iniciar_sesion_con">o iniciar sesión con</string>
+    <string name="google_btn">Iniciar sesión con Google</string>
+    <string name="facebook_btn">Iniciar sesión con Facebook</string>
 </resources>
