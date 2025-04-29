@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,7 @@ public class RegistroActivity extends AppCompatActivity {
     TextView txtFechaSeleccionada;
     RatingBar ratingIngles;
 
-    Button btnSeleccionarFecha, btnRegistrar, btnBorrar, btnCancelar;
+    Button btnSeleccionarFecha, btnRegistrar, btnBorrar, btnCancelar, btnMostrarDatos;
 
     String fechaNacimiento = "";
 
@@ -45,6 +44,7 @@ public class RegistroActivity extends AppCompatActivity {
         btnRegistrar = findViewById(R.id.btnRegistrar);
         btnBorrar = findViewById(R.id.btnBorrar);
         btnCancelar = findViewById(R.id.btnCancelar);
+        btnMostrarDatos = findViewById(R.id.btnMostrarDatos);
 
         // Spinners: valores ejemplo
         String[] nacionalidades = {"Ecuatoriana", "Colombiana", "Peruana", "Venezolana"};
@@ -93,22 +93,25 @@ public class RegistroActivity extends AppCompatActivity {
             String vFechaNacimiento = fechaNacimiento;
             float vNivelIngles = ratingIngles.getRating();
 
-            // Crear string con todas las variables
-            String datos = "Cédula: " + vCedula + "\n" +
-                    "Nombres: " + vNombres + "\n" +
-                    "Apellidos: " + vApellidos + "\n" +
-                    "Edad: " + vEdad + "\n" +
-                    "Nacionalidad: " + vNacionalidad + "\n" +
-                    "Género: " + vGenero + "\n" +
-                    "Estado Civil: " + vEstadoCivil + "\n" +
-                    "Fecha Nacimiento: " + vFechaNacimiento + "\n" +
-                    "Nivel de Inglés: " + vNivelIngles;
+            // Crear string con separadores
+            String datos = vCedula + ";" +
+                    vNombres + ";" +
+                    vApellidos + ";" +
+                    vEdad + ";" +
+                    vNacionalidad + ";" +
+                    vGenero + ";" +
+                    vEstadoCivil + ";" +
+                    vFechaNacimiento + ";" +
+                    vNivelIngles + ";";
 
-            // Mostrar en log
-            Log.d("Registro", datos);
-
-            // Toast
-            Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
+            //Guardar en archivo
+            try {
+                openFileOutput("datos.txt", MODE_PRIVATE).write(datos.getBytes());
+                Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_LONG).show();
+            }
 
             // Volver al login
             Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
@@ -135,6 +138,44 @@ public class RegistroActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        //Boton Mostrar Datos
+        btnMostrarDatos.setOnClickListener(view -> {
+            try {
+                // Leer archivo
+                byte[] buffer = new byte[openFileInput("datos.txt").available()];
+                openFileInput("datos.txt").read(buffer);
+                String contenido = new String(buffer);
+
+                // Separar los datos
+                String[] partes = contenido.split(";");
+                String mensaje = "Cédula: " + partes[0] + "\n" +
+                        "Nombres: " + partes[1] + "\n" +
+                        "Apellidos: " + partes[2] + "\n" +
+                        "Edad: " + partes[3] + "\n" +
+                        "Nacionalidad: " + partes[4] + "\n" +
+                        "Género: " + partes[5] + "\n" +
+                        "Estado Civil: " + partes[6] + "\n" +
+                        "Fecha Nacimiento: " + partes[7] + "\n" +
+                        "Nivel de Inglés: " + partes[8];
+
+                // Mostrar en ventana modal (AlertDialog)
+                new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
+                        .setTitle("Datos Registrados")
+                        .setMessage(mensaje)
+                        .setPositiveButton("Cerrar", null)
+                        .show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
+                        .setTitle("Error")
+                        .setMessage("No se encontraron datos registrados.")
+                        .setPositiveButton("Cerrar", null)
+                        .show();
+            }
+        });
+
     }
 }
 

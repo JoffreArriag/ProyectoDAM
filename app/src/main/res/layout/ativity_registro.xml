@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_edad"
             android:inputType="number"
+            android:autofillHints="birthDateYear"
             android:background="#30ffffff"
             android:padding="16dp"
             android:textColor="@color/black"
@@ -79,14 +80,16 @@
         <Spinner
             android:id="@+id/spinnerNacionalidad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:padding="8dp"
             android:layout_marginBottom="12dp"/>
 
         <!-- Género -->
         <Spinner
             android:id="@+id/spinnerGenero"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:padding="8dp"
             android:layout_marginBottom="12dp"/>
 
         <!-- Estado civil -->
@@ -101,13 +104,13 @@
                 android:id="@+id/radioSoltero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Soltero" />
+                android:text="@string/estado_soltero" />
 
             <RadioButton
                 android:id="@+id/radioCasado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Casado" />
+                android:text="@string/estado_casado" />
         </RadioGroup>
 
         <!-- Fecha de nacimiento -->
@@ -115,14 +118,14 @@
             android:id="@+id/btnSeleccionarFecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccionar Fecha de Nacimiento"
+            android:hint="@string/seleccionar_fecha"
             android:layout_marginBottom="12dp" />
 
         <TextView
             android:id="@+id/txtFechaSeleccionada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fecha no seleccionada"
+            android:hint="@string/fecha_no_seleccionada"
             android:textColor="@color/black"
             android:layout_marginBottom="12dp" />
 
@@ -130,7 +133,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nivel de Inglés:"
+            android:hint="@string/nivel_ingles"
             android:textColor="@color/black" />
 
         <RatingBar
@@ -148,15 +151,14 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:weightSum="3"
-            android:paddingHorizontal="16dp"
-            android:layout_below="@id/ratingIngles">
+            android:paddingHorizontal="16dp">
 
             <Button
                 android:id="@+id/btnRegistrar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Registrar"
+                android:text="@string/btn_registrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -166,7 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Borrar"
+                android:text="@string/btn_borrar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
@@ -176,12 +178,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancelar"
+                android:text="@string/btn_cancelar"
                 android:textSize="14sp"
                 android:padding="10dp"
                 android:minHeight="48dp" />
         </LinearLayout>
-
+        <Button
+            android:id="@+id/btnMostrarDatos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_MostrarDatos"
+            android:textSize="14sp"
+            android:padding="10dp"
+            android:minHeight="48dp"/>
 
     </LinearLayout>
 </ScrollView>

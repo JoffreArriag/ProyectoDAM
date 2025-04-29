@@ -66,6 +66,7 @@
     <string name="btn_registrar">Registrar</string>
     <string name="btn_borrar">Borrar</string>
     <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_MostrarDatos">Mostrar Datos Registrados</string>
 
 
     <string name="integrantes">INTEGRANTES:\n\n
