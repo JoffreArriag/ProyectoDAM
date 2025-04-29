@@ -47,11 +47,11 @@ public class RegistroActivity extends AppCompatActivity {
         btnMostrarDatos = findViewById(R.id.btnMostrarDatos);
 
         // Spinners: valores ejemplo
-        String[] nacionalidades = {"Ecuatoriana", "Colombiana", "Peruana", "Venezolana"};
+        String[] nacionalidades = {"Seleccione nacionalidad", "Ecuatoriana", "Colombiana", "Peruana", "Venezolana"};
         ArrayAdapter<String> adapterNacionalidad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, nacionalidades);
         spinnerNacionalidad.setAdapter(adapterNacionalidad);
 
-        String[] generos = {"Masculino", "Femenino", "Otro"};
+        String[] generos = {"Seleccione género", "Masculino", "Femenino", "Otro"};
         ArrayAdapter<String> adapterGenero = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, generos);
         spinnerGenero.setAdapter(adapterGenero);
 
@@ -92,6 +92,17 @@ public class RegistroActivity extends AppCompatActivity {
 
             String vFechaNacimiento = fechaNacimiento;
             float vNivelIngles = ratingIngles.getRating();
+
+            // Validaciones antes de guardar
+            if (vNacionalidad.equals("Seleccione nacionalidad") || vGenero.equals("Seleccione género")) {
+                Toast.makeText(this, "Debe seleccionar una nacionalidad y un género válidos", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (vCedula.isEmpty() || vNombres.isEmpty() || vApellidos.isEmpty() || vEdad.isEmpty()) {
+                Toast.makeText(this, "Debe llenar todos los campos obligatorios", Toast.LENGTH_LONG).show();
+                return;
+            }
 
             // Crear string con separadores
             String datos = vCedula + ";" +

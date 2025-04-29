@@ -3,20 +3,6 @@
     <string name="app_name">Login</string>
 
     <!-- nuevos -->
-    <string-array name="nacionalidades">
-        <item>Seleccione</item>
-        <item>Ecuatoriana</item>
-        <item>Colombiana</item>
-        <item>Peruana</item>
-        <item>Venezolana</item>
-    </string-array>
-
-    <string-array name="generos">
-        <item>Seleccione</item>
-        <item>Masculino</item>
-        <item>Femenino</item>
-        <item>Otro</item>
-    </string-array>
 
     <string name="mis_cultivos">Mis Cultivos</string>
     <string name="agregar">Agregar</string>
@@ -41,7 +27,6 @@
     <string name="compra_venta">Compra y venta de productos.</string>
 
     <string name="welcome_message">Bienvenido, %1$s</string>
-    <string name="no_notifications">No tienes notificaciones nuevas.</string>
 
     <string name="info_proyecto">Grupo #2\nAplicación para el sector agrícola\nUsuario/contraseña: admin</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
@@ -62,11 +47,26 @@
     <string name="estado_casado">Casado</string>
     <string name="seleccionar_fecha">Seleccionar Fecha de Nacimiento</string>
     <string name="fecha_no_seleccionada">Fecha no seleccionada</string>
+    <string-array name="nacionalidades_array">
+        <item>Seleccione nacionalidad</item>
+        <item>Ecuatoriana</item>
+        <item>Colombiana</item>
+        <item>Peruana</item>
+        <item>Venezolana</item>
+    </string-array>
+
+    <string-array name="generos_array">
+        <item>Seleccione genero</item>
+        <item>Masculino</item>
+        <item>Femenino</item>
+        <item>Otro</item>
+    </string-array>
     <string name="nivel_ingles">Nivel de Inglés:</string>
     <string name="btn_registrar">Registrar</string>
     <string name="btn_borrar">Borrar</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="btn_MostrarDatos">Mostrar Datos Registrados</string>
+
 
 
     <string name="integrantes">INTEGRANTES:\n\n
