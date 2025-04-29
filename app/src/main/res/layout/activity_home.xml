@@ -33,13 +33,13 @@
                 android:layout_marginEnd="8dp"/>
 
             <ImageView
-                android:id="@+id/notificationIcon"
+                android:id="@+id/ic_info"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="4dp"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/campana_notificacion"
-                android:src="@drawable/baseline_circle_notifications_24"
+                android:src="@drawable/ic_info"
                 android:clickable="true"
                 android:focusable="true"/>
 

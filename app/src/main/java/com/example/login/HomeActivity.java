@@ -4,14 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ImageView;
 import androidx.cardview.widget.CardView;
 
 public class HomeActivity extends AppCompatActivity {
 
     TextView usernameTextView;
-    ImageView notificationIcon, logoutIcon;
+    ImageView ic_info, logoutIcon;
     CardView cardCultivos;
 
     @Override
@@ -20,7 +19,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         usernameTextView = findViewById(R.id.usernameTextView);
-        notificationIcon = findViewById(R.id.notificationIcon);
+        ic_info = findViewById(R.id.ic_info);
         logoutIcon = findViewById(R.id.logoutIcon);
         cardCultivos = findViewById(R.id.cardCultivos);
 
@@ -30,10 +29,13 @@ public class HomeActivity extends AppCompatActivity {
             usernameTextView.setText(getString(R.string.welcome_message, username));
         }
 
-        // Interacción con campana de notificaciones
-        notificationIcon.setOnClickListener(v -> Toast.makeText(this, R.string.no_notifications, Toast.LENGTH_SHORT).show());
+        // Interacción con botón "Acerca de"
+        ic_info.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, AcercaDeActivity.class);
+            startActivity(intent);
+        });
 
-        // Interacción con botón de salir
+        // Interacción con botón "Cerrar sesión"
         logoutIcon.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -41,8 +43,7 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         });
 
-        //Interacción con Card de Cultivos
+        // Interacción con Card de Cultivos
         cardCultivos.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, CultivosActivity.class)));
     }
 }
-

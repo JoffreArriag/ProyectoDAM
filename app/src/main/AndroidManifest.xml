@@ -15,6 +15,8 @@
 
         <activity android:name=".CultivosActivity" android:exported="false" />
         <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".AcercaDeActivity"
+            android:theme="@style/Theme.App.ModalDialog"/>
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

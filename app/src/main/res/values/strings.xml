@@ -68,4 +68,13 @@
     <string name="btn_cancelar">Cancelar</string>
 
 
+    <string name="integrantes">INTEGRANTES:\n\n
+MAGALLANES MATAMOROS JUAN\n\n
+LOOR VERA MIGUEL\n\n
+ARRIAGA TUBAY JOFFRE\n\n
+HUACON RAMIREZ GREGORY\n\n
+MITE ZAPATA KARLA</string>
+
+    <string name="regresar">Regresar</string>
+
 </resources>
