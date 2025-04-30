@@ -44,6 +44,7 @@
             android:name=".AcercaDeActivity"
             android:label="@string/acerca_de"
             android:theme="@style/Theme.App.ModalDialog" />
+
     </application>
 
 </manifest>

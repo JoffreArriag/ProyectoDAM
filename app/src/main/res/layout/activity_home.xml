@@ -58,6 +58,7 @@
 
         <!-- Card: Agricultores -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardAgricultores"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -151,6 +152,7 @@
 
         <!-- Card: Inventario Agrícola -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardInventario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -197,6 +199,7 @@
 
         <!-- Card: Tareas de Riego y Fertilización -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardRiego"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -243,6 +246,7 @@
 
         <!-- Card: Mercado y Ventas -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardMercado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
