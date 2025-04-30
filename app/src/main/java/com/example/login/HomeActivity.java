@@ -42,12 +42,16 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         deleteIcon.setOnClickListener(view -> {
-            SharedPreferences preferences = getSharedPreferences("datos_usuario", MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences("Mis Preferencias", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.apply();
 
             Toast.makeText(HomeActivity.this, "Datos borrados correctamente", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 }
