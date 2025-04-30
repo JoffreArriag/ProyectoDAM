@@ -2,16 +2,16 @@ package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.ImageView;
-import androidx.cardview.widget.CardView;
+import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity {
 
     TextView usernameTextView;
-    ImageView ic_info, logoutIcon;
-    CardView cardCultivos;
+    ImageView ic_info, logoutIcon, deleteIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,31 +19,35 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         usernameTextView = findViewById(R.id.usernameTextView);
-        ic_info = findViewById(R.id.ic_info);
+        ic_info = findViewById(R.id.ic);
         logoutIcon = findViewById(R.id.logoutIcon);
-        cardCultivos = findViewById(R.id.cardCultivos);
+        deleteIcon = findViewById(R.id.deleteIcon);
 
-        // Obtener nombre de usuario enviado desde MainActivity
-        String username = getIntent().getStringExtra("username");
+
+        String username = getIntent().getStringExtra("nombreUsuario");
         if (username != null) {
-            usernameTextView.setText(getString(R.string.welcome_message, username));
+            usernameTextView.setText("Bienvenido, " + username);
         }
 
-        // Interacción con botón "Acerca de"
         ic_info.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, AcercaDeActivity.class);
+            Intent intent = new Intent(this, AcercaDeActivity.class);
             startActivity(intent);
         });
 
-        // Interacción con botón "Cerrar sesión"
         logoutIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         });
 
-        // Interacción con Card de Cultivos
-        cardCultivos.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, CultivosActivity.class)));
+        deleteIcon.setOnClickListener(view -> {
+            SharedPreferences preferences = getSharedPreferences("datos_usuario", MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.apply();
+
+            Toast.makeText(HomeActivity.this, "Datos borrados correctamente", Toast.LENGTH_SHORT).show();
+        });
     }
 }

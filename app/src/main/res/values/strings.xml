@@ -66,7 +66,8 @@
     <string name="btn_borrar">Borrar</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="btn_MostrarDatos">Mostrar Datos Registrados</string>
-
+    <string name="btn_MantenerSesion">Mantener Sesion</string>
+    <string name="btn_BorrarDatos">Borrar Datos</string>
 
 
     <string name="integrantes">INTEGRANTES:\n\n
@@ -77,5 +78,9 @@ HUACON RAMIREZ GREGORY\n\n
 MITE ZAPATA KARLA</string>
 
     <string name="regresar">Regresar</string>
+    <string name="menu">Menu</string>
+
+    <string name="informacion">Información</string>
+    <string name="borrar_datos">Borrar datos</string>
 
 </resources>

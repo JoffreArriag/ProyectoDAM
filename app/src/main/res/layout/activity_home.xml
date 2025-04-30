@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/fondo">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginTop="16dp">
+        android:padding="16dp">
 
-        <!-- Barra superior -->
+        <!-- Encabezado: Bienvenida + iconos -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical|end">
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/usernameTextView"
@@ -27,35 +27,33 @@
                 android:text="@string/bienvenido_usuario"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:layout_marginEnd="8dp"/>
+                android:textColor="@color/black" />
 
             <ImageView
-                android:id="@+id/ic_info"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="4dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="@string/campana_notificacion"
+                android:id="@+id/deleteIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="@string/borrar_datos" />
+
+            <ImageView
+                android:id="@+id/ic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_info"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:contentDescription="@string/informacion" />
 
             <ImageView
                 android:id="@+id/logoutIcon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="4dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="@string/cerrar_sesion"
+                android:layout_width="42dp"
+                android:layout_height="52dp"
                 android:src="@drawable/ic_logout"
-                android:clickable="true"
-                android:focusable="true" />
+                android:contentDescription="@string/cerrar_sesion" />
         </LinearLayout>
 
-        <!-- Cards -->
+        <!-- Card: Agricultores -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +73,7 @@
                     android:layout_weight="0.3"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_agricultor"
-                    android:contentDescription="@string/agricultor_icon"/>
+                    android:contentDescription="@string/agricultor_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -101,7 +99,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card de Cultivos -->
+        <!-- Card: Cultivos -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardCultivos"
             android:layout_width="match_parent"
@@ -122,7 +120,7 @@
                     android:layout_weight="0.3"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_cultivo"
-                    android:contentDescription="@string/cultivo_icon"/>
+                    android:contentDescription="@string/cultivo_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -148,7 +146,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card de Inventario Agrícola -->
+        <!-- Card: Inventario Agrícola -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -168,7 +166,7 @@
                     android:layout_weight="0.3"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_inventario"
-                    android:contentDescription="@string/inventario_icon"/>
+                    android:contentDescription="@string/inventario_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -194,7 +192,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card de Tareas de Riego y Fertilización -->
+        <!-- Card: Tareas de Riego y Fertilización -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -214,7 +212,7 @@
                     android:layout_weight="0.3"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_riego"
-                    android:contentDescription="@string/riego_icon"/>
+                    android:contentDescription="@string/riego_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -240,7 +238,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Card de Mercado y Ventas -->
+        <!-- Card: Mercado y Ventas -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -260,7 +258,7 @@
                     android:layout_weight="0.3"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_mercado"
-                    android:contentDescription="@string/mercado_icon"/>
+                    android:contentDescription="@string/mercado_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -285,6 +283,5 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 </ScrollView>

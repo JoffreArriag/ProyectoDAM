@@ -66,11 +66,20 @@
             android:inputType="textPassword"
             android:autofillHints="password" />
 
+        <CheckBox
+            android:id="@+id/checkboxMantenerSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contraseña"
+            android:layout_marginTop="12dp"
+            android:text="@string/btn_MantenerSesion"
+            android:textColor="@color/black" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginbtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/contraseña"
+            android:layout_below="@id/checkboxMantenerSesion"
             android:layout_marginTop="24dp"
             android:text="@string/iniciar_sesion"
             android:backgroundTint="@color/black"
