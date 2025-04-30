@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "MisPreferencias";
     private static final String KEY_USUARIO = "usuario";
     private static final String KEY_CONTRASEÑA = "contraseña";
+    private static final String KEY_MANTENER_SESION = "mantenerSesion";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // Auto login si existe usuario guardado
+        // Restaurar el estado del checkbox
+        boolean mantenerSesion = sharedPreferences.getBoolean(KEY_MANTENER_SESION, false);
+        checkBoxMantenerSesion.setChecked(mantenerSesion);
+
+        // Si se guardó usuario y contraseña, hacer autologin
         String savedUsuario = sharedPreferences.getString(KEY_USUARIO, null);
         String savedContraseña = sharedPreferences.getString(KEY_CONTRASEÑA, null);
 
-        if (savedUsuario != null && savedContraseña != null) {
+        if (savedUsuario != null && savedContraseña != null && mantenerSesion) {
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             intent.putExtra("nombreUsuario", savedUsuario);
             startActivity(intent);
@@ -56,12 +61,17 @@ public class MainActivity extends AppCompatActivity {
             if (user.equals("admin") && pass.equals("admin")) {
                 Toast.makeText(MainActivity.this, "Acceso Concedido", Toast.LENGTH_SHORT).show();
 
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
                 if (checkBoxMantenerSesion.isChecked()) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(KEY_USUARIO, user);
                     editor.putString(KEY_CONTRASEÑA, pass);
-                    editor.apply();
+                    editor.putBoolean(KEY_MANTENER_SESION, true);
+                } else {
+                    editor.clear();
                 }
+
+                editor.apply();
 
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 intent.putExtra("nombreUsuario", user);

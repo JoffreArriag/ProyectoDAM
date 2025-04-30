@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
+import androidx.appcompat.widget.TooltipCompat;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -22,7 +23,9 @@ public class HomeActivity extends AppCompatActivity {
         ic_info = findViewById(R.id.ic);
         logoutIcon = findViewById(R.id.logoutIcon);
         deleteIcon = findViewById(R.id.deleteIcon);
-
+        TooltipCompat.setTooltipText(deleteIcon, "Eliminar datos guardados");
+        TooltipCompat.setTooltipText(ic_info, "Información de la app");
+        TooltipCompat.setTooltipText(logoutIcon, "Cerrar sesión");
 
         String username = getIntent().getStringExtra("nombreUsuario");
         if (username != null) {
@@ -42,16 +45,12 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         deleteIcon.setOnClickListener(view -> {
-            SharedPreferences preferences = getSharedPreferences("Mis Preferencias", MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.apply();
 
-            Toast.makeText(HomeActivity.this, "Datos borrados correctamente", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            Toast.makeText(HomeActivity.this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
         });
     }
 }

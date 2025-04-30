@@ -1,52 +1,75 @@
 <resources>
-    <!-- ya existentes -->
+    <!-- App -->
     <string name="app_name">Login</string>
 
-    <!-- nuevos -->
-
-    <string name="mis_cultivos">Mis Cultivos</string>
-    <string name="agregar">Agregar</string>
-
+    <!-- Actividades principales -->
     <string name="bienvenido_usuario">Bienvenido, Usuario</string>
     <string name="campana_notificacion">Campana de Notificación</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
-    <string name="agricultor_icon">Icono de Agricultor</string>
-    <string name="agricultores">Agricultores</string>
-    <string name="gestion_agricultores">Gestión de agricultores.</string>
-    <string name="cultivo_icon">Icono de Cultivo</string>
-    <string name="cultivos">Cultivos</string>
-    <string name="control_cultivos">Control y monitoreo de cultivos.</string>
-    <string name="inventario_icon">Icono de Inventario</string>
-    <string name="inventario_agricola">Inventario Agrícola</string>
-    <string name="registro_insumos">Registro de insumos agrícolas.</string>
-    <string name="riego_icon">Icono de Riego</string>
-    <string name="tareas_riego">Tareas de Riego y Fertilización</string>
-    <string name="programacion_riego">Programación de tareas.</string>
-    <string name="mercado_icon">Icono de Mercado</string>
-    <string name="mercado_ventas">Mercado y Ventas</string>
-    <string name="compra_venta">Compra y venta de productos.</string>
-
+    <string name="informacion">Información</string>
+    <string name="menu">Menu</string>
+    <string name="regresar">Regresar</string>
     <string name="welcome_message">Bienvenido, %1$s</string>
 
-    <string name="info_proyecto">Grupo #2\nAplicación para el sector agrícola\nUsuario/contraseña: admin</string>
+    <!-- Funcionalidad -->
+    <string name="borrar_datos">Borrar datos</string>
+    <string name="btn_BorrarDatos">Borrar Datos</string>
+    <string name="btn_MantenerSesion">Mantener Sesion</string>
+    <string name="btn_MostrarDatos">Mostrar Datos Registrados</string>
+    <string name="btn_borrar">Borrar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_registrar">Registrar</string>
+
+        <!-- Iconos y etiquetas -->
+    <string name="agricultor_icon">Icono de Agricultor</string>
+    <string name="cultivo_icon">Icono de Cultivo</string>
+    <string name="inventario_icon">Icono de Inventario</string>
+    <string name="mercado_icon">Icono de Mercado</string>
+    <string name="riego_icon">Icono de Riego</string>
+
+    <!-- Módulos -->
+    <string name="agricultores">Agricultores</string>
+    <string name="control_cultivos">Control y monitoreo de cultivos.</string>
+    <string name="cultivos">Cultivos</string>
+    <string name="gestion_agricultores">Gestión de agricultores.</string>
+    <string name="inventario_agricola">Inventario Agrícola</string>
+    <string name="mercado_ventas">Mercado y Ventas</string>
+    <string name="mis_cultivos">Mis Cultivos</string>
+    <string name="programacion_riego">Programación de tareas.</string>
+    <string name="registro_insumos">Registro de insumos agrícolas.</string>
+    <string name="tareas_riego">Tareas de Riego y Fertilización</string>
+    <string name="compra_venta">Compra y venta de productos.</string>
+
+    <!-- Inicio de sesión y registro -->
+    <string name="crear_cuenta">Crear Cuenta</string>
+    <string name="facebook_btn">Iniciar sesión con Facebook</string>
+    <string name="google_btn">Iniciar sesión con Google</string>
     <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="iniciar_sesion_con">o iniciar sesión con</string>
+    <string name="olvidar_contraseña">Olvidé mi contraseña</string>
     <string name="usuario">Usuario</string>
     <string name="contraseña">Contraseña</string>
-    <string name="crear_cuenta">Crear Cuenta</string>
-    <string name="olvidar_contraseña">Olvidé mi contraseña</string>
-    <string name="iniciar_sesion_con">o iniciar sesión con</string>
-    <string name="google_btn">Iniciar sesión con Google</string>
-    <string name="facebook_btn">Iniciar sesión con Facebook</string>
 
+    <!-- Formulario de registro -->
     <string name="formulario_registro">Formulario de Registro</string>
-    <string name="hint_cedula">Cédula</string>
-    <string name="hint_nombres">Nombres</string>
     <string name="hint_apellidos">Apellidos</string>
+    <string name="hint_cedula">Cédula</string>
     <string name="hint_edad">Edad</string>
-    <string name="estado_soltero">Soltero</string>
-    <string name="estado_casado">Casado</string>
+    <string name="hint_nombres">Nombres</string>
+    <string name="nivel_ingles">Nivel de Inglés:</string>
     <string name="seleccionar_fecha">Seleccionar Fecha de Nacimiento</string>
     <string name="fecha_no_seleccionada">Fecha no seleccionada</string>
+    <string name="estado_casado">Casado</string>
+    <string name="estado_soltero">Soltero</string>
+
+    <!-- Arrays -->
+    <string-array name="generos_array">
+        <item>Seleccione genero</item>
+        <item>Masculino</item>
+        <item>Femenino</item>
+        <item>Otro</item>
+    </string-array>
+
     <string-array name="nacionalidades_array">
         <item>Seleccione nacionalidad</item>
         <item>Ecuatoriana</item>
@@ -55,21 +78,8 @@
         <item>Venezolana</item>
     </string-array>
 
-    <string-array name="generos_array">
-        <item>Seleccione genero</item>
-        <item>Masculino</item>
-        <item>Femenino</item>
-        <item>Otro</item>
-    </string-array>
-    <string name="nivel_ingles">Nivel de Inglés:</string>
-    <string name="btn_registrar">Registrar</string>
-    <string name="btn_borrar">Borrar</string>
-    <string name="btn_cancelar">Cancelar</string>
-    <string name="btn_MostrarDatos">Mostrar Datos Registrados</string>
-    <string name="btn_MantenerSesion">Mantener Sesion</string>
-    <string name="btn_BorrarDatos">Borrar Datos</string>
-
-
+    <!-- Información del proyecto -->
+    <string name="info_proyecto">Grupo #2\nAplicación para el sector agrícola\nUsuario/contraseña: admin</string>
     <string name="integrantes">INTEGRANTES:\n\n
 MAGALLANES MATAMOROS JUAN\n\n
 LOOR VERA MIGUEL\n\n
@@ -77,10 +87,11 @@ ARRIAGA TUBAY JOFFRE\n\n
 HUACON RAMIREZ GREGORY\n\n
 MITE ZAPATA KARLA</string>
 
-    <string name="regresar">Regresar</string>
-    <string name="menu">Menu</string>
+    <!-- Otros -->
+    <string name="agregar">Agregar</string>
 
-    <string name="informacion">Información</string>
-    <string name="borrar_datos">Borrar datos</string>
-
+    <!-- Tooltips -->
+    <string name="tooltip_eliminar_datos">Eliminar datos guardados</string>
+    <string name="tooltip_informacion_app">Información de la app</string>
+    <string name="tooltip_cerrar_sesion">Cerrar sesión</string>
 </resources>

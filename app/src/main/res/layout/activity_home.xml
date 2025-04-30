@@ -35,7 +35,8 @@
                 android:layout_height="32dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_delete"
-                android:contentDescription="@string/borrar_datos" />
+                android:contentDescription="@string/borrar_datos"
+                android:tooltipText="@string/tooltip_eliminar_datos"/>
 
             <ImageView
                 android:id="@+id/ic"
@@ -43,14 +44,16 @@
                 android:layout_height="32dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_info"
-                android:contentDescription="@string/informacion" />
+                android:contentDescription="@string/informacion"
+                android:tooltipText="@string/tooltip_informacion_app"/>
 
             <ImageView
                 android:id="@+id/logoutIcon"
                 android:layout_width="42dp"
                 android:layout_height="52dp"
                 android:src="@drawable/ic_logout"
-                android:contentDescription="@string/cerrar_sesion" />
+                android:contentDescription="@string/cerrar_sesion"
+                android:tooltipText="@string/tooltip_cerrar_sesion"/>
         </LinearLayout>
 
         <!-- Card: Agricultores -->
