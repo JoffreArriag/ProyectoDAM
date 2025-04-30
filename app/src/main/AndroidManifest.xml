@@ -12,22 +12,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Login"
         tools:targetApi="31">
-
-        <!-- Actividades -->
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name=".MercadoVentas"
+            android:exported="false" />
+        <activity
+            android:name=".TareaRiegoFertilizacion"
+            android:exported="false" />
+        <activity
+            android:name=".InventarioAgricola"
+            android:exported="false" />
+        <activity
+            android:name=".Agricultores"
+            android:exported="false" /> <!-- Actividades -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".RegistroActivity" />
-        <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".CultivosActivity" android:exported="false" />
-        <activity android:name=".AcercaDeActivity"
-            android:theme="@style/Theme.App.ModalDialog"
-            android:label="@string/acerca_de" />
-
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CultivosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AcercaDeActivity"
+            android:label="@string/acerca_de"
+            android:theme="@style/Theme.App.ModalDialog" />
     </application>
 
 </manifest>

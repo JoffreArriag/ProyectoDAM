@@ -21,7 +21,7 @@
     <string name="btn_cancelar">Cancelar</string>
     <string name="btn_registrar">Registrar</string>
 
-        <!-- Iconos y etiquetas -->
+    <!-- Iconos y etiquetas -->
     <string name="agricultor_icon">Icono de Agricultor</string>
     <string name="cultivo_icon">Icono de Cultivo</string>
     <string name="inventario_icon">Icono de Inventario</string>
