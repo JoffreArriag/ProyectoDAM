@@ -10,6 +10,7 @@
     <string name="menu">Menu</string>
     <string name="regresar">Regresar</string>
     <string name="welcome_message">Bienvenido, %1$s</string>
+    <string name="acerca_de">Acerca de la App</string>
 
     <!-- Funcionalidad -->
     <string name="borrar_datos">Borrar datos</string>
@@ -80,12 +81,12 @@
 
     <!-- Información del proyecto -->
     <string name="info_proyecto">Grupo #2\nAplicación para el sector agrícola\nUsuario/contraseña: admin</string>
-    <string name="integrantes">INTEGRANTES:\n\n
-MAGALLANES MATAMOROS JUAN\n\n
-LOOR VERA MIGUEL\n\n
-ARRIAGA TUBAY JOFFRE\n\n
-HUACON RAMIREZ GREGORY\n\n
-MITE ZAPATA KARLA</string>
+    <string name="integrantes">Integrantes:\n\n
+Magallanes Matamoros Juan\n\n
+Loor Vera Miguel\n\n
+Arriaga Tubay Joffre\n\n
+Huacon Ramirez Gregory\n\n
+Mite Zapata Karla</string>
 
     <!-- Otros -->
     <string name="agregar">Agregar</string>

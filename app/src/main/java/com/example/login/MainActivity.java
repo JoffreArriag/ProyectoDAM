@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         usuario = findViewById(R.id.usuario);
         contraseña = findViewById(R.id.contraseña);
-        checkBoxMantenerSesion = findViewById(R.id.checkboxMantenerSesion);
+        checkBoxMantenerSesion = findViewById(R.id.checkBoxMantenerSesion);
         MaterialButton loginbtn = findViewById(R.id.loginbtn);
-        TextView olvidemicontraseña = findViewById(R.id.olvidémicontraseña);
+        TextView olvidemicontraseña = findViewById(R.id.olvideContraseña);
         ImageView googleBtn = findViewById(R.id.googlebtn);
         ImageView facebookBtn = findViewById(R.id.facebookbtn);
         MaterialButton btnCrearCuenta = findViewById(R.id.btnCrearCuenta);
@@ -102,8 +102,21 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         });
 
-        googleBtn.setOnClickListener(v -> Toast.makeText(this, "Iniciando sesión con Google...", Toast.LENGTH_SHORT).show());
-        facebookBtn.setOnClickListener(v -> Toast.makeText(this, "Iniciando sesión con Facebook...", Toast.LENGTH_SHORT).show());
+        googleBtn.setOnClickListener(v -> {
+                Toast.makeText(this, "Iniciando sesión con Google...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                intent.putExtra("nombreUsuario", "Xavier");
+                startActivity(intent);
+                finish();
+                });
+
+        facebookBtn.setOnClickListener(v -> {
+            Toast.makeText(this, "Iniciando sesión con Facebook...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            intent.putExtra("nombreUsuario", "Carlos");
+            startActivity(intent);
+            finish();
+        });
 
         btnCrearCuenta.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegistroActivity.class);

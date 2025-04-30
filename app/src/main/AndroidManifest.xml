@@ -13,17 +13,21 @@
         android:theme="@style/Theme.Login"
         tools:targetApi="31">
 
-        <activity android:name=".CultivosActivity" android:exported="false" />
-        <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".AcercaDeActivity"
-            android:theme="@style/Theme.App.ModalDialog"/>
+        <!-- Actividades -->
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".RegistroActivity" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".CultivosActivity" android:exported="false" />
+        <activity android:name=".AcercaDeActivity"
+            android:theme="@style/Theme.App.ModalDialog"
+            android:label="@string/acerca_de" />
+
     </application>
 
 </manifest>

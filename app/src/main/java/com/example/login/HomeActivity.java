@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             editor.clear();
             editor.apply();
 
-            Toast.makeText(HomeActivity.this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomeActivity.this, "Contenido eliminado", Toast.LENGTH_SHORT).show();
         });
     }
 }
