@@ -90,8 +90,4 @@ MITE ZAPATA KARLA</string>
     <!-- Otros -->
     <string name="agregar">Agregar</string>
 
-    <!-- Tooltips -->
-    <string name="tooltip_eliminar_datos">Eliminar datos guardados</string>
-    <string name="tooltip_informacion_app">Información de la app</string>
-    <string name="tooltip_cerrar_sesion">Cerrar sesión</string>
 </resources>

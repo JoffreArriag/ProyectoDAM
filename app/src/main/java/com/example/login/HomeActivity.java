@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.appcompat.widget.TooltipCompat;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -23,9 +23,8 @@ public class HomeActivity extends AppCompatActivity {
         ic_info = findViewById(R.id.ic);
         logoutIcon = findViewById(R.id.logoutIcon);
         deleteIcon = findViewById(R.id.deleteIcon);
-        TooltipCompat.setTooltipText(deleteIcon, "Eliminar datos guardados");
-        TooltipCompat.setTooltipText(ic_info, "Información de la app");
-        TooltipCompat.setTooltipText(logoutIcon, "Cerrar sesión");
+
+
 
         String username = getIntent().getStringExtra("nombreUsuario");
         if (username != null) {
