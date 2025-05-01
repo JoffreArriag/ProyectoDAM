@@ -72,6 +72,22 @@
     <string name="categoria_industriales">Industriales</string>
     <string name="categoria_hortalizas">Hortalizas</string>
     <string name="categoria_frutales">Frutales</string>
+    <string name="hint_nombre_cultivo">Nombre del cultivo</string>
+    <string name="hint_fecha_inicio">Fecha de inicio</string>
+    <string name="hint_ubicacion">Ubicación</string>
+    <string name="btn_volver">Volver</string>
+    <string name="btn_guardar">Guardar</string>
+
+    <!-- Pantalla agricultores -->
+    <string name="title_agricultores">Listado de Agricultores</string>
+    <string name="editZona">Agregar Zona</string>
+    <string name="editExperiencia">Experiencia</string>
+    <string name="btnAgregarAgricultor">Agregar Agricultor</string>
+    <string name="btnDelete">Eliminar</string>
+    <string name="btnEdit">Editar</string>
+
+
+
 
     <!-- Arrays -->
     <string-array name="generos_array">

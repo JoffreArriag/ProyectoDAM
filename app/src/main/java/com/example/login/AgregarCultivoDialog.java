@@ -32,7 +32,7 @@ public class AgregarCultivoDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        // Inflar vista personalizada
+
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_agregar_cultivo, null);
 
         etNombre = view.findViewById(R.id.etNombreCultivo);
@@ -83,7 +83,7 @@ public class AgregarCultivoDialog extends DialogFragment {
         // Botón volver
         btnVolver.setOnClickListener(v -> dismiss());
 
-        // Crear y devolver el dialogo con la vista personalizada
+
         return new AlertDialog.Builder(requireContext())
                 .setView(view)
                 .create();

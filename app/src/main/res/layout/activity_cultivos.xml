@@ -17,25 +17,24 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0288D1"
-            android:padding="16dp"
-            android:orientation="horizontal">
+            android:background="#3203A9F4"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/backButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/baseline_arrow_back_24"
-                />
+                android:src="@drawable/ic_flecha" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="@string/title_cultivo"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:layout_marginStart="16dp" />
+                android:textColor="#0B0A0A"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Botón Agregar Cultivo -->

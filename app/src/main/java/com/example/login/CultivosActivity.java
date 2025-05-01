@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +28,14 @@ public class CultivosActivity extends AppCompatActivity {
         ImageButton btnIndustriales = findViewById(R.id.btnIndustriales);
         ImageButton btnHortalizas = findViewById(R.id.btnHortalizas);
         ImageButton btnFrutales = findViewById(R.id.btnFrutales);
+        ImageView backButton = findViewById(R.id.backButton);
         Button btnAgregarCultivo = findViewById(R.id.btnAgregarCultivo);
 
+        // boton regresar
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CultivosActivity.this, HomeActivity.class);
+            startActivity(intent);
+        });
         // Botón Agregar Cultivo
         btnAgregarCultivo.setOnClickListener(new View.OnClickListener() {
             @Override
