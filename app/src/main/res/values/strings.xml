@@ -63,6 +63,16 @@
     <string name="estado_casado">Casado</string>
     <string name="estado_soltero">Soltero</string>
 
+    <!-- Pantalla cultivo -->
+    <string name="descripcion_back_button">Volver</string>
+    <string name="title_cultivo">Cultivos</string>
+    <string name="btn_agregar_cultivo">Agregar Cultivo</string>
+    <string name="categoria_cereales">Cereales</string>
+    <string name="categoria_leguminosas">Leguminosas</string>
+    <string name="categoria_industriales">Industriales</string>
+    <string name="categoria_hortalizas">Hortalizas</string>
+    <string name="categoria_frutales">Frutales</string>
+
     <!-- Arrays -->
     <string-array name="generos_array">
         <item>Seleccione genero</item>

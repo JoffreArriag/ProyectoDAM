@@ -1,98 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo">
+    android:background="@drawable/fondo"
+    android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/activity_cultivos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingBottom="80dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewTitulo"
+        <!-- Header -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#0288D1"
+            android:padding="16dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_arrow_back_24"
+                />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_cultivo"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+        <!-- Botón Agregar Cultivo -->
+        <Button
+            android:id="@+id/btnAgregarCultivo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GESTIÓN DE CULTIVOS"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
-
-        <ImageButton
-            android:id="@+id/btnAgregar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_agregar"
-            android:background="@android:color/transparent"
-            android:contentDescription="Agregar cultivo"
-            android:layout_gravity="end"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/btn_agregar_cultivo"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center" />
 
-        <ListView
-            android:id="@+id/listViewCultivos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="1dp" />
 
-        <!-- Formulario oculto para agregar/editar cultivo -->
+        <!-- Contenedor de categorías -->
         <LinearLayout
-            android:id="@+id/layoutFormularioCultivo"
+            android:id="@+id/cardContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="8dp"
-            android:background="#DDDDDD"
-            android:elevation="4dp">
+            android:padding="16dp"
+            android:gravity="center">
 
-            <EditText
-                android:id="@+id/etTipo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tipo de Cultivo" />
-
-            <EditText
-                android:id="@+id/etFecha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Fecha de Siembra"
-                android:focusable="false"
-                android:clickable="true"
-                android:inputType="none"
-                android:layout_marginTop="8dp" />
-
-            <EditText
-                android:id="@+id/etUbicacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ubicación"
-                android:layout_marginTop="8dp" />
-
+            <!-- Cards Horizontales -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:gravity="end">
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
 
-                <Button
-                    android:id="@+id/btnGuardarCultivo"
+                <!-- CARD: Cereales -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Guardar" />
+                    android:orientation="vertical"
+                    android:layout_margin="8dp"
+                    android:gravity="center_horizontal"
+                    android:background="@android:color/transparent">
 
-                <Button
-                    android:id="@+id/btnCancelarCultivo"
+                    <ImageButton
+                        android:id="@+id/btnCereales"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_cereales"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/categoria_cereales"
+                        android:background="@android:color/transparent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categoria_cereales"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorBlack"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- CARD: Leguminosas -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancelar"
-                    android:layout_marginStart="8dp" />
+                    android:orientation="vertical"
+                    android:layout_margin="8dp"
+                    android:gravity="center_horizontal"
+                    android:background="@android:color/transparent">
+
+                    <ImageButton
+                        android:id="@+id/btnLeguminosas"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_leguminosas"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/categoria_leguminosas"
+                        android:background="@android:color/transparent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categoria_leguminosas"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorBlack"
+                        android:gravity="center" />
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- Cards Horizontales -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <!-- CARD: Industriales -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="8dp"
+                    android:gravity="center_horizontal"
+                    android:background="@android:color/transparent">
+
+                    <ImageButton
+                        android:id="@+id/btnIndustriales"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_industriales"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/categoria_industriales"
+                        android:background="@android:color/transparent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categoria_industriales"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorBlack"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- CARD: Hortalizas -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="8dp"
+                    android:gravity="center_horizontal"
+                    android:background="@android:color/transparent">
+
+                    <ImageButton
+                        android:id="@+id/btnHortalizas"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_hortalizas"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/categoria_hortalizas"
+                        android:background="@android:color/transparent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categoria_hortalizas"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorBlack"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Cards Horizontales -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- CARD: Frutales -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="8dp"
+                    android:gravity="center_horizontal"
+                    android:background="@android:color/transparent">
+
+                    <ImageButton
+                        android:id="@+id/btnFrutales"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_frutales"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/categoria_frutales"
+                        android:background="@android:color/transparent"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categoria_frutales"
+                        android:textSize="14sp"
+                        android:textColor="@color/textColorBlack"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
