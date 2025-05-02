@@ -25,6 +25,12 @@ public class AgregarCultivoDialog extends DialogFragment {
 
     private CultivoListener listener;
 
+    private Cultivo cultivoExistente;
+
+    public void setCultivo(Cultivo cultivo) {
+        this.cultivoExistente = cultivo;
+    }
+
     public void setCultivoListener(CultivoListener listener) {
         this.listener = listener;
     }
@@ -47,6 +53,17 @@ public class AgregarCultivoDialog extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categorias);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategoria.setAdapter(adapter);
+
+
+        if (cultivoExistente != null) {
+            etNombre.setText(cultivoExistente.getNombre());
+            etFecha.setText(cultivoExistente.getFechaInicio());
+            etUbicacion.setText(cultivoExistente.getUbicacion());
+
+            int position = adapter.getPosition(cultivoExistente.getCategoria());
+            spinnerCategoria.setSelection(position);
+        }
+
 
         // Fecha con DatePicker
         etFecha.setOnClickListener(v -> {

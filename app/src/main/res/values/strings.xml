@@ -77,6 +77,10 @@
     <string name="hint_ubicacion">Ubicación</string>
     <string name="btn_volver">Volver</string>
     <string name="btn_guardar">Guardar</string>
+    <string name="tvCultivoInfo">Cultivo info</string>
+    <string name="lista_cultivos">Lista de cultivos</string>
+    <string name="cultivo_info">• %1$s\nFecha: %2$s\nUbicación: %3$s</string>
+
 
     <!-- Pantalla agricultores -->
     <string name="title_agricultores">Listado de Agricultores</string>

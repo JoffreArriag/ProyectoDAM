@@ -12,17 +12,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 
 public class CultivosActivity extends AppCompatActivity {
 
-    private Map<String, List<Cultivo>> cultivosPorCategoria = new HashMap<>();
+    private final Map<String, List<Cultivo>> cultivosPorCategoria = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cultivos);
 
-        // Inicialización de los botones
         ImageButton btnCereales = findViewById(R.id.btnCereales);
         ImageButton btnLeguminosas = findViewById(R.id.btnLeguminosas);
         ImageButton btnIndustriales = findViewById(R.id.btnIndustriales);
@@ -31,38 +34,25 @@ public class CultivosActivity extends AppCompatActivity {
         ImageView backButton = findViewById(R.id.backButton);
         Button btnAgregarCultivo = findViewById(R.id.btnAgregarCultivo);
 
-        // boton regresar
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(CultivosActivity.this, HomeActivity.class);
-            startActivity(intent);
-        });
-        // Botón Agregar Cultivo
-        btnAgregarCultivo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AgregarCultivoDialog dialog = new AgregarCultivoDialog();
-                dialog.setCultivoListener(new AgregarCultivoDialog.CultivoListener() {
-                    @Override
-                    public void onCultivoAgregado(Cultivo cultivo) {
-                        String categoria = cultivo.getCategoria();
-                        if (!cultivosPorCategoria.containsKey(categoria)) {
-                            cultivosPorCategoria.put(categoria, new ArrayList<>());
-                        }
-                        cultivosPorCategoria.get(categoria).add(cultivo);
-                        Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialog.show(getSupportFragmentManager(), "AgregarCultivo");
-            }
+        backButton.setOnClickListener(v -> startActivity(new Intent(CultivosActivity.this, HomeActivity.class)));
+
+        btnAgregarCultivo.setOnClickListener(v -> {
+            AgregarCultivoDialog dialog = new AgregarCultivoDialog();
+            dialog.setCultivoListener(cultivo -> {
+                String categoria = cultivo.getCategoria();
+                cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
+                Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
+            });
+            dialog.show(getSupportFragmentManager(), "AgregarCultivo");
         });
 
-        // Botones de Categorías
         btnCereales.setOnClickListener(v -> mostrarCultivosPorCategoria("Cereales"));
         btnLeguminosas.setOnClickListener(v -> mostrarCultivosPorCategoria("Leguminosas"));
         btnIndustriales.setOnClickListener(v -> mostrarCultivosPorCategoria("Industriales"));
         btnHortalizas.setOnClickListener(v -> mostrarCultivosPorCategoria("Hortalizas"));
         btnFrutales.setOnClickListener(v -> mostrarCultivosPorCategoria("Frutales"));
     }
+
 
     private void mostrarCultivosPorCategoria(String categoria) {
         List<Cultivo> cultivos = cultivosPorCategoria.get(categoria);
@@ -71,17 +61,52 @@ public class CultivosActivity extends AppCompatActivity {
             return;
         }
 
-        StringBuilder mensaje = new StringBuilder();
-        for (Cultivo c : cultivos) {
-            mensaje.append("• ").append(c.getNombre()).append("\n")
-                    .append("   Fecha: ").append(c.getFechaInicio()).append("\n")
-                    .append("   Ubicación: ").append(c.getUbicacion()).append("\n\n");
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_mostrar_cultivos, null);
+        LinearLayout layoutCultivos = view.findViewById(R.id.layoutCultivos);
+
+        for (int i = 0; i < cultivos.size(); i++) {
+            Cultivo cultivo = cultivos.get(i);
+
+            View itemView = inflater.inflate(R.layout.item_cultivo, layoutCultivos, false);
+            TextView tvInfo = itemView.findViewById(R.id.tvCultivoInfo);
+            Button btnEditar = itemView.findViewById(R.id.btnEditar);
+            Button btnEliminar = itemView.findViewById(R.id.btnEliminar);
+
+            tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion()));
+
+            int index = i;
+
+            btnEliminar.setOnClickListener(v -> {
+                cultivos.remove(index);
+                Toast.makeText(this, "Cultivo eliminado", Toast.LENGTH_SHORT).show();
+                mostrarCultivosPorCategoria(categoria);
+            });
+
+            btnEditar.setOnClickListener(v -> {
+                editarCultivo(cultivo, categoria, index);
+            });
+
+            layoutCultivos.addView(itemView);
         }
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Cultivos en " + categoria)
-                .setMessage(mensaje.toString())
-                .setPositiveButton("Cerrar", null)
+                .setView(view)
+                .setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss())
                 .show();
     }
+
+    private void editarCultivo(Cultivo cultivo, String categoria, int index) {
+        AgregarCultivoDialog dialog = new AgregarCultivoDialog();
+        dialog.setCultivo(cultivo);
+
+        dialog.setCultivoListener(cultivoEditado -> {
+            cultivosPorCategoria.get(categoria).set(index, cultivoEditado);
+            Toast.makeText(this, "Cultivo editado", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show(getSupportFragmentManager(), "editarCultivo");
+    }
+
 }

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapter.AgricultorViewHolder> {
 
-    private List<Agricultor> listaAgricultores;
+    private final List<Agricultor> listaAgricultores;
 
     public AgricultoresAdapter(List<Agricultor> listaAgricultores) {
         this.listaAgricultores = listaAgricultores;
@@ -37,8 +37,11 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
     // ViewHolder para los elementos del RecyclerView
     public class AgricultorViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textNombre, textEdad, textZona, textExperiencia;
-        private ImageView imageAgricultor;
+        private final TextView textNombre;
+        private final TextView textEdad;
+        private final TextView textZona;
+        private final TextView textExperiencia;
+        private final ImageView imageAgricultor;
         public AgricultorViewHolder(View itemView) {
             super(itemView);
             imageAgricultor = itemView.findViewById(R.id.imageAgricultor);

@@ -17,7 +17,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3203A9F4"
+            android:background="#0403A9F4"
             android:orientation="horizontal"
             android:padding="16dp">
 
@@ -59,7 +59,6 @@
             android:padding="16dp"
             android:gravity="center">
 
-            <!-- Cards Horizontales -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +121,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Cards Horizontales -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -185,7 +183,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Cards Horizontales -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

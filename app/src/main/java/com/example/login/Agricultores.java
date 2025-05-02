@@ -23,7 +23,6 @@ public class Agricultores extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agricultores);
 
-        // Referencia al botón de retroceso
         ImageView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(Agricultores.this, HomeActivity.class);
