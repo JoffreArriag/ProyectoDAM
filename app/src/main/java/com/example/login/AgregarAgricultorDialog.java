@@ -7,69 +7,88 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+
 public class AgregarAgricultorDialog extends DialogFragment {
 
     public interface AgricultorListener {
         void onAgricultorAgregado(Agricultor agricultor);
+        void onAgricultorEditado(Agricultor agricultor, int position);
     }
 
     private AgricultorListener listener;
+    private Agricultor agricultorExistente;
+    private int editarPos = -1;
 
     public void setAgricultorListener(AgricultorListener listener) {
         this.listener = listener;
+    }
+
+    public void setAgricultorEditar(Agricultor agricultor, int position) {
+        this.agricultorExistente = agricultor;
+        this.editarPos = position;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_agregar_agricultor, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_agricultor, null);
+        builder.setView(view);
 
         EditText editNombre = view.findViewById(R.id.editNombre);
         EditText editEdad = view.findViewById(R.id.editEdad);
         EditText editZona = view.findViewById(R.id.editZona);
-        EditText editExperiencia = view.findViewById(R.id.editExperiencia);
+        Spinner spinnerExperiencia = view.findViewById(R.id.spinnerExperiencia);
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnVolver = view.findViewById(R.id.btnVolver);
 
-        builder.setView(view);
+        // Spinner setup
+        String[] opciones = {"Cuidado de cultivos", "Manejo de maquinaria", "Gestión de recursos agrícolas", "Venta y comercialización de productos"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
+        spinnerExperiencia.setAdapter(adapter);
 
-        Dialog dialog = builder.create();
+        if (agricultorExistente != null) {
+            editNombre.setText(agricultorExistente.getNombre());
+            editEdad.setText(String.valueOf(agricultorExistente.getEdad()));
+            editZona.setText(agricultorExistente.getZona());
+            spinnerExperiencia.setSelection(adapter.getPosition(agricultorExistente.getExperiencia()));
+        }
 
         btnGuardar.setOnClickListener(v -> {
             String nombre = editNombre.getText().toString().trim();
             String edadStr = editEdad.getText().toString().trim();
             String zona = editZona.getText().toString().trim();
-            String experiencia = editExperiencia.getText().toString().trim();
+            String experiencia = spinnerExperiencia.getSelectedItem().toString();
 
-            if (nombre.isEmpty() || edadStr.isEmpty() || zona.isEmpty() || experiencia.isEmpty()) {
-                Toast.makeText(getContext(), "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+            if (nombre.isEmpty() || edadStr.isEmpty() || zona.isEmpty()) {
+                Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             try {
                 int edad = Integer.parseInt(edadStr);
-
-                Agricultor nuevoAgricultor = new Agricultor(nombre, edad, zona, experiencia);
-                if (listener != null) {
-                    listener.onAgricultorAgregado(nuevoAgricultor);
+                Agricultor nuevo = new Agricultor(nombre, edad, zona, experiencia);
+                if (editarPos >= 0 && listener != null) {
+                    listener.onAgricultorEditado(nuevo, editarPos);
+                } else if (listener != null) {
+                    listener.onAgricultorAgregado(nuevo);
                 }
                 dismiss();
             } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Edad debe ser un número", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Edad debe ser numérica", Toast.LENGTH_SHORT).show();
             }
         });
 
-
         btnVolver.setOnClickListener(v -> dismiss());
 
-        return dialog;
+        return builder.create();
     }
 }
+

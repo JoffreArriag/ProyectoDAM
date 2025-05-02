@@ -33,12 +33,36 @@ public class Agricultores extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerAgricultores);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new AgricultoresAdapter(listaAgricultores);
+        adapter = new AgricultoresAdapter(listaAgricultores, new AgricultoresAdapter.OnAgricultorAccionListener() {
+            @Override
+            public void onEditar(Agricultor agricultor, int position) {
+                AgregarAgricultorDialog dialog = new AgregarAgricultorDialog();
+                dialog.setAgricultorListener(new AgregarAgricultorDialog.AgricultorListener() {
+                    @Override
+                    public void onAgricultorAgregado(Agricultor nuevo) {
+                    }
 
+                    @Override
+                    public void onAgricultorEditado(Agricultor editado, int pos) {
+                        listaAgricultores.set(pos, editado);
+                        adapter.notifyItemChanged(pos);
+                        Toast.makeText(Agricultores.this, "Agricultor editado", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.setAgricultorEditar(agricultor, position);
+                dialog.show(getSupportFragmentManager(), "EditarAgricultor");
+            }
+
+            @Override
+            public void onEliminar(int position) {
+                listaAgricultores.remove(position);
+                adapter.notifyItemRemoved(position);
+                Toast.makeText(Agricultores.this, "Agricultor eliminado", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         recyclerView.setAdapter(adapter);
 
-        // Botón para agregar un nuevo agricultor
         Button btnAgregarAgricultor = findViewById(R.id.btnAgregarAgricultor);
         btnAgregarAgricultor.setOnClickListener(v -> showAgregarAgricultorDialog());
     }
@@ -51,6 +75,11 @@ public class Agricultores extends AppCompatActivity {
                 listaAgricultores.add(agricultor);
                 adapter.notifyDataSetChanged();
                 Toast.makeText(Agricultores.this, "Agricultor agregado", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAgricultorEditado(Agricultor agricultor, int position) {
+
             }
         });
         dialog.show(getSupportFragmentManager(), "AgregarAgricultor");

@@ -11,22 +11,28 @@ import android.widget.ImageView;
 public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapter.AgricultorViewHolder> {
 
     private final List<Agricultor> listaAgricultores;
+    private final OnAgricultorAccionListener accionListener;
 
-    public AgricultoresAdapter(List<Agricultor> listaAgricultores) {
+    public interface OnAgricultorAccionListener {
+        void onEditar(Agricultor agricultor, int position);
+        void onEliminar(int position);
+    }
+
+    public AgricultoresAdapter(List<Agricultor> listaAgricultores, OnAgricultorAccionListener listener) {
         this.listaAgricultores = listaAgricultores;
+        this.accionListener = listener;
     }
 
     @Override
     public AgricultorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_agricultor, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_agricultor, parent, false);
         return new AgricultorViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AgricultorViewHolder holder, int position) {
         Agricultor agricultor = listaAgricultores.get(position);
-        holder.bind(agricultor);
+        holder.bind(agricultor, position);
     }
 
     @Override
@@ -34,14 +40,11 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
         return listaAgricultores.size();
     }
 
-    // ViewHolder para los elementos del RecyclerView
     public class AgricultorViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textNombre;
-        private final TextView textEdad;
-        private final TextView textZona;
-        private final TextView textExperiencia;
-        private final ImageView imageAgricultor;
+        TextView textNombre, textEdad, textZona, textExperiencia;
+        ImageView imageAgricultor, btnEditar, btnEliminar;
+
         public AgricultorViewHolder(View itemView) {
             super(itemView);
             imageAgricultor = itemView.findViewById(R.id.imageAgricultor);
@@ -49,15 +52,20 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
             textEdad = itemView.findViewById(R.id.textEdad);
             textZona = itemView.findViewById(R.id.textZona);
             textExperiencia = itemView.findViewById(R.id.textExperiencia);
+            btnEditar = itemView.findViewById(R.id.btnEditar);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
 
-        public void bind(Agricultor agricultor) {
-            textNombre.setText(agricultor.getNombre() != null ? agricultor.getNombre() : "No disponible");
+        public void bind(Agricultor agricultor, int position) {
+            textNombre.setText(agricultor.getNombre());
             textEdad.setText(String.valueOf(agricultor.getEdad()));
-            textZona.setText(agricultor.getZona() != null ? agricultor.getZona() : "No disponible");
-            textExperiencia.setText(agricultor.getExperiencia() != null ? agricultor.getExperiencia() : "No disponible");
+            textZona.setText(agricultor.getZona());
+            textExperiencia.setText(agricultor.getExperiencia());
             imageAgricultor.setImageResource(R.drawable.ic_person);
-        }
 
+            btnEditar.setOnClickListener(v -> accionListener.onEditar(agricultor, position));
+            btnEliminar.setOnClickListener(v -> accionListener.onEliminar(position));
+        }
     }
 }
+
