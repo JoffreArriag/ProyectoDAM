@@ -98,6 +98,13 @@
     <string name="recyclerInsumos">Lista de insumos agrícolas</string>
     <string name="titleInventario">Inventario Agrícola</string>
 
+    <!-- Pantalla Tareas de riego -->
+    <string name="btnAgregarTarea">Agregar Tarea</string>
+    <string name="titleTarea">Tareas de Riego y Fertilización</string>
+    <string name="txtTarea">Nombre de la tarea</string>
+    <string name="txtCultivoTarea">Cultivo</string>
+
+
     <!-- Arrays -->
     <string-array name="generos_array">
         <item>Seleccione genero</item>
