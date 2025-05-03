@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         cardInventario.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, InventarioAgricola.class);
+            Intent intent = new Intent(HomeActivity.this, InventarioActivity.class);
             startActivity(intent);
         });
 

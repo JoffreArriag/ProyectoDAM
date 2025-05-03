@@ -90,8 +90,13 @@
     <string name="btnDelete">Eliminar</string>
     <string name="btnEdit">Editar</string>
 
-
-
+    <!-- Pantalla Inventario Agricola -->
+    <string name="editCantidad">Cantidad</string>
+    <string name="editDescripcion">Descripción</string>
+    <string name="textNombre">Nombre del insumo</string>
+    <string name="btnAgregarInsumo">Agregar Insumo</string>
+    <string name="recyclerInsumos">Lista de insumos agrícolas</string>
+    <string name="titleInventario">Inventario Agrícola</string>
 
     <!-- Arrays -->
     <string-array name="generos_array">
