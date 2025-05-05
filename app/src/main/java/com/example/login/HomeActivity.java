@@ -3,12 +3,12 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.ImageView;
-import android.widget.Toast;
 import androidx.cardview.widget.CardView;
+
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -43,8 +43,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // Acción para el icono de información
         ic_info.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AcercaDeActivity.class);
-            startActivity(intent);
+            AcercaDeDialogFragment dialog = new AcercaDeDialogFragment();
+            dialog.show(getSupportFragmentManager(), "AcercaDeDialog");
         });
 
         // Acción para el icono de logout
@@ -57,12 +57,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // Acción para eliminar preferencias
         deleteIcon.setOnClickListener(view -> {
-            SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear();
-            editor.apply();
-
-            Toast.makeText(HomeActivity.this, "Contenido eliminado", Toast.LENGTH_SHORT).show();
+            AcercaDeDialogFragment dialog = new AcercaDeDialogFragment();
+            dialog.show(getSupportFragmentManager(), "AcercaDeDialog");
         });
 
         // Acciones de las tarjetas
