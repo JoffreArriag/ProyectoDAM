@@ -15,7 +15,10 @@ public class BDOpenHelper extends SQLiteOpenHelper {
     public BDOpenHelper( Context context ) {
         super(context, bdName, null, bdversion);
     }
-
+    public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT"+
+        "cedula TEXT," +
+        "nombres TEXT, "+
+        "ratingIngles FLOAT)";
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

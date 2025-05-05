@@ -2,7 +2,9 @@ package com.example.login;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.*;
 
@@ -124,6 +126,12 @@ public class RegistroActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_LONG).show();
             }
 
+            //guardar en la BD
+            if(guardarBD(vCedula.toString(), vNombres.toString(), vNivelIngles)){
+
+            }
+
+
             // Volver al login
             Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
             startActivity(intent);
@@ -186,6 +194,25 @@ public class RegistroActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+    }
+    public boolean guardarBD (String cedula, String nombre, float rating){
+        BDOpenHelper dbAgricultura = new BDOpenHelper(this);
+        final SQLiteDatabase dbAgriculturaEdit = dbAgricultura.getWritableDatabase();
+        if (dbAgriculturaEdit != null){
+            ContentValues cv = new ContentValues();
+            cv.put("cedula", cedula);
+            cv.put("nombre", nombre);
+            cv.put("ratingIngles", rating);
+
+            dbAgriculturaEdit.insert("usuario", null, cv);
+            dbAgriculturaEdit.close();
+            return true;
+        }else{
+            dbAgriculturaEdit.close();
+            return false;
+        }
+
 
     }
 }
