@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         cardMercado.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MercadoVentas.class);
+            Intent intent = new Intent(HomeActivity.this, MercadoActivity.class);
             startActivity(intent);
         });
     }
