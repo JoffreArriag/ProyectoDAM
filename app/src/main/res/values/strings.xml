@@ -113,6 +113,13 @@
     <string name="hint_precio">Ingrese el precio del producto</string>
     <string name="hint_cantidad">Ingrese la cantidad del producto</string>
 
+    <!-- Pantalla  -->
+    <string name="titleTarea">Ingrese el precio del producto</string>
+    <string name="btnAgregarTarea">Ingrese la cantidad del producto</string>
+    <string name="txtTarea">Nombre de la tarea</string>
+    <string name="txtCultivoTarea">Nombre de cultivo tarea</string>
+
+
     <!-- Arrays -->
     <string-array name="generos_array">
         <item>Seleccione genero</item>
