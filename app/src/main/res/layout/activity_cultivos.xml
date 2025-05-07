@@ -216,7 +216,17 @@
                         android:gravity="center" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
+
+        <!-- Botón Consultar Cultivo -->
+        <Button
+            android:id="@+id/btnBuscarCultivo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/btnBuscarCultivo"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center" />
     </LinearLayout>
 </ScrollView>

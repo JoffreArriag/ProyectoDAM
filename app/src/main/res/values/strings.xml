@@ -80,7 +80,7 @@
     <string name="tvCultivoInfo">Cultivo info</string>
     <string name="lista_cultivos">Lista de cultivos</string>
     <string name="cultivo_info">• %1$s\nFecha: %2$s\nUbicación: %3$s</string>
-
+    <string name="btnBuscarCultivo">Buscar Cultivos</string>
 
     <!-- Pantalla agricultores -->
     <string name="title_agricultores">Listado de Agricultores</string>
@@ -112,6 +112,15 @@
     <string name="Tipo_Producto">Tipo de Producto</string>
     <string name="hint_precio">Ingrese el precio del producto</string>
     <string name="hint_cantidad">Ingrese la cantidad del producto</string>
+    <string name="nombreCultivo">Nombre del cultivo</string>
+    <string name="categoriaCultivo">Categoría</string>
+    <string name="fechaInicioCultivo">Fecha de inicio</string>
+    <string name="ubicacionCultivo">Ubicación</string>
+    <string name="txtProductosSeleccionados">Productos seleccionados:</string>
+    <string name="listaProductos">(Lista de nombres aquí)</string>
+    <string name="btnGenerarVenta">Generar Venta</string>
+    <string name="btnVender">Vender</string>
+    <string name="recyclerProductos">Mercado</string>
 
     <!-- Pantalla  -->
     <string name="titleTarea">Ingrese el precio del producto</string>
