@@ -20,7 +20,14 @@ public class BDOpenHelper extends SQLiteOpenHelper {
     public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT"+
         "cedula TEXT," +
         "nombres TEXT, "+
+        "apellidos TEXT, "+
+        "edad TEXT, "+
+        "nacionalidad TEXT, "+
+        "genero TEXT, "+
+        "estado_civil TEXT, "+
+        "fecha_nacimiento TEXT, "+
         "ratingIngles FLOAT)";
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS usuarios");
@@ -146,7 +153,7 @@ public class BDOpenHelper extends SQLiteOpenHelper {
         return lista;
     }
 
-    // NUEVO: Método para actualizar un cultivo
+    // NUEVO: Metodo para actualizar un cultivo
     public boolean actualizarCultivo(Cultivo cultivoAntiguo, Cultivo cultivoNuevo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valores = new ContentValues();

@@ -106,20 +106,14 @@ public class RegistroActivity extends AppCompatActivity {
                 Toast.makeText(this, "Debe llenar todos los campos obligatorios", Toast.LENGTH_LONG).show();
                 return;
             }
-
-            boolean insertado = dbHelper.insertarPersona(
-                    vCedula, vNombres, vApellidos, vEdad,
-                    vNacionalidad, vGenero, vEstadoCivil,
-                    vFechaNacimiento, vNivelIngles
-            );
-
-            if (insertado) {
+            //Guardar en BD
+            if(guardarBD(vCedula, vNombres,vApellidos,vEdad,vNacionalidad,vGenero,vEstadoCivil,vFechaNacimiento,vNivelIngles )){
                 Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(RegistroActivity.this, MainActivity.class));
-                finish();
-            } else {
-                Toast.makeText(this, "Error al guardar en la base de datos", Toast.LENGTH_LONG).show();
+            }else{
+
             }
+
+
         });
 
         // Botón Borrar
@@ -192,4 +186,28 @@ public class RegistroActivity extends AppCompatActivity {
                     .show();
         });
     }
+    public boolean guardarBD(String cedula, String nombres, String apellidos,
+                             String edad, String nacionalidad, String genero, String estadoCivil,
+                             String fechaNacimiento, float ratingIngles) {
+        BDOpenHelper dbAgricola = new BDOpenHelper(this);
+        final SQLiteDatabase dbAgricolaEdit = dbAgricola.getWritableDatabase();
+        if(dbAgricolaEdit != null){
+            ContentValues valores = new ContentValues();
+            valores.put("cedula", cedula);
+            valores.put("nombres", nombres);
+            valores.put("apellidos", apellidos);
+            valores.put("edad", edad);
+            valores.put("nacionalidad", nacionalidad);
+            valores.put("genero", genero);
+            valores.put("estado_civil", estadoCivil);
+            valores.put("fecha_nacimiento", fechaNacimiento);
+            valores.put("ratingIngles", ratingIngles);
+            dbAgricolaEdit.insert("usuario", null, valores);
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 }
