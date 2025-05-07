@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // Restaurar el estado del checkbox
+
         boolean mantenerSesion = sharedPreferences.getBoolean(KEY_MANTENER_SESION, false);
         checkBoxMantenerSesion.setChecked(mantenerSesion);
 
-        // Si se guardó usuario y contraseña, hacer autologin
+
         String savedUsuario = sharedPreferences.getString(KEY_USUARIO, null);
         String savedContraseña = sharedPreferences.getString(KEY_CONTRASEÑA, null);
 

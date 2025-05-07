@@ -88,10 +88,19 @@ public class AgregarCultivoDialog extends DialogFragment {
 
             if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty()) {
                 Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion);
-                if (listener != null) {
-                    listener.onCultivoAgregado(cultivo);
+
+                BDOpenHelper dbHelper = new BDOpenHelper(getContext());
+                boolean insertado = dbHelper.insertarCultivo(cultivo);
+
+                if (insertado) {
+                    if (listener != null) {
+                        listener.onCultivoAgregado(cultivo);
+                    }
+                    Toast.makeText(getContext(), "Cultivo guardado correctamente", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+                    Toast.makeText(getContext(), "Error al guardar el cultivo", Toast.LENGTH_SHORT).show();
                 }
-                dismiss();
             } else {
                 Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
             }

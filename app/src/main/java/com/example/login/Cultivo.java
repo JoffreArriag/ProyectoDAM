@@ -13,9 +13,35 @@ public class Cultivo {
         this.ubicacion = ubicacion;
     }
 
-    public String getNombre() { return nombre; }
-    public String getCategoria() { return categoria; }
-    public String getFechaInicio() { return fechaInicio; }
-    public String getUbicacion() { return ubicacion; }
-}
+    public String getNombre() {
+        return nombre;
+    }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(String fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+}
