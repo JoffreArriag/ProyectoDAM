@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Login"
         tools:targetApi="31">
 
-        <activity android:name=".MercadoVentas" android:exported="false" />
+        <activity android:name=".MercadoActivity" android:exported="false" />
         <activity android:name=".TareaRiegoFertilizacion" android:exported="false" />
         <activity android:name=".InventarioActivity" android:exported="false" />
         <activity android:name=".Agricultores" android:exported="false" />

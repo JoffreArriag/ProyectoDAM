@@ -98,11 +98,26 @@
     <string name="recyclerInsumos">Lista de insumos agrícolas</string>
     <string name="titleInventario">Inventario Agrícola</string>
 
-    <!-- Pantalla Tareas de riego -->
-    <string name="btnAgregarTarea">Agregar Tarea</string>
-    <string name="titleTarea">Tareas de Riego y Fertilización</string>
+    <!-- Pantalla Mecado y ventas -->
+    <string name="btnAgregarProducto">Agregar Producto</string>
+    <string name="btntitleMecardo">Mercado de Ventas Agrícolas</string>
+    <string name="recycler_productos_desc">Lista de productos agrícolas disponibles</string>
+    <string name="txtTipo">Tipo</string>
+    <string name="txtPrecio">Precio: $</string>
+    <string name="descripcion_precio">Precio: $</string>
+    <string name="descripcion_cantidad">Cantidad: 0</string>
+    <string name="descripcion_guardar">Guardar</string>
+    <string name="descripcion_cancelar">Cancelar</string>
+    <string name="descripcion_tipo_producto">Tipo de Producto</string>
+    <string name="Tipo_Producto">Tipo de Producto</string>
+    <string name="hint_precio">Ingrese el precio del producto</string>
+    <string name="hint_cantidad">Ingrese la cantidad del producto</string>
+
+    <!-- Pantalla  -->
+    <string name="titleTarea">Ingrese el precio del producto</string>
+    <string name="btnAgregarTarea">Ingrese la cantidad del producto</string>
     <string name="txtTarea">Nombre de la tarea</string>
-    <string name="txtCultivoTarea">Cultivo</string>
+    <string name="txtCultivoTarea">Nombre de cultivo tarea</string>
 
 
     <!-- Arrays -->
@@ -119,6 +134,14 @@
         <item>Colombiana</item>
         <item>Peruana</item>
         <item>Venezolana</item>
+    </string-array>
+
+    <string-array name="tipos_producto">
+        <item>Tomates</item>
+        <item>Maíz</item>
+        <item>Trigo</item>
+        <item>Verduras</item>
+        <item>Frutas</item>
     </string-array>
 
     <!-- Información del proyecto -->
