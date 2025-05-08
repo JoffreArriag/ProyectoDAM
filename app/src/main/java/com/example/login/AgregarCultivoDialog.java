@@ -2,6 +2,9 @@ package com.example.login;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
+
 
 public class AgregarCultivoDialog extends DialogFragment {
 
@@ -24,7 +28,6 @@ public class AgregarCultivoDialog extends DialogFragment {
     }
 
     private CultivoListener listener;
-
     private Cultivo cultivoExistente;
 
     public void setCultivo(Cultivo cultivo) {
@@ -38,7 +41,6 @@ public class AgregarCultivoDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
         View view = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_agregar_cultivo, null);
 
         etNombre = view.findViewById(R.id.etNombreCultivo);
@@ -48,24 +50,19 @@ public class AgregarCultivoDialog extends DialogFragment {
         btnGuardar = view.findViewById(R.id.btnGuardar);
         btnVolver = view.findViewById(R.id.btnVolver);
 
-        // Spinner opciones
         String[] categorias = {"Cereales", "Leguminosas", "Industriales", "Hortalizas", "Frutales"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categorias);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategoria.setAdapter(adapter);
 
-
         if (cultivoExistente != null) {
             etNombre.setText(cultivoExistente.getNombre());
             etFecha.setText(cultivoExistente.getFechaInicio());
             etUbicacion.setText(cultivoExistente.getUbicacion());
-
             int position = adapter.getPosition(cultivoExistente.getCategoria());
             spinnerCategoria.setSelection(position);
         }
 
-
-        // Fecha con DatePicker
         etFecha.setOnClickListener(v -> {
             Calendar calendario = Calendar.getInstance();
             int año = calendario.get(Calendar.YEAR);
@@ -79,7 +76,6 @@ public class AgregarCultivoDialog extends DialogFragment {
             datePicker.show();
         });
 
-        // Botón guardar
         btnGuardar.setOnClickListener(v -> {
             String nombre = etNombre.getText().toString();
             String fecha = etFecha.getText().toString();
@@ -89,10 +85,31 @@ public class AgregarCultivoDialog extends DialogFragment {
             if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty()) {
                 Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion);
 
-                BDOpenHelper dbHelper = new BDOpenHelper(getContext());
-                boolean insertado = dbHelper.insertarCultivo(cultivo);
+                SQLiteDatabase db = new BDOpenHelper(getContext()).getWritableDatabase();
 
-                if (insertado) {
+                Cursor cursor = db.rawQuery(
+                        "SELECT * FROM cultivos WHERE nombre = ? AND fecha_inicio = ?",
+                        new String[]{nombre, fecha}
+                );
+
+                if (cursor.getCount() > 0) {
+                    cursor.close();
+                    db.close();
+                    Toast.makeText(getContext(), "Ya existe un cultivo con ese nombre y fecha", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ContentValues valores = new ContentValues();
+                valores.put("nombre", nombre);
+                valores.put("categoria", categoria);
+                valores.put("fecha_inicio", fecha);
+                valores.put("ubicacion", ubicacion);
+
+                long resultado = db.insert("cultivos", null, valores);
+                cursor.close();
+                db.close();
+
+                if (resultado != -1) {
                     if (listener != null) {
                         listener.onCultivoAgregado(cultivo);
                     }
@@ -101,14 +118,13 @@ public class AgregarCultivoDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getContext(), "Error al guardar el cultivo", Toast.LENGTH_SHORT).show();
                 }
+
             } else {
                 Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Botón volver
         btnVolver.setOnClickListener(v -> dismiss());
-
 
         return new AlertDialog.Builder(requireContext())
                 .setView(view)

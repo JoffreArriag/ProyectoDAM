@@ -16,22 +16,21 @@ import java.util.List;
 import java.util.Map;
 import android.view.LayoutInflater;
 import android.widget.EditText;
-
+import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentValues;
+import android.database.Cursor;
 
 public class CultivosActivity extends AppCompatActivity {
 
     private final Map<String, List<Cultivo>> cultivosPorCategoria = new HashMap<>();
-    private BDOpenHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cultivos);
 
-        dbHelper = new BDOpenHelper(this);
         cargarCultivosDesdeBD();
 
-        // Referencias UI
         ImageButton btnCereales = findViewById(R.id.btnCereales);
         ImageButton btnLeguminosas = findViewById(R.id.btnLeguminosas);
         ImageButton btnIndustriales = findViewById(R.id.btnIndustriales);
@@ -40,7 +39,6 @@ public class CultivosActivity extends AppCompatActivity {
         ImageView backButton = findViewById(R.id.backButton);
         Button btnAgregarCultivo = findViewById(R.id.btnAgregarCultivo);
 
-        // Acciones de los botones
         backButton.setOnClickListener(v -> startActivity(new Intent(CultivosActivity.this, HomeActivity.class)));
 
         btnAgregarCultivo.setOnClickListener(v -> {
@@ -48,13 +46,11 @@ public class CultivosActivity extends AppCompatActivity {
             dialog.setCultivoListener(cultivo -> {
                 String categoria = cultivo.getCategoria();
                 cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
-                dbHelper.insertarCultivo(cultivo);
                 Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
             });
             dialog.show(getSupportFragmentManager(), "AgregarCultivo");
         });
 
-        // Mostrar cultivos por categoría
         btnCereales.setOnClickListener(v -> mostrarCultivosPorCategoria("Cereales"));
         btnLeguminosas.setOnClickListener(v -> mostrarCultivosPorCategoria("Leguminosas"));
         btnIndustriales.setOnClickListener(v -> mostrarCultivosPorCategoria("Industriales"));
@@ -62,7 +58,6 @@ public class CultivosActivity extends AppCompatActivity {
         btnFrutales.setOnClickListener(v -> mostrarCultivosPorCategoria("Frutales"));
 
         Button btnBuscarCultivo = findViewById(R.id.btnBuscarCultivo);
-
         btnBuscarCultivo.setOnClickListener(view -> {
             EditText inputBusqueda = new EditText(CultivosActivity.this);
             inputBusqueda.setHint("Ingrese nombre o ubicación del cultivo");
@@ -78,10 +73,30 @@ public class CultivosActivity extends AppCompatActivity {
                             return;
                         }
 
-                        List<Cultivo> resultados = dbHelper.buscarCultivosPorNombreOUbicacion(criterio);
+                        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
+                        Cursor cursor = db.rawQuery(
+                                "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ?",
+                                new String[]{"%" + criterio + "%", "%" + criterio + "%"}
+                        );
+
+                        List<Cultivo> resultados = new ArrayList<>();
+
+                        if (cursor.moveToFirst()) {
+                            do {
+                                Cultivo cultivo = new Cultivo(
+                                        cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                                        cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
+                                        cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
+                                        cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"))
+                                );
+                                resultados.add(cultivo);
+                            } while (cursor.moveToNext());
+                        }
+
+                        cursor.close();
+                        db.close();
 
                         if (!resultados.isEmpty()) {
-                            // Mostrar los resultados en un nuevo AlertDialog
                             LayoutInflater inflater = LayoutInflater.from(this);
                             View viewResultado = inflater.inflate(R.layout.dialog_mostrar_cultivos, null);
                             LinearLayout layoutCultivos = viewResultado.findViewById(R.id.layoutCultivos);
@@ -99,7 +114,6 @@ public class CultivosActivity extends AppCompatActivity {
                                     .setView(viewResultado)
                                     .setPositiveButton("Cerrar", null)
                                     .show();
-
                         } else {
                             new androidx.appcompat.app.AlertDialog.Builder(this)
                                     .setTitle("Sin resultados")
@@ -112,20 +126,28 @@ public class CultivosActivity extends AppCompatActivity {
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
-
     }
 
-    // Cargar los cultivos desde la base de datos
     private void cargarCultivosDesdeBD() {
-        List<Cultivo> todosCultivos = dbHelper.obtenerTodosLosCultivos();
-        for (Cultivo cultivo : todosCultivos) {
-            cultivosPorCategoria
-                    .computeIfAbsent(cultivo.getCategoria(), k -> new ArrayList<>())
-                    .add(cultivo);
+        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM cultivos", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
+                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
+                String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
+
+                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion);
+                cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
+            } while (cursor.moveToNext());
         }
+
+        cursor.close();
+        db.close();
     }
 
-    // Mostrar los cultivos por categoría
     private void mostrarCultivosPorCategoria(String categoria) {
         List<Cultivo> cultivos = cultivosPorCategoria.get(categoria);
         if (cultivos == null || cultivos.isEmpty()) {
@@ -140,8 +162,6 @@ public class CultivosActivity extends AppCompatActivity {
 
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
-
-
             View itemView = inflater.inflate(R.layout.item_cultivo, layoutCultivos, false);
             TextView tvInfo = itemView.findViewById(R.id.tvCultivoInfo);
             Button btnEditar = itemView.findViewById(R.id.btnEditar);
@@ -150,21 +170,53 @@ public class CultivosActivity extends AppCompatActivity {
             tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion()));
             int index = i;
 
-            // Acción del botón Eliminar
             btnEliminar.setOnClickListener(v -> {
                 cultivos.remove(index);
-                dbHelper.eliminarCultivo(cultivo);
-                Toast.makeText(this, "Cultivo eliminado", Toast.LENGTH_SHORT).show();
+
+                SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
+                int resultado = db.delete("cultivos", "nombre = ? AND fecha_inicio = ?",
+                        new String[]{cultivo.getNombre(), cultivo.getFechaInicio()});
+                db.close();
+
+                if (resultado > 0) {
+                    Toast.makeText(this, "Cultivo eliminado", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error al eliminar cultivo", Toast.LENGTH_SHORT).show();
+                }
+
                 mostrarCultivosPorCategoria(categoria);
             });
 
             btnEditar.setOnClickListener(v -> {
-                editarCultivo(cultivo, categoria, index);
+                AgregarCultivoDialog dialog = new AgregarCultivoDialog();
+                dialog.setCultivo(cultivo);
+
+                dialog.setCultivoListener(cultivoEditado -> {
+                    SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
+
+                    ContentValues valores = new ContentValues();
+                    valores.put("nombre", cultivoEditado.getNombre());
+                    valores.put("categoria", cultivoEditado.getCategoria());
+                    valores.put("fecha_inicio", cultivoEditado.getFechaInicio());
+                    valores.put("ubicacion", cultivoEditado.getUbicacion());
+
+                    int resultado = db.update("cultivos", valores, "nombre = ? AND categoria = ? AND fecha_inicio = ?",
+                            new String[]{cultivo.getNombre(), cultivo.getCategoria(), cultivo.getFechaInicio()});
+                    db.close();
+
+                    if (resultado > 0) {
+                        cultivosPorCategoria.get(categoria).set(index, cultivoEditado);
+                        Toast.makeText(this, "Cultivo editado", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Error al editar el cultivo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                dialog.show(getSupportFragmentManager(), "editarCultivo");
             });
 
             layoutCultivos.addView(itemView);
         }
-
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Cultivos en " + categoria)
@@ -172,24 +224,4 @@ public class CultivosActivity extends AppCompatActivity {
                 .setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
-    // Editar un cultivo
-    private void editarCultivo(Cultivo cultivo, String categoria, int index) {
-        AgregarCultivoDialog dialog = new AgregarCultivoDialog();
-        dialog.setCultivo(cultivo);
-
-        dialog.setCultivoListener(cultivoEditado -> {
-            boolean resultado = dbHelper.actualizarCultivo(cultivo, cultivoEditado);
-
-            if (resultado) {
-                cultivosPorCategoria.get(categoria).set(index, cultivoEditado);
-                Toast.makeText(this, "Cultivo editado", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Error al editar el cultivo", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        dialog.show(getSupportFragmentManager(), "editarCultivo");
-    }
-
 }
