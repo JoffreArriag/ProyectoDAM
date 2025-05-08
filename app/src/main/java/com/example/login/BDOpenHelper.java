@@ -12,12 +12,12 @@ import java.util.List;
 public class BDOpenHelper extends SQLiteOpenHelper {
 
     public static final String bdName = "agricola.sqlite";
-    public static final int bdversion = 2;
+    public static final int bdversion = 3;
 
     public BDOpenHelper(Context context) {
         super(context, bdName, null, bdversion);
     }
-    public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT"+
+    public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
         "cedula TEXT," +
         "nombres TEXT, "+
         "apellidos TEXT, "+
@@ -30,24 +30,19 @@ public class BDOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Eliminar la tabla antigua "usuarios" si existe
         db.execSQL("DROP TABLE IF EXISTS usuarios");
+        // Eliminar la tabla "usuario" si existe (por si necesitamos recrearla)
+        db.execSQL("DROP TABLE IF EXISTS usuario");
+        // Eliminar la tabla cultivos para recrearla
         db.execSQL("DROP TABLE IF EXISTS cultivos");
         onCreate(db);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String crearTablaUsuarios = "CREATE TABLE usuarios (" +
-                "cedula TEXT PRIMARY KEY, " +
-                "nombres TEXT, " +
-                "apellidos TEXT, " +
-                "edad TEXT, " +
-                "nacionalidad TEXT, " +
-                "genero TEXT, " +
-                "estado_civil TEXT, " +
-                "fecha_nacimiento TEXT, " +
-                "nivel_ingles REAL)";
-        db.execSQL(crearTablaUsuarios);
+
+        db.execSQL(tablausuario);
 
         String crearTablaCultivos = "CREATE TABLE cultivos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -57,6 +52,26 @@ public class BDOpenHelper extends SQLiteOpenHelper {
                 "ubicacion TEXT)";
         db.execSQL(crearTablaCultivos);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public boolean insertarPersona(String cedula, String nombres, String apellidos, String edad,
                                    String nacionalidad, String genero, String estadoCivil,

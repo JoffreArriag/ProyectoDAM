@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
@@ -110,82 +111,89 @@ public class RegistroActivity extends AppCompatActivity {
             if(guardarBD(vCedula, vNombres,vApellidos,vEdad,vNacionalidad,vGenero,vEstadoCivil,vFechaNacimiento,vNivelIngles )){
                 Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
             }else{
-
+                Toast.makeText(this, "Datos NO registrados ", Toast.LENGTH_LONG).show();
             }
 
 
         });
 
-        // Botón Borrar
-        btnBorrar.setOnClickListener(view -> {
-            cedula.setText("");
-            nombres.setText("");
-            apellidos.setText("");
-            edad.setText("");
-            radioGroupEstadoCivil.clearCheck();
-            txtFechaSeleccionada.setText("Fecha no seleccionada");
-            ratingIngles.setRating(0);
-            spinnerNacionalidad.setSelection(0);
-            spinnerGenero.setSelection(0);
-        });
 
-        // Botón Cancelar
-        btnCancelar.setOnClickListener(view -> {
-            Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
 
-        // Botón Mostrar Datos
-        btnMostrarDatos.setOnClickListener(view -> {
-            EditText inputBusqueda = new EditText(RegistroActivity.this);
-            inputBusqueda.setHint("Ingrese cédula o nombre");
 
-            new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-                    .setTitle("Buscar Usuario")
-                    .setView(inputBusqueda)
-                    .setPositiveButton("Buscar", (dialog, which) -> {
-                        String criterio = inputBusqueda.getText().toString().trim();
-
-                        if (criterio.isEmpty()) {
-                            Toast.makeText(this, "Debe ingresar cédula o nombre", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        SQLiteDatabase db = dbHelper.getReadableDatabase();
-                        String query = "SELECT * FROM usuarios WHERE cedula = ? OR nombres LIKE ?";
-                        try (android.database.Cursor cursor = db.rawQuery(query, new String[]{criterio, "%" + criterio + "%"})) {
-                            if (cursor.moveToFirst()) {
-                                String mensaje = "Cédula: " + cursor.getString(0) + "\n" +
-                                        "Nombres: " + cursor.getString(1) + "\n" +
-                                        "Apellidos: " + cursor.getString(2) + "\n" +
-                                        "Edad: " + cursor.getString(3) + "\n" +
-                                        "Nacionalidad: " + cursor.getString(4) + "\n" +
-                                        "Género: " + cursor.getString(5) + "\n" +
-                                        "Estado Civil: " + cursor.getString(6) + "\n" +
-                                        "Fecha Nacimiento: " + cursor.getString(7) + "\n" +
-                                        "Nivel Inglés: " + cursor.getFloat(8);
-
-                                new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-                                        .setTitle("Datos encontrados")
-                                        .setMessage(mensaje)
-                                        .setPositiveButton("Cerrar", null)
-                                        .show();
-                            } else {
-                                new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-                                        .setTitle("Sin resultados")
-                                        .setMessage("No existen datos con esa cédula o nombre.")
-                                        .setPositiveButton("Cerrar", null)
-                                        .show();
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(this, "Error en la búsqueda", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-        });
     }
+    public void borrarCampos(View v) {
+        cedula.setText("");
+        nombres.setText("");
+        apellidos.setText("");
+        edad.setText("");
+        radioGroupEstadoCivil.clearCheck();
+        txtFechaSeleccionada.setText("Fecha no seleccionada");
+        ratingIngles.setRating(0);
+        spinnerNacionalidad.setSelection(0);
+        spinnerGenero.setSelection(0);
+    }
+    public void cancelarRegistro(View v) {
+        Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void mostrarDatosBD(View v){
+        Intent intent = new Intent(RegistroActivity.this, ConsultarUsuario.class);
+        startActivity(intent);
+
+    }
+
+//    public void mostrarDatosModal(View v) {
+//        EditText inputBusqueda = new EditText(RegistroActivity.this);
+//        inputBusqueda.setHint("Ingrese cédula o nombre");
+//
+//        new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
+//                .setTitle("Buscar Usuario")
+//                .setView(inputBusqueda)
+//                .setPositiveButton("Buscar", (dialog, which) -> {
+//                    String criterio = inputBusqueda.getText().toString().trim();
+//
+//                    if (criterio.isEmpty()) {
+//                        Toast.makeText(RegistroActivity.this, "Debe ingresar cédula o nombre", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//
+//                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+//                    String query = "SELECT * FROM usuarios WHERE cedula = ? OR nombres LIKE ?";
+//                    try (Cursor data = db.rawQuery(query, new String[]{criterio, "%" + criterio + "%"})) {
+//                        if (data.moveToFirst()) {
+//                            String mensaje = "Cédula: " + data.getString(0) + "\n" +
+//                                    "Nombres: " + data.getString(1) + "\n" +
+//                                    "Apellidos: " + data.getString(2) + "\n" +
+//                                    "Edad: " + data.getString(3) + "\n" +
+//                                    "Nacionalidad: " + data.getString(4) + "\n" +
+//                                    "Género: " + data.getString(5) + "\n" +
+//                                    "Estado Civil: " + data.getString(6) + "\n" +
+//                                    "Fecha Nacimiento: " + data.getString(7) + "\n" +
+//                                    "Nivel Inglés: " + data.getFloat(8);
+//
+//                            new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
+//                                    .setTitle("Datos encontrados")
+//                                    .setMessage(mensaje)
+//                                    .setPositiveButton("Cerrar", null)
+//                                    .show();
+//                        } else {
+//                            new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
+//                                    .setTitle("Sin resultados")
+//                                    .setMessage("No existen datos con esa cédula o nombre.")
+//                                    .setPositiveButton("Cerrar", null)
+//                                    .show();
+//                        }
+//                    } catch (Exception e) {
+//                        Toast.makeText(RegistroActivity.this, "Error en la búsqueda", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .setNegativeButton("Cancelar", null)
+//                .show();
+//    }
+
+
     public boolean guardarBD(String cedula, String nombres, String apellidos,
                              String edad, String nacionalidad, String genero, String estadoCivil,
                              String fechaNacimiento, float ratingIngles) {

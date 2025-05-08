@@ -183,14 +183,16 @@
                 android:padding="10dp"
                 android:minHeight="48dp" />
         </LinearLayout>
+
         <Button
             android:id="@+id/btnMostrarDatos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_MostrarDatos"
-            android:textSize="14sp"
+            android:minHeight="48dp"
+            android:onClick="mostrarDatosBD"
             android:padding="10dp"
-            android:minHeight="48dp"/>
+            android:text="@string/btn_MostrarDatos"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </ScrollView>
