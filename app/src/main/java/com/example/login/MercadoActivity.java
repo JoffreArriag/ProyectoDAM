@@ -29,7 +29,7 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 🔁 Reemplazo de dbHelper.obtenerTodosLosCultivos():
+
         List<Cultivo> cultivos = cargarCultivosDesdeBD();
 
         adapter = new CultivoAdapter(cultivos);
@@ -42,7 +42,7 @@ public class MercadoActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> startActivity(new Intent(MercadoActivity.this, HomeActivity.class)));
     }
 
-    // ✅ Carga directa desde la base de datos sin usar métodos de BDOpenHelper
+
     private List<Cultivo> cargarCultivosDesdeBD() {
         List<Cultivo> listaCultivos = new ArrayList<>();
         SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
