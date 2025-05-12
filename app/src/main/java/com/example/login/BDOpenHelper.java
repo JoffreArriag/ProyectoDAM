@@ -12,31 +12,31 @@ import java.util.List;
 public class BDOpenHelper extends SQLiteOpenHelper {
 
     public static final String bdName = "agricola.sqlite";
-    public static final int bdversion = 5;
+    public static final int bdversion = 9;
 
     public BDOpenHelper(Context context) {
         super(context, bdName, null, bdversion);
     }
-    public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-        "cedula TEXT," +
-        "nombres TEXT, "+
-        "apellidos TEXT, "+
-        "edad TEXT, "+
-        "nacionalidad TEXT, "+
-        "genero TEXT, "+
-        "estado_civil TEXT, "+
-        "fecha_nacimiento TEXT, "+
-        "ratingIngles FLOAT)";
+    public static final String tablausuario = "CREATE TABLE usuario(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "cedula TEXT UNIQUE," +
+            "nombres TEXT, "+
+            "apellidos TEXT, "+
+            "edad INTEGER, "+
+            "nacionalidad TEXT, "+
+            "genero TEXT, "+
+            "estado_civil TEXT, "+
+            "fecha_nacimiento TEXT, "+
+            "ratingIngles FLOAT)";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Eliminar la tabla antigua "usuarios" si existe
-        db.execSQL("DROP TABLE IF EXISTS usuarios");
-        // Eliminar la tabla "usuario" si existe (por si necesitamos recrearla)
+        // Eliminar la tabla "usuario" si existe
         db.execSQL("DROP TABLE IF EXISTS usuario");
-        // Eliminar la tabla cultivos para recrearla
+        // Eliminar otras tablas si es necesario
         db.execSQL("DROP TABLE IF EXISTS cultivos");
         db.execSQL("DROP TABLE IF EXISTS ventas");
+        db.execSQL("DROP TABLE IF EXISTS agricultores");
+        db.execSQL("DROP TABLE IF EXISTS insumosagricola");
         onCreate(db);
     }
 
@@ -50,7 +50,7 @@ public class BDOpenHelper extends SQLiteOpenHelper {
                 "nombre TEXT, " +
                 "categoria TEXT, " +
                 "fecha_inicio TEXT, " +
-                "ubicacion TEXT,"+
+                "ubicacion TEXT," +
                 "precio_caja REAL)";
         db.execSQL(crearTablaCultivos);
 
@@ -58,10 +58,24 @@ public class BDOpenHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "cedula TEXT, " +
                 "nombre TEXT, " +
-                "productos TEXT,"+
+                "productos TEXT," +
                 "total REAL)";
         db.execSQL(crearTablaVentas);
+
+        String crearTablaAgricultores = "CREATE TABLE agricultores (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nombre TEXT, " +
+                "edad INTEGER, " +
+                "zona TEXT, " +
+                "experiencia TEXT)";
+        db.execSQL(crearTablaAgricultores);
+
+        String crearTablaInsumoAgricola = "CREATE TABLE IF NOT EXISTS insumos (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nombre TEXT, " +
+                "descripcion TEXT, " +
+                "cantidad INTEGER)";
+        db.execSQL(crearTablaInsumoAgricola);
+
     }
-
-
 }

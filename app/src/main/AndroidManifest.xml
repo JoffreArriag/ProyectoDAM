@@ -14,9 +14,9 @@
 
         <activity android:name=".ConsultarUsuario" android:exported="false" />
         <activity android:name=".MercadoActivity" android:exported="false" />
+        <activity android:name=".InventarioActivity" android:exported="false" />
         <activity android:name=".ConsultVentaActivity" android:exported="false" />
         <activity android:name=".TareaRiegoFertilizacion" android:exported="false" />
-        <activity android:name=".InventarioActivity" android:exported="false" />
         <activity android:name=".Agricultores" android:exported="false" />
         <activity android:name=".RegistroActivity" android:exported="false" />
         <activity android:name=".HomeActivity" android:exported="false" />
