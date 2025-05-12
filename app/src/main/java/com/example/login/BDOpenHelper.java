@@ -12,7 +12,7 @@ import java.util.List;
 public class BDOpenHelper extends SQLiteOpenHelper {
 
     public static final String bdName = "agricola.sqlite";
-    public static final int bdversion = 3;
+    public static final int bdversion = 5;
 
     public BDOpenHelper(Context context) {
         super(context, bdName, null, bdversion);
@@ -36,6 +36,7 @@ public class BDOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS usuario");
         // Eliminar la tabla cultivos para recrearla
         db.execSQL("DROP TABLE IF EXISTS cultivos");
+        db.execSQL("DROP TABLE IF EXISTS ventas");
         onCreate(db);
     }
 
@@ -49,8 +50,17 @@ public class BDOpenHelper extends SQLiteOpenHelper {
                 "nombre TEXT, " +
                 "categoria TEXT, " +
                 "fecha_inicio TEXT, " +
-                "ubicacion TEXT)";
+                "ubicacion TEXT,"+
+                "precio_caja REAL)";
         db.execSQL(crearTablaCultivos);
+
+        String crearTablaVentas = "CREATE TABLE ventas (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "cedula TEXT, " +
+                "nombre TEXT, " +
+                "productos TEXT,"+
+                "total REAL)";
+        db.execSQL(crearTablaVentas);
     }
 
 

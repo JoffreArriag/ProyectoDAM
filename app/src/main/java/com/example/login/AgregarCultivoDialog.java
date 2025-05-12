@@ -22,6 +22,8 @@ public class AgregarCultivoDialog extends DialogFragment {
     private EditText etNombre, etFecha, etUbicacion;
     private Spinner spinnerCategoria;
     private Button btnGuardar, btnVolver;
+    private EditText etPrecioCaja;
+
 
     public interface CultivoListener {
         void onCultivoAgregado(Cultivo cultivo);
@@ -49,6 +51,7 @@ public class AgregarCultivoDialog extends DialogFragment {
         spinnerCategoria = view.findViewById(R.id.spinnerCategoria);
         btnGuardar = view.findViewById(R.id.btnGuardar);
         btnVolver = view.findViewById(R.id.btnVolver);
+        etPrecioCaja = view.findViewById(R.id.etPrecioCaja);
 
         String[] categorias = {"Cereales", "Leguminosas", "Industriales", "Hortalizas", "Frutales"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categorias);
@@ -59,6 +62,7 @@ public class AgregarCultivoDialog extends DialogFragment {
             etNombre.setText(cultivoExistente.getNombre());
             etFecha.setText(cultivoExistente.getFechaInicio());
             etUbicacion.setText(cultivoExistente.getUbicacion());
+            etPrecioCaja.setText(String.valueOf(cultivoExistente.getPrecioCaja()));
             int position = adapter.getPosition(cultivoExistente.getCategoria());
             spinnerCategoria.setSelection(position);
         }
@@ -81,9 +85,11 @@ public class AgregarCultivoDialog extends DialogFragment {
             String fecha = etFecha.getText().toString();
             String ubicacion = etUbicacion.getText().toString();
             String categoria = spinnerCategoria.getSelectedItem().toString();
+            String precioStr = etPrecioCaja.getText().toString();
 
-            if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty()) {
-                Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion);
+            if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty() && !precioStr.isEmpty()) {
+                double precioCaja = Double.parseDouble(precioStr);
+                Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion, precioCaja);
 
                 SQLiteDatabase db = new BDOpenHelper(getContext()).getWritableDatabase();
 
@@ -104,6 +110,7 @@ public class AgregarCultivoDialog extends DialogFragment {
                 valores.put("categoria", categoria);
                 valores.put("fecha_inicio", fecha);
                 valores.put("ubicacion", ubicacion);
+                valores.put("precio_caja", precioCaja);
 
                 long resultado = db.insert("cultivos", null, valores);
                 cursor.close();

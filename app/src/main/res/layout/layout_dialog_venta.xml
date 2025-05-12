@@ -5,21 +5,77 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/txtNotadeventa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txtNotadeventa"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtNombreCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txtNombreCliente"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/etNombreCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/etNombreCliente"
+        android:inputType="textPersonName"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:minHeight="48dp"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/txtCedulaCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txtCedulaCliente"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/etCedulaCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/etCedulaCliente"
+        android:inputType="textNoSuggestions|textVisiblePassword"
+        android:maxLength="10"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:minHeight="48dp"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/txtProductosSeleccionados"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/txtProductosSeleccionados"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/listaProductos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/listaProductos"
+        android:text="(Productos aparecerán aquí)"
         android:layout_marginTop="8dp" />
 
+    <!-- Total a pagar -->
+    <TextView
+        android:id="@+id/txtTotalPagar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total a pagar: $0.00"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:gravity="end" />
+
+    <!-- Botón para generar venta -->
     <Button
         android:id="@+id/btnGenerarVenta"
         android:layout_width="match_parent"

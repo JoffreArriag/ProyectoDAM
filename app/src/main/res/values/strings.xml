@@ -79,8 +79,9 @@
     <string name="btn_guardar">Guardar</string>
     <string name="tvCultivoInfo">Cultivo info</string>
     <string name="lista_cultivos">Lista de cultivos</string>
-    <string name="cultivo_info">• %1$s\nFecha: %2$s\nUbicación: %3$s</string>
+    <string name="cultivo_info">• %1$s\nFecha: %2$s\nUbicación: %3$s\nPrecio/caja: $%4$.2f</string>
     <string name="btnBuscarCultivo">Buscar Cultivos</string>
+    <string name="hint_precio_caja">Precio por caja</string>
 
     <!-- Pantalla agricultores -->
     <string name="title_agricultores">Listado de Agricultores</string>
@@ -119,8 +120,19 @@
     <string name="txtProductosSeleccionados">Productos seleccionados:</string>
     <string name="listaProductos">(Lista de nombres aquí)</string>
     <string name="btnGenerarVenta">Generar Venta</string>
-    <string name="btnVender">Vender</string>
+    <string name="btnVender">Crear Venta</string>
     <string name="recyclerProductos">Mercado</string>
+    <string name="btnEditarVenta">Editar Venta</string>
+    <string name="btnEliminarVenta">Eliminar Venta</string>
+    <string name="txtNombreCliente">Nombre del Cliente:</string>
+    <string name="etNombreCliente">Ingrese el nombre</string>
+    <string name="etCedulaCliente">Ingrese la cédula</string>
+    <string name="txtCedulaCliente">Cédula del Cliente:</string>
+    <string name="txtNotadeventa">Nota de Venta</string>
+    <string name="btnConsultarVenta">Consultar Venta</string>
+    <string name="ventasRegistradasTitle">Ventas Registradas</string>
+    <string name="etBuscarVenta">Buscar por Cédula o Nombre</string>
+
 
     <!-- Pantalla  -->
     <string name="titleTarea">Ingrese el precio del producto</string>

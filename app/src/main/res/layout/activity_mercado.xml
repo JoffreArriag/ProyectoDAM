@@ -37,11 +37,27 @@
         android:layout_weight="1"
         android:contentDescription="@string/recycler_productos_desc"/>
 
-    <Button
-        android:id="@+id/btnVender"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btnVender"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnCrearVenta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btnGenerarVenta" />
+
+        <Button
+            android:id="@+id/btnConsultarVenta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btnConsultarVenta" />
+    </LinearLayout>
 
 </LinearLayout>

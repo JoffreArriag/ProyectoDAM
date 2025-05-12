@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,19 +30,20 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         List<Cultivo> cultivos = cargarCultivosDesdeBD();
 
         adapter = new CultivoAdapter(cultivos);
         recyclerView.setAdapter(adapter);
 
-        Button btnVender = findViewById(R.id.btnVender);
-        btnVender.setOnClickListener(v -> mostrarDialogoVenta());
+        Button btnCrearVenta = findViewById(R.id.btnCrearVenta);
+        btnCrearVenta.setOnClickListener(v -> mostrarDialogoVenta());
+
+        Button btnConsultarVenta = findViewById(R.id.btnConsultarVenta);
+        btnConsultarVenta.setOnClickListener(v -> startActivity(new Intent(this, ConsultVentaActivity.class)));
 
         ImageView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> startActivity(new Intent(MercadoActivity.this, HomeActivity.class)));
     }
-
 
     private List<Cultivo> cargarCultivosDesdeBD() {
         List<Cultivo> listaCultivos = new ArrayList<>();
@@ -54,8 +56,9 @@ public class MercadoActivity extends AppCompatActivity {
                 String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
                 String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
                 String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
+                double precioCaja = cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"));
 
-                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion);
+                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion, precioCaja);
                 listaCultivos.add(cultivo);
             } while (cursor.moveToNext());
         }
@@ -78,25 +81,53 @@ public class MercadoActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         TextView listaProductos = dialogView.findViewById(R.id.listaProductos);
+        TextView txtTotalPagar = dialogView.findViewById(R.id.txtTotalPagar);
         Button btnGenerar = dialogView.findViewById(R.id.btnGenerarVenta);
 
         StringBuilder nombres = new StringBuilder();
+        // Definir total como una variable final
+        final double[] total = {0.0};
+
+        // Calcular el total de la venta y listar los productos seleccionados
         for (Cultivo c : seleccionados) {
-            nombres.append("- ").append(c.getNombre()).append("\n");
+            nombres.append("- ").append(c.getNombre())
+                    .append(" ($").append(String.format("%.2f", c.getPrecioCaja())).append(")\n");
+            total[0] += c.getPrecioCaja(); // Usamos el array para poder modificar su valor
         }
+
         listaProductos.setText(nombres.toString());
+        txtTotalPagar.setText("Total a pagar: $" + String.format("%.2f", total[0]));
 
         AlertDialog dialog = builder.create();
 
         btnGenerar.setOnClickListener(v -> {
-            generarVenta(seleccionados);
+            EditText etNombre = dialogView.findViewById(R.id.etNombreCliente);
+            EditText etCedula = dialogView.findViewById(R.id.etCedulaCliente);
+
+            String nombre = etNombre.getText().toString().trim();
+            String cedula = etCedula.getText().toString().trim();
+
+            if (nombre.isEmpty() || cedula.isEmpty()) {
+                Toast.makeText(this, "Debe ingresar nombre y cédula", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Concatenar los productos seleccionados
+            StringBuilder productos = new StringBuilder();
+            for (Cultivo c : seleccionados) {
+                productos.append(c.getNombre()).append("; ");
+            }
+
+            // Inserción de la venta en la base de datos (incluyendo el total)
+            SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
+            db.execSQL("INSERT INTO ventas (cedula, nombre, productos, total) VALUES (?, ?, ?, ?)",
+                    new Object[]{cedula, nombre, productos.toString(), total[0]});
+            db.close();
+
+            Toast.makeText(this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
             dialog.dismiss();
         });
 
         dialog.show();
-    }
-
-    private void generarVenta(List<Cultivo> seleccionados) {
-        Toast.makeText(this, "Venta generada con " + seleccionados.size() + " productos", Toast.LENGTH_LONG).show();
     }
 }

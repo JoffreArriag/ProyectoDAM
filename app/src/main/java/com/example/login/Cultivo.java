@@ -5,12 +5,14 @@ public class Cultivo {
     private String categoria;
     private String fechaInicio;
     private String ubicacion;
+    private double precioCaja;
 
-    public Cultivo(String nombre, String categoria, String fechaInicio, String ubicacion) {
+    public Cultivo(String nombre, String categoria, String fechaInicio, String ubicacion, double precioCaja) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.fechaInicio = fechaInicio;
         this.ubicacion = ubicacion;
+        this.precioCaja = precioCaja;
     }
 
     public String getNombre() {
@@ -43,5 +45,13 @@ public class Cultivo {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public double getPrecioCaja() {
+        return precioCaja;
+    }
+
+    public void setPrecioCaja(double precioCaja) {
+        this.precioCaja = precioCaja;
     }
 }

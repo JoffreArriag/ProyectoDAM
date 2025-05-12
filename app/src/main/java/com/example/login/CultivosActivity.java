@@ -87,8 +87,10 @@ public class CultivosActivity extends AppCompatActivity {
                                         cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
                                         cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
                                         cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
-                                        cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"))
+                                        cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
+                                        cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
                                 );
+
                                 resultados.add(cultivo);
                             } while (cursor.moveToNext());
                         }
@@ -105,7 +107,14 @@ public class CultivosActivity extends AppCompatActivity {
                             for (Cultivo cultivo : resultados) {
                                 View itemView = inflater.inflate(R.layout.item_cultivo, layoutCultivos, false);
                                 TextView tvInfo = itemView.findViewById(R.id.tvCultivoInfo);
-                                tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion()));
+                                tvInfo.setText(getString(
+                                        R.string.cultivo_info,
+                                        cultivo.getNombre(),
+                                        cultivo.getFechaInicio(),
+                                        cultivo.getUbicacion(),
+                                        cultivo.getPrecioCaja()
+                                ));
+
                                 layoutCultivos.addView(itemView);
                             }
 
@@ -138,8 +147,9 @@ public class CultivosActivity extends AppCompatActivity {
                 String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
                 String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
                 String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
+                double precioCaja = cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"));
 
-                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion);
+                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion, precioCaja);
                 cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
             } while (cursor.moveToNext());
         }
@@ -167,7 +177,7 @@ public class CultivosActivity extends AppCompatActivity {
             Button btnEditar = itemView.findViewById(R.id.btnEditar);
             Button btnEliminar = itemView.findViewById(R.id.btnEliminar);
 
-            tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion()));
+            tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion(), cultivo.getPrecioCaja()));
             int index = i;
 
             btnEliminar.setOnClickListener(v -> {
@@ -199,6 +209,7 @@ public class CultivosActivity extends AppCompatActivity {
                     valores.put("categoria", cultivoEditado.getCategoria());
                     valores.put("fecha_inicio", cultivoEditado.getFechaInicio());
                     valores.put("ubicacion", cultivoEditado.getUbicacion());
+                    valores.put("precio_caja", cultivoEditado.getPrecioCaja());
 
                     int resultado = db.update("cultivos", valores, "nombre = ? AND categoria = ? AND fecha_inicio = ?",
                             new String[]{cultivo.getNombre(), cultivo.getCategoria(), cultivo.getFechaInicio()});

@@ -33,6 +33,7 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
         holder.categoria.setText(cultivo.getCategoria());
         holder.fechaInicio.setText(cultivo.getFechaInicio());
         holder.ubicacion.setText(cultivo.getUbicacion());
+        holder.precioCaja.setText("Precio/caja: $" + cultivo.getPrecioCaja());
 
         holder.checkbox.setOnCheckedChangeListener(null);
         holder.checkbox.setChecked(cultivosSeleccionados.contains(cultivo));
@@ -55,7 +56,7 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
 
     public static class CultivoViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nombre, categoria, fechaInicio, ubicacion;
+        TextView nombre, categoria, fechaInicio, ubicacion, precioCaja;
         CheckBox checkbox;
 
         public CultivoViewHolder(View itemView) {
@@ -65,6 +66,7 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
             fechaInicio = itemView.findViewById(R.id.fechaInicioCultivo);
             ubicacion = itemView.findViewById(R.id.ubicacionCultivo);
             checkbox = itemView.findViewById(R.id.checkboxSelect);
+            precioCaja = itemView.findViewById(R.id.precioCajaCultivo);
         }
     }
 
