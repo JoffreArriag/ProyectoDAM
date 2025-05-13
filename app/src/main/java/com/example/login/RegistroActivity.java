@@ -52,7 +52,6 @@ public class RegistroActivity extends AppCompatActivity {
         btnCancelar = findViewById(R.id.btnCancelar);
         btnMostrarDatos = findViewById(R.id.btnMostrarDatos);
 
-
         String[] nacionalidades = {"Seleccione nacionalidad", "Ecuatoriana", "Colombiana", "Peruana", "Venezolana"};
         ArrayAdapter<String> adapterNacionalidad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, nacionalidades);
         spinnerNacionalidad.setAdapter(adapterNacionalidad);
@@ -60,7 +59,6 @@ public class RegistroActivity extends AppCompatActivity {
         String[] generos = {"Seleccione género", "Masculino", "Femenino", "Otro"};
         ArrayAdapter<String> adapterGenero = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, generos);
         spinnerGenero.setAdapter(adapterGenero);
-
 
         btnSeleccionarFecha.setOnClickListener(view -> {
             Calendar calendario = Calendar.getInstance();
@@ -108,19 +106,15 @@ public class RegistroActivity extends AppCompatActivity {
                 return;
             }
             //Guardar en BD
-            if(guardarBD(vCedula, vNombres,vApellidos,vEdad,vNacionalidad,vGenero,vEstadoCivil,vFechaNacimiento,vNivelIngles )){
+            if(guardarBD(vCedula, vNombres, vApellidos, vEdad, vNacionalidad, vGenero, vEstadoCivil, vFechaNacimiento, vNivelIngles)){
                 Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(this, "Datos NO registrados ", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Datos NO registrados", Toast.LENGTH_LONG).show();
             }
-
-
         });
-
-
-
-
     }
+
+    // Método para borrar los campos
     public void borrarCampos(View v) {
         cedula.setText("");
         nombres.setText("");
@@ -132,74 +126,26 @@ public class RegistroActivity extends AppCompatActivity {
         spinnerNacionalidad.setSelection(0);
         spinnerGenero.setSelection(0);
     }
+
+    // Método para cancelar el registro
     public void cancelarRegistro(View v) {
         Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void mostrarDatosBD(View v){
+    // Método para mostrar los datos
+    public void mostrarDatosBD(View v) {
         Intent intent = new Intent(RegistroActivity.this, ConsultarUsuario.class);
         startActivity(intent);
-
     }
-
-//    public void mostrarDatosModal(View v) {
-//        EditText inputBusqueda = new EditText(RegistroActivity.this);
-//        inputBusqueda.setHint("Ingrese cédula o nombre");
-//
-//        new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-//                .setTitle("Buscar Usuario")
-//                .setView(inputBusqueda)
-//                .setPositiveButton("Buscar", (dialog, which) -> {
-//                    String criterio = inputBusqueda.getText().toString().trim();
-//
-//                    if (criterio.isEmpty()) {
-//                        Toast.makeText(RegistroActivity.this, "Debe ingresar cédula o nombre", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//
-//                    SQLiteDatabase db = dbHelper.getReadableDatabase();
-//                    String query = "SELECT * FROM usuarios WHERE cedula = ? OR nombres LIKE ?";
-//                    try (Cursor data = db.rawQuery(query, new String[]{criterio, "%" + criterio + "%"})) {
-//                        if (data.moveToFirst()) {
-//                            String mensaje = "Cédula: " + data.getString(0) + "\n" +
-//                                    "Nombres: " + data.getString(1) + "\n" +
-//                                    "Apellidos: " + data.getString(2) + "\n" +
-//                                    "Edad: " + data.getString(3) + "\n" +
-//                                    "Nacionalidad: " + data.getString(4) + "\n" +
-//                                    "Género: " + data.getString(5) + "\n" +
-//                                    "Estado Civil: " + data.getString(6) + "\n" +
-//                                    "Fecha Nacimiento: " + data.getString(7) + "\n" +
-//                                    "Nivel Inglés: " + data.getFloat(8);
-//
-//                            new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-//                                    .setTitle("Datos encontrados")
-//                                    .setMessage(mensaje)
-//                                    .setPositiveButton("Cerrar", null)
-//                                    .show();
-//                        } else {
-//                            new androidx.appcompat.app.AlertDialog.Builder(RegistroActivity.this)
-//                                    .setTitle("Sin resultados")
-//                                    .setMessage("No existen datos con esa cédula o nombre.")
-//                                    .setPositiveButton("Cerrar", null)
-//                                    .show();
-//                        }
-//                    } catch (Exception e) {
-//                        Toast.makeText(RegistroActivity.this, "Error en la búsqueda", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .setNegativeButton("Cancelar", null)
-//                .show();
-//    }
-
 
     public boolean guardarBD(String cedula, String nombres, String apellidos,
                              String edad, String nacionalidad, String genero, String estadoCivil,
                              String fechaNacimiento, float ratingIngles) {
         BDOpenHelper dbAgricola = new BDOpenHelper(this);
         final SQLiteDatabase dbAgricolaEdit = dbAgricola.getWritableDatabase();
-        if(dbAgricolaEdit != null){
+        if (dbAgricolaEdit != null) {
             ContentValues valores = new ContentValues();
             valores.put("cedula", cedula);
             valores.put("nombres", nombres);
@@ -212,10 +158,8 @@ public class RegistroActivity extends AppCompatActivity {
             valores.put("ratingIngles", ratingIngles);
             dbAgricolaEdit.insert("usuario", null, valores);
             return true;
-        }else{
+        } else {
             return false;
         }
-
     }
-
 }

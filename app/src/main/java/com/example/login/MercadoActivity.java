@@ -36,13 +36,28 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         Button btnCrearVenta = findViewById(R.id.btnCrearVenta);
-        btnCrearVenta.setOnClickListener(v -> mostrarDialogoVenta());
+        btnCrearVenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mostrarDialogoVenta();
+            }
+        });
 
         Button btnConsultarVenta = findViewById(R.id.btnConsultarVenta);
-        btnConsultarVenta.setOnClickListener(v -> startActivity(new Intent(this, ConsultVentaActivity.class)));
+        btnConsultarVenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MercadoActivity.this, ConsultVentaActivity.class));
+            }
+        });
 
         ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> startActivity(new Intent(MercadoActivity.this, HomeActivity.class)));
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MercadoActivity.this, HomeActivity.class));
+            }
+        });
     }
 
     private List<Cultivo> cargarCultivosDesdeBD() {
@@ -85,14 +100,14 @@ public class MercadoActivity extends AppCompatActivity {
         Button btnGenerar = dialogView.findViewById(R.id.btnGenerarVenta);
 
         StringBuilder nombres = new StringBuilder();
-        // Definir total como una variable final
+
         final double[] total = {0.0};
 
-        // Calcular el total de la venta y listar los productos seleccionados
+
         for (Cultivo c : seleccionados) {
             nombres.append("- ").append(c.getNombre())
                     .append(" ($").append(String.format("%.2f", c.getPrecioCaja())).append(")\n");
-            total[0] += c.getPrecioCaja(); // Usamos el array para poder modificar su valor
+            total[0] += c.getPrecioCaja();
         }
 
         listaProductos.setText(nombres.toString());
@@ -100,32 +115,35 @@ public class MercadoActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        btnGenerar.setOnClickListener(v -> {
-            EditText etNombre = dialogView.findViewById(R.id.etNombreCliente);
-            EditText etCedula = dialogView.findViewById(R.id.etCedulaCliente);
+        btnGenerar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText etNombre = dialogView.findViewById(R.id.etNombreCliente);
+                EditText etCedula = dialogView.findViewById(R.id.etCedulaCliente);
 
-            String nombre = etNombre.getText().toString().trim();
-            String cedula = etCedula.getText().toString().trim();
+                String nombre = etNombre.getText().toString().trim();
+                String cedula = etCedula.getText().toString().trim();
 
-            if (nombre.isEmpty() || cedula.isEmpty()) {
-                Toast.makeText(this, "Debe ingresar nombre y cédula", Toast.LENGTH_SHORT).show();
-                return;
+                if (nombre.isEmpty() || cedula.isEmpty()) {
+                    Toast.makeText(MercadoActivity.this, "Debe ingresar nombre y cédula", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                StringBuilder productos = new StringBuilder();
+                for (Cultivo c : seleccionados) {
+                    productos.append(c.getNombre()).append("; ");
+                }
+
+
+                SQLiteDatabase db = new BDOpenHelper(MercadoActivity.this).getWritableDatabase();
+                db.execSQL("INSERT INTO ventas (cedula, nombre, productos, total) VALUES (?, ?, ?, ?)",
+                        new Object[]{cedula, nombre, productos.toString(), total[0]});
+                db.close();
+
+                Toast.makeText(MercadoActivity.this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
             }
-
-            // Concatenar los productos seleccionados
-            StringBuilder productos = new StringBuilder();
-            for (Cultivo c : seleccionados) {
-                productos.append(c.getNombre()).append("; ");
-            }
-
-            // Inserción de la venta en la base de datos (incluyendo el total)
-            SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
-            db.execSQL("INSERT INTO ventas (cedula, nombre, productos, total) VALUES (?, ?, ?, ?)",
-                    new Object[]{cedula, nombre, productos.toString(), total[0]});
-            db.close();
-
-            Toast.makeText(this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
-            dialog.dismiss();
         });
 
         dialog.show();

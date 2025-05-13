@@ -4,9 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import androidx.recyclerview.widget.RecyclerView;
-import java.util.List;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapter.AgricultorViewHolder> {
 
@@ -32,7 +34,7 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
     @Override
     public void onBindViewHolder(AgricultorViewHolder holder, int position) {
         Agricultor agricultor = listaAgricultores.get(position);
-        holder.bind(agricultor, position);
+        holder.bind(agricultor);
     }
 
     @Override
@@ -40,10 +42,11 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
         return listaAgricultores.size();
     }
 
-    public class AgricultorViewHolder extends RecyclerView.ViewHolder {
+    public class AgricultorViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textNombre, textEdad, textZona, textExperiencia;
         ImageView imageAgricultor, btnEditar, btnEliminar;
+        Agricultor agricultorActual;
 
         public AgricultorViewHolder(View itemView) {
             super(itemView);
@@ -54,18 +57,37 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
             textExperiencia = itemView.findViewById(R.id.textExperiencia);
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
+
+            btnEditar.setOnClickListener(this::editarAgricultor);
+            btnEliminar.setOnClickListener(this::eliminarAgricultor);
         }
 
-        public void bind(Agricultor agricultor, int position) {
+        public void bind(Agricultor agricultor) {
+            agricultorActual = agricultor;
             textNombre.setText(agricultor.getNombre());
             textEdad.setText(String.valueOf(agricultor.getEdad()));
             textZona.setText(agricultor.getZona());
             textExperiencia.setText(agricultor.getExperiencia());
             imageAgricultor.setImageResource(R.drawable.ic_person);
+        }
 
-            btnEditar.setOnClickListener(v -> accionListener.onEditar(agricultor, position));
-            btnEliminar.setOnClickListener(v -> accionListener.onEliminar(position));
+        public void editarAgricultor(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION && agricultorActual != null) {
+                accionListener.onEditar(agricultorActual, position);
+            }
+        }
+
+        public void eliminarAgricultor(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                accionListener.onEliminar(position);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }
-

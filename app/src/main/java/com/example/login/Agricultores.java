@@ -33,11 +33,7 @@ public class Agricultores extends AppCompatActivity {
         cargarAgricultoresDesdeBD();
 
         ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Agricultores.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        backButton.setOnClickListener(this::irAHome);
 
         recyclerView = findViewById(R.id.recyclerAgricultores);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -86,7 +82,7 @@ public class Agricultores extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         Button btnAgregarAgricultor = findViewById(R.id.btnAgregarAgricultor);
-        btnAgregarAgricultor.setOnClickListener(v -> showAgregarAgricultorDialog());
+        btnAgregarAgricultor.setOnClickListener(this::agregarAgricultor);
     }
 
     private void cargarAgricultoresDesdeBD() {
@@ -106,7 +102,13 @@ public class Agricultores extends AppCompatActivity {
         cursor.close();
     }
 
-    private void showAgregarAgricultorDialog() {
+    public void irAHome(View v) {
+        Intent intent = new Intent(Agricultores.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void agregarAgricultor(View v) {
         AgregarAgricultorDialog dialog = new AgregarAgricultorDialog();
         dialog.setAgricultorListener(new AgregarAgricultorDialog.AgricultorListener() {
             @Override

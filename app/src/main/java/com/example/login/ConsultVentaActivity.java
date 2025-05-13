@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,7 +42,7 @@ public class ConsultVentaActivity extends AppCompatActivity {
         btnEditar = findViewById(R.id.btnEditar);
 
         ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> startActivity(new Intent(this, HomeActivity.class)));
+        backButton.setOnClickListener(this::onBackButtonClick);
 
         etBuscarVenta.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -52,27 +53,34 @@ public class ConsultVentaActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
-        btnEliminar.setOnClickListener(v -> {
-            if (cedulaActual != null) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.execSQL("DELETE FROM ventas WHERE cedula = ?", new Object[]{cedulaActual});
-                db.close();
-                Toast.makeText(this, "Venta eliminada", Toast.LENGTH_SHORT).show();
-                limpiarCampos();
-            } else {
-                Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
-            }
-        });
+        btnEliminar.setOnClickListener(this::onEliminarButtonClick);
+        btnEditar.setOnClickListener(this::onEditarButtonClick);
+    }
 
-        btnEditar.setOnClickListener(v -> {
-            if (cedulaActual != null) {
-                String nombreActual = txtNombre.getText().toString().replace("Nombre: ", "").trim();
-                String productosActuales = txtProductos.getText().toString().replace("Productos: ", "").trim();
-                mostrarDialogoEditar(nombreActual, productosActuales);
-            } else {
-                Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void onBackButtonClick(View v) {
+        startActivity(new Intent(this, HomeActivity.class));
+    }
+
+    private void onEliminarButtonClick(View v) {
+        if (cedulaActual != null) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db.execSQL("DELETE FROM ventas WHERE cedula = ?", new Object[]{cedulaActual});
+            db.close();
+            Toast.makeText(this, "Venta eliminada", Toast.LENGTH_SHORT).show();
+            limpiarCampos();
+        } else {
+            Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onEditarButtonClick(View v) {
+        if (cedulaActual != null) {
+            String nombreActual = txtNombre.getText().toString().replace("Nombre: ", "").trim();
+            String productosActuales = txtProductos.getText().toString().replace("Productos: ", "").trim();
+            mostrarDialogoEditar(nombreActual, productosActuales);
+        } else {
+            Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void buscarVenta(String cedula) {
@@ -248,7 +256,4 @@ public class ConsultVentaActivity extends AppCompatActivity {
 
         builder.show();
     }
-
-
-
 }

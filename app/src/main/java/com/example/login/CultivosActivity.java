@@ -51,11 +51,11 @@ public class CultivosActivity extends AppCompatActivity {
             dialog.show(getSupportFragmentManager(), "AgregarCultivo");
         });
 
-        btnCereales.setOnClickListener(v -> mostrarCultivosPorCategoria("Cereales"));
-        btnLeguminosas.setOnClickListener(v -> mostrarCultivosPorCategoria("Leguminosas"));
-        btnIndustriales.setOnClickListener(v -> mostrarCultivosPorCategoria("Industriales"));
-        btnHortalizas.setOnClickListener(v -> mostrarCultivosPorCategoria("Hortalizas"));
-        btnFrutales.setOnClickListener(v -> mostrarCultivosPorCategoria("Frutales"));
+        btnCereales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Cereales"));
+        btnLeguminosas.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Leguminosas"));
+        btnIndustriales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Industriales"));
+        btnHortalizas.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Hortalizas"));
+        btnFrutales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Frutales"));
 
         Button btnBuscarCultivo = findViewById(R.id.btnBuscarCultivo);
         btnBuscarCultivo.setOnClickListener(view -> {
@@ -142,7 +142,7 @@ public class CultivosActivity extends AppCompatActivity {
         db.close();
     }
 
-    private void mostrarCultivosPorCategoria(String categoria) {
+    private void mostrarCultivosPorCategoria(View view, String categoria) {
         List<Cultivo> cultivos = cultivosPorCategoria.get(categoria);
         if (cultivos == null || cultivos.isEmpty()) {
             Toast.makeText(this, "No hay cultivos en " + categoria, Toast.LENGTH_SHORT).show();
@@ -150,8 +150,8 @@ public class CultivosActivity extends AppCompatActivity {
         }
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.dialog_mostrar_cultivos, null);
-        LinearLayout layoutCultivos = view.findViewById(R.id.layoutCultivos);
+        View dialogView = inflater.inflate(R.layout.dialog_mostrar_cultivos, null);
+        LinearLayout layoutCultivos = dialogView.findViewById(R.id.layoutCultivos);
         layoutCultivos.removeAllViews();
 
         for (int i = 0; i < cultivos.size(); i++) {
@@ -178,7 +178,7 @@ public class CultivosActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al eliminar cultivo", Toast.LENGTH_SHORT).show();
                 }
 
-                mostrarCultivosPorCategoria(categoria);
+                mostrarCultivosPorCategoria(view, categoria);
             });
 
             btnEditar.setOnClickListener(v -> {
@@ -215,7 +215,7 @@ public class CultivosActivity extends AppCompatActivity {
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Cultivos en " + categoria)
-                .setView(view)
+                .setView(dialogView)
                 .setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss())
                 .show();
     }

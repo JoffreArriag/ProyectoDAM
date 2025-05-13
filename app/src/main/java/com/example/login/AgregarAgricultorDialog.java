@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-
 public class AgregarAgricultorDialog extends DialogFragment {
 
     public interface AgricultorListener {
@@ -25,6 +24,12 @@ public class AgregarAgricultorDialog extends DialogFragment {
     private AgricultorListener listener;
     private Agricultor agricultorExistente;
     private int editarPos = -1;
+
+
+    private EditText editNombre;
+    private EditText editEdad;
+    private EditText editZona;
+    private Spinner spinnerExperiencia;
 
     public void setAgricultorListener(AgricultorListener listener) {
         this.listener = listener;
@@ -42,10 +47,10 @@ public class AgregarAgricultorDialog extends DialogFragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_agricultor, null);
         builder.setView(view);
 
-        EditText editNombre = view.findViewById(R.id.editNombre);
-        EditText editEdad = view.findViewById(R.id.editEdad);
-        EditText editZona = view.findViewById(R.id.editZona);
-        Spinner spinnerExperiencia = view.findViewById(R.id.spinnerExperiencia);
+        editNombre = view.findViewById(R.id.editNombre);
+        editEdad = view.findViewById(R.id.editEdad);
+        editZona = view.findViewById(R.id.editZona);
+        spinnerExperiencia = view.findViewById(R.id.spinnerExperiencia);
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnVolver = view.findViewById(R.id.btnVolver);
 
@@ -61,34 +66,38 @@ public class AgregarAgricultorDialog extends DialogFragment {
             spinnerExperiencia.setSelection(adapter.getPosition(agricultorExistente.getExperiencia()));
         }
 
-        btnGuardar.setOnClickListener(v -> {
-            String nombre = editNombre.getText().toString().trim();
-            String edadStr = editEdad.getText().toString().trim();
-            String zona = editZona.getText().toString().trim();
-            String experiencia = spinnerExperiencia.getSelectedItem().toString();
-
-            if (nombre.isEmpty() || edadStr.isEmpty() || zona.isEmpty()) {
-                Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            try {
-                int edad = Integer.parseInt(edadStr);
-                Agricultor nuevo = new Agricultor(nombre, edad, zona, experiencia);
-                if (editarPos >= 0 && listener != null) {
-                    listener.onAgricultorEditado(nuevo, editarPos);
-                } else if (listener != null) {
-                    listener.onAgricultorAgregado(nuevo);
-                }
-                dismiss();
-            } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Edad debe ser numérica", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btnVolver.setOnClickListener(v -> dismiss());
+        btnGuardar.setOnClickListener(this::guardarAgricultor);
+        btnVolver.setOnClickListener(this::volver);
 
         return builder.create();
     }
-}
 
+    public void guardarAgricultor(View v) {
+        String nombre = editNombre.getText().toString().trim();
+        String edadStr = editEdad.getText().toString().trim();
+        String zona = editZona.getText().toString().trim();
+        String experiencia = spinnerExperiencia.getSelectedItem().toString();
+
+        if (nombre.isEmpty() || edadStr.isEmpty() || zona.isEmpty()) {
+            Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            int edad = Integer.parseInt(edadStr);
+            Agricultor nuevo = new Agricultor(nombre, edad, zona, experiencia);
+            if (editarPos >= 0 && listener != null) {
+                listener.onAgricultorEditado(nuevo, editarPos);
+            } else if (listener != null) {
+                listener.onAgricultorAgregado(nuevo);
+            }
+            dismiss();
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Edad debe ser numérica", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void volver(View v) {
+        dismiss();
+    }
+}

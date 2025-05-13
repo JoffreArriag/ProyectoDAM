@@ -40,7 +40,6 @@ public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder
             textDescripcion.setText(insumo.getDescripcion());
             textCantidad.setText("Cantidad: " + insumo.getCantidad());
 
-
             int imagenId = R.drawable.ic_inventar;
             switch (insumo.getNombre()) {
                 case "Fertilizantes":
@@ -63,8 +62,20 @@ public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder
             ImageView icono = itemView.findViewById(R.id.imageInsumo);
             icono.setImageResource(imagenId);
 
-            btnEditar.setOnClickListener(v -> listener.onEditar(insumo, position));
-            btnEliminar.setOnClickListener(v -> listener.onEliminar(position));
+
+            btnEditar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onEditar(insumo, position);
+                }
+            });
+
+            btnEliminar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onEliminar(position);
+                }
+            });
         }
     }
 

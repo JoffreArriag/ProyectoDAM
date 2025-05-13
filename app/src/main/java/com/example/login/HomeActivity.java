@@ -46,73 +46,95 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Acción para mostrar el modal de información del equipo
-        View.OnClickListener mostrarModalAcercaDe = v -> {
-            LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
-            View modalView = inflater.inflate(R.layout.activity_acerca_de, null);
+        View.OnClickListener mostrarModalAcercaDe = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
+                View modalView = inflater.inflate(R.layout.activity_acerca_de, null);
 
-            AlertDialog dialog = new AlertDialog.Builder(HomeActivity.this)
-                    .setView(modalView)
-                    .create();
+                AlertDialog dialog = new AlertDialog.Builder(HomeActivity.this)
+                        .setView(modalView)
+                        .create();
 
-            Button btnRegresar = modalView.findViewById(R.id.btnRegresar);
-            btnRegresar.setOnClickListener(btn -> dialog.dismiss());
+                Button btnRegresar = modalView.findViewById(R.id.btnRegresar);
+                btnRegresar.setOnClickListener(btn -> dialog.dismiss());
 
-            dialog.show();
+                dialog.show();
+            }
         };
 
         ic_info.setOnClickListener(mostrarModalAcercaDe);
 
         // Acción para eliminar las preferencias
-        deleteIcon.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-            builder.setMessage("¿Estás seguro de que deseas eliminar esta preferencia?")
-                    .setCancelable(false)
-                    .setPositiveButton("Sí", (dialog, id) -> {
-                        SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.remove("usuario");
-                        editor.remove("contraseña");
-                        editor.remove("mantenerSesion");
-                        editor.apply();
+        deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setMessage("¿Estás seguro de que deseas eliminar esta preferencia?")
+                        .setCancelable(false)
+                        .setPositiveButton("Sí", (dialog, id) -> {
+                            SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.remove("usuario");
+                            editor.remove("contraseña");
+                            editor.remove("mantenerSesion");
+                            editor.apply();
 
-                        Toast.makeText(HomeActivity.this, "Preferencias eliminadas", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("No", (dialog, id) -> {
-                        dialog.dismiss();
-                    });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                            Toast.makeText(HomeActivity.this, "Preferencias eliminadas", Toast.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("No", (dialog, id) -> {
+                            dialog.dismiss();
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
         });
 
-
-
         // Acción para logout
-        logoutIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+        logoutIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
         });
 
         // Acciones de las tarjetas
-        cardCultivos.setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, CultivosActivity.class));
+        cardCultivos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, CultivosActivity.class));
+            }
         });
 
-        cardAgricultores.setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, Agricultores.class));
+        cardAgricultores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, Agricultores.class));
+            }
         });
 
-        cardInventario.setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, InventarioActivity.class));
+        cardInventario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, InventarioActivity.class));
+            }
         });
 
-        cardRiego.setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, TareaRiegoFertilizacion.class));
+        cardRiego.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, TareaRiegoFertilizacion.class));
+            }
         });
 
-        cardMercado.setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, MercadoActivity.class));
+        cardMercado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, MercadoActivity.class));
+            }
         });
     }
 }

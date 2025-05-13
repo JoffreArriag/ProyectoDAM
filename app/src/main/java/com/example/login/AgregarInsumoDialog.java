@@ -21,6 +21,9 @@ public class AgregarInsumoDialog extends DialogFragment {
     private InsumoAgricola insumoExistente;
     private int editarPos = -1;
 
+    private Spinner spinnerNombreInsumo;
+    private EditText editDescripcion, editCantidad;
+
     public void setInsumoListener(InsumoListener listener) {
         this.listener = listener;
     }
@@ -36,12 +39,11 @@ public class AgregarInsumoDialog extends DialogFragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_insumo, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()).setView(view);
 
-        Spinner spinnerNombreInsumo = view.findViewById(R.id.spinnerNombreInsumo);
-        EditText editDescripcion = view.findViewById(R.id.editDescripcion);
-        EditText editCantidad = view.findViewById(R.id.editCantidad);
+        spinnerNombreInsumo = view.findViewById(R.id.spinnerNombreInsumo);
+        editDescripcion = view.findViewById(R.id.editDescripcion);
+        editCantidad = view.findViewById(R.id.editCantidad);
         Button btnGuardar = view.findViewById(R.id.btnGuardarInsumo);
         Button btnCancelar = view.findViewById(R.id.btnCancelarInsumo);
-
 
         String[] nombresInsumo = {
                 "Fertilizantes",
@@ -53,40 +55,44 @@ public class AgregarInsumoDialog extends DialogFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, nombresInsumo);
         spinnerNombreInsumo.setAdapter(adapter);
 
-
         if (insumoExistente != null) {
             spinnerNombreInsumo.setSelection(adapter.getPosition(insumoExistente.getNombre()));
             editDescripcion.setText(insumoExistente.getDescripcion());
             editCantidad.setText(String.valueOf(insumoExistente.getCantidad()));
         }
 
-        btnGuardar.setOnClickListener(v -> {
-            String nombre = spinnerNombreInsumo.getSelectedItem().toString();
-            String descripcion = editDescripcion.getText().toString().trim();
-            String cantidadStr = editCantidad.getText().toString().trim();
-
-            if (descripcion.isEmpty() || cantidadStr.isEmpty()) {
-                Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            try {
-                int cantidad = Integer.parseInt(cantidadStr);
-                InsumoAgricola insumo = new InsumoAgricola(nombre, descripcion, cantidad);
-
-                if (editarPos >= 0) {
-                    listener.onInsumoEditado(insumo, editarPos);
-                } else {
-                    listener.onInsumoAgregado(insumo);
-                }
-                dismiss();
-            } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Cantidad debe ser numérica", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        btnCancelar.setOnClickListener(v -> dismiss());
+        btnGuardar.setOnClickListener(this::guardarInsumo);
+        btnCancelar.setOnClickListener(this::cancelar);
 
         return builder.create();
+    }
+
+    public void guardarInsumo(View v) {
+        String nombre = spinnerNombreInsumo.getSelectedItem().toString();
+        String descripcion = editDescripcion.getText().toString().trim();
+        String cantidadStr = editCantidad.getText().toString().trim();
+
+        if (descripcion.isEmpty() || cantidadStr.isEmpty()) {
+            Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            int cantidad = Integer.parseInt(cantidadStr);
+            InsumoAgricola insumo = new InsumoAgricola(nombre, descripcion, cantidad);
+
+            if (editarPos >= 0) {
+                listener.onInsumoEditado(insumo, editarPos);
+            } else {
+                listener.onInsumoAgregado(insumo);
+            }
+            dismiss();
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Cantidad debe ser numérica", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void cancelar(View v) {
+        dismiss();
     }
 }

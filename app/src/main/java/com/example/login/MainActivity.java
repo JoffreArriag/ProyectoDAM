@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,10 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-
         boolean mantenerSesion = sharedPreferences.getBoolean(KEY_MANTENER_SESION, false);
         checkBoxMantenerSesion.setChecked(mantenerSesion);
-
 
         String savedUsuario = sharedPreferences.getString(KEY_USUARIO, null);
         String savedContraseña = sharedPreferences.getString(KEY_CONTRASEÑA, null);
@@ -54,73 +53,88 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        loginbtn.setOnClickListener(v -> {
-            String user = usuario.getText().toString();
-            String pass = contraseña.getText().toString();
+        loginbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String user = usuario.getText().toString();
+                String pass = contraseña.getText().toString();
 
-            if (user.equals("admin") && pass.equals("admin")) {
-                Toast.makeText(MainActivity.this, "Acceso Concedido", Toast.LENGTH_SHORT).show();
+                if (user.equals("admin") && pass.equals("admin")) {
+                    Toast.makeText(MainActivity.this, "Acceso Concedido", Toast.LENGTH_SHORT).show();
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                if (checkBoxMantenerSesion.isChecked()) {
-                    editor.putString(KEY_USUARIO, user);
-                    editor.putString(KEY_CONTRASEÑA, pass);
-                    editor.putBoolean(KEY_MANTENER_SESION, true);
+                    if (checkBoxMantenerSesion.isChecked()) {
+                        editor.putString(KEY_USUARIO, user);
+                        editor.putString(KEY_CONTRASEÑA, pass);
+                        editor.putBoolean(KEY_MANTENER_SESION, true);
+                    } else {
+                        editor.clear();
+                    }
+
+                    editor.apply();
+
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    intent.putExtra("nombreUsuario", user);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    editor.clear();
+                    Toast.makeText(MainActivity.this, "Datos incorrectos", Toast.LENGTH_SHORT).show();
                 }
-
-                editor.apply();
-
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                intent.putExtra("nombreUsuario", user);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(MainActivity.this, "Datos incorrectos", Toast.LENGTH_SHORT).show();
             }
         });
 
-        olvidemicontraseña.setOnClickListener(v -> {
-            final EditText inputEmail = new EditText(MainActivity.this);
-            inputEmail.setHint("Ingresa tu correo");
+        olvidemicontraseña.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText inputEmail = new EditText(MainActivity.this);
+                inputEmail.setHint("Ingresa tu correo");
 
-            new android.app.AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Recuperar contraseña")
-                    .setMessage("Te enviaremos un correo para recuperar tu contraseña")
-                    .setView(inputEmail)
-                    .setPositiveButton("Enviar", (dialog, which) -> {
-                        String correo = inputEmail.getText().toString();
-                        if (!correo.isEmpty()) {
-                            Toast.makeText(MainActivity.this, "Contraseña enviada a: " + correo, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Debes ingresar un correo", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
+                new android.app.AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Recuperar contraseña")
+                        .setMessage("Te enviaremos un correo para recuperar tu contraseña")
+                        .setView(inputEmail)
+                        .setPositiveButton("Enviar", (dialog, which) -> {
+                            String correo = inputEmail.getText().toString();
+                            if (!correo.isEmpty()) {
+                                Toast.makeText(MainActivity.this, "Contraseña enviada a: " + correo, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Debes ingresar un correo", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+            }
         });
 
-        googleBtn.setOnClickListener(v -> {
-                Toast.makeText(this, "Iniciando sesión con Google...", Toast.LENGTH_SHORT).show();
+        googleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Iniciando sesión con Google...", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 intent.putExtra("nombreUsuario", "Xavier");
                 startActivity(intent);
                 finish();
-                });
-
-        facebookBtn.setOnClickListener(v -> {
-            Toast.makeText(this, "Iniciando sesión con Facebook...", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            intent.putExtra("nombreUsuario", "Carlos");
-            startActivity(intent);
-            finish();
+            }
         });
 
-        btnCrearCuenta.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
-            startActivity(intent);
+        facebookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Iniciando sesión con Facebook...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                intent.putExtra("nombreUsuario", "Carlos");
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnCrearCuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegistroActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }
