@@ -81,43 +81,49 @@ public class AgregarCultivoDialog extends DialogFragment {
         });
 
         btnGuardar.setOnClickListener(v -> {
-            String nombre = etNombre.getText().toString();
-            String fecha = etFecha.getText().toString();
-            String ubicacion = etUbicacion.getText().toString();
+            String nombre = etNombre.getText().toString().trim();
+            String fecha = etFecha.getText().toString().trim();
+            String ubicacion = etUbicacion.getText().toString().trim();
             String categoria = spinnerCategoria.getSelectedItem().toString();
-            String precioStr = etPrecioCaja.getText().toString();
+            String precioStr = etPrecioCaja.getText().toString().trim();
 
             if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty() && !precioStr.isEmpty()) {
                 double precioCaja = Double.parseDouble(precioStr);
-                Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion, precioCaja);
-
                 SQLiteDatabase db = new BDOpenHelper(getContext()).getWritableDatabase();
-
-                Cursor cursor = db.rawQuery(
-                        "SELECT * FROM cultivos WHERE nombre = ? AND fecha_inicio = ?",
-                        new String[]{nombre, fecha}
-                );
-
-                if (cursor.getCount() > 0) {
-                    cursor.close();
-                    db.close();
-                    Toast.makeText(getContext(), "Ya existe un cultivo con ese nombre y fecha", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 ContentValues valores = new ContentValues();
+
                 valores.put("nombre", nombre);
                 valores.put("categoria", categoria);
                 valores.put("fecha_inicio", fecha);
                 valores.put("ubicacion", ubicacion);
                 valores.put("precio_caja", precioCaja);
 
-                long resultado = db.insert("cultivos", null, valores);
-                cursor.close();
+                long resultado;
+                if (cultivoExistente != null) {
+                    // ACTUALIZACIÓN
+                    resultado = db.update("cultivos", valores, "nombre = ?", new String[]{cultivoExistente.getNombre()});
+                } else {
+                    // INSERCIÓN
+                    Cursor cursor = db.rawQuery(
+                            "SELECT * FROM cultivos WHERE nombre = ? AND fecha_inicio = ?",
+                            new String[]{nombre, fecha}
+                    );
+
+                    if (cursor.getCount() > 0) {
+                        cursor.close();
+                        db.close();
+                        Toast.makeText(getContext(), "Ya existe un cultivo con ese nombre y fecha", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    cursor.close();
+                    resultado = db.insert("cultivos", null, valores);
+                }
+
                 db.close();
 
                 if (resultado != -1) {
                     if (listener != null) {
+                        Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion, precioCaja);
                         listener.onCultivoAgregado(cultivo);
                     }
                     Toast.makeText(getContext(), "Cultivo guardado correctamente", Toast.LENGTH_SHORT).show();
@@ -130,6 +136,7 @@ public class AgregarCultivoDialog extends DialogFragment {
                 Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         btnVolver.setOnClickListener(v -> dismiss());
 

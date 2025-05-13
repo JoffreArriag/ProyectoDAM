@@ -75,58 +75,41 @@ public class CultivosActivity extends AppCompatActivity {
 
                         SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
                         Cursor cursor = db.rawQuery(
-                                "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ?",
+                                "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ? LIMIT 1",
                                 new String[]{"%" + criterio + "%", "%" + criterio + "%"}
                         );
 
-                        List<Cultivo> resultados = new ArrayList<>();
-
                         if (cursor.moveToFirst()) {
-                            do {
-                                Cultivo cultivo = new Cultivo(
-                                        cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
-                                        cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
-                                        cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
-                                        cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
-                                        cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
-                                );
+                            Cultivo cultivo = new Cultivo(
+                                    cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                                    cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
+                                    cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
+                                    cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
+                                    cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
+                            );
 
-                                resultados.add(cultivo);
-                            } while (cursor.moveToNext());
-                        }
+                            cursor.close();
+                            db.close();
 
-                        cursor.close();
-                        db.close();
-
-                        if (!resultados.isEmpty()) {
-                            LayoutInflater inflater = LayoutInflater.from(this);
-                            View viewResultado = inflater.inflate(R.layout.dialog_mostrar_cultivos, null);
-                            LinearLayout layoutCultivos = viewResultado.findViewById(R.id.layoutCultivos);
-                            layoutCultivos.removeAllViews();
-
-                            for (Cultivo cultivo : resultados) {
-                                View itemView = inflater.inflate(R.layout.item_cultivo, layoutCultivos, false);
-                                TextView tvInfo = itemView.findViewById(R.id.tvCultivoInfo);
-                                tvInfo.setText(getString(
-                                        R.string.cultivo_info,
-                                        cultivo.getNombre(),
-                                        cultivo.getFechaInicio(),
-                                        cultivo.getUbicacion(),
-                                        cultivo.getPrecioCaja()
-                                ));
-
-                                layoutCultivos.addView(itemView);
-                            }
+                            String mensaje = "Nombre: " + cultivo.getNombre()
+                                    + "\nCategoría: " + cultivo.getCategoria()
+                                    + "\nFecha inicio: " + cultivo.getFechaInicio()
+                                    + "\nUbicación: " + cultivo.getUbicacion()
+                                    + "\nPrecio por caja: $" + String.format("%.2f", cultivo.getPrecioCaja());
 
                             new androidx.appcompat.app.AlertDialog.Builder(this)
-                                    .setTitle("Resultados de búsqueda")
-                                    .setView(viewResultado)
-                                    .setPositiveButton("Cerrar", null)
+                                    .setTitle("Datos del Cultivo")
+                                    .setMessage(mensaje)
+                                    .setPositiveButton("Regresar", null)
                                     .show();
+
                         } else {
+                            cursor.close();
+                            db.close();
+
                             new androidx.appcompat.app.AlertDialog.Builder(this)
                                     .setTitle("Sin resultados")
-                                    .setMessage("No se encontraron cultivos con ese nombre o ubicación.")
+                                    .setMessage("No se encontró ningún cultivo con ese nombre o ubicación.")
                                     .setPositiveButton("Cerrar", null)
                                     .show();
                         }
@@ -135,6 +118,7 @@ public class CultivosActivity extends AppCompatActivity {
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
+
     }
 
     private void cargarCultivosDesdeBD() {

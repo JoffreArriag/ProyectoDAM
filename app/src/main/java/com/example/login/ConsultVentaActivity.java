@@ -223,9 +223,20 @@ public class ConsultVentaActivity extends AppCompatActivity {
 
             if (!nuevoNombre.isEmpty() && !productosSeleccionados.isEmpty() && cedulaActual != null) {
                 String nuevosProductos = String.join(";", productosSeleccionados);
+
+
+                double nuevoTotal = 0;
+                for (CheckBox cb : checkBoxes) {
+                    if (cb.isChecked()) {
+                        nuevoTotal += preciosMap.get(cb);
+                    }
+                }
+
                 SQLiteDatabase dbEdit = dbHelper.getWritableDatabase();
-                dbEdit.execSQL("UPDATE ventas SET nombre = ?, productos = ? WHERE cedula = ?", new Object[]{nuevoNombre, nuevosProductos, cedulaActual});
+                dbEdit.execSQL("UPDATE ventas SET nombre = ?, productos = ?, total = ? WHERE cedula = ?",
+                        new Object[]{nuevoNombre, nuevosProductos, nuevoTotal, cedulaActual});
                 dbEdit.close();
+
                 Toast.makeText(this, "Venta actualizada correctamente", Toast.LENGTH_SHORT).show();
                 buscarVenta(cedulaActual);
             } else {
