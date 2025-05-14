@@ -67,7 +67,7 @@ public class ConsultarUsuario extends AppCompatActivity {
         lblFechaNacimiento = findViewById(R.id.cons_lblFechaNacimiento);
         lblRatingIngles = findViewById(R.id.cons_lblRatingIngles);
 
-        // Inicializar EditTexts (los nuevos que añadiste en el XML)
+
         txtEditCedula = findViewById(R.id.cons_txtEditCedula);
         txtEditNombres = findViewById(R.id.cons_txtEditNombres);
         txtEditApellidos = findViewById(R.id.cons_txtEditApellidos);
@@ -81,7 +81,6 @@ public class ConsultarUsuario extends AppCompatActivity {
         // Inicializar el botón de editar
         btnEditar = findViewById(R.id.btnEditarUsuario);
 
-        // Inicialmente, los EditTexts deben estar ocultos (esto ya lo hiciste en el XML)
         // y el botón debe decir "Editar"
         modoEdicion = false;
         btnEditar.setText("Editar");
