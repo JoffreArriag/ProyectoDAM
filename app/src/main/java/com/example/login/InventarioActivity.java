@@ -28,19 +28,6 @@ public class InventarioActivity extends AppCompatActivity {
         dbHelper = new BDOpenHelper(this);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerInsumos);
-        Button btnAgregar = findViewById(R.id.btnAgregarInsumo);
-        ImageView backButton = findViewById(R.id.backButton);
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InventarioActivity.this, HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         cargarInsumosDesdeBD();
 
         adapter = new InsumoAdapter(listaInsumos, new InsumoAdapter.OnInsumoAccionListener() {
@@ -85,33 +72,6 @@ public class InventarioActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        btnAgregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AgregarInsumoDialog dialog = new AgregarInsumoDialog();
-                dialog.setInsumoListener(new AgregarInsumoDialog.InsumoListener() {
-                    @Override
-                    public void onInsumoAgregado(InsumoAgricola insumo) {
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        values.put("nombre", insumo.getNombre());
-                        values.put("descripcion", insumo.getDescripcion());
-                        values.put("cantidad", insumo.getCantidad());
-                        long id = db.insert("insumos", null, values);
-                        insumo.setId((int) id);
-
-                        listaInsumos.add(insumo);
-                        adapter.notifyItemInserted(listaInsumos.size() - 1);
-                        Toast.makeText(InventarioActivity.this, "Insumo agregado", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onInsumoEditado(InsumoAgricola insumo, int position) {}
-                });
-                dialog.show(getSupportFragmentManager(), "AgregarInsumo");
-            }
-        });
     }
 
     private void cargarInsumosDesdeBD() {
@@ -128,5 +88,37 @@ public class InventarioActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         cursor.close();
+    }
+
+
+    public void volverAInicio(View v) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+    public void agregarInsumo(View v) {
+        AgregarInsumoDialog dialog = new AgregarInsumoDialog();
+        dialog.setInsumoListener(new AgregarInsumoDialog.InsumoListener() {
+            @Override
+            public void onInsumoAgregado(InsumoAgricola insumo) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("nombre", insumo.getNombre());
+                values.put("descripcion", insumo.getDescripcion());
+                values.put("cantidad", insumo.getCantidad());
+                long id = db.insert("insumos", null, values);
+                insumo.setId((int) id);
+
+                listaInsumos.add(insumo);
+                adapter.notifyItemInserted(listaInsumos.size() - 1);
+                Toast.makeText(InventarioActivity.this, "Insumo agregado", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onInsumoEditado(InsumoAgricola insumo, int position) {}
+        });
+        dialog.show(getSupportFragmentManager(), "AgregarInsumo");
     }
 }

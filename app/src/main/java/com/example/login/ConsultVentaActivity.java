@@ -21,7 +21,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
 
     private EditText etBuscarVenta;
     private TextView txtNombre, txtCedula, txtProductos, txtTotal;
-    private Button btnEliminar, btnEditar;
     private BDOpenHelper dbHelper;
     private String cedulaActual;
 
@@ -38,9 +37,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
         txtProductos = findViewById(R.id.txtProductosSeleccionados);
         txtTotal = findViewById(R.id.txtTotalVenta);
 
-        btnEliminar = findViewById(R.id.btnEliminar);
-        btnEditar = findViewById(R.id.btnEditar);
-
         ImageView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(this::onBackButtonClick);
 
@@ -52,16 +48,15 @@ public class ConsultVentaActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
-
-        btnEliminar.setOnClickListener(this::onEliminarButtonClick);
-        btnEditar.setOnClickListener(this::onEditarButtonClick);
     }
 
-    private void onBackButtonClick(View v) {
+    // Este metodo debe ser público para que sea reconocido en el XML
+    public void onBackButtonClick(View v) {
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    private void onEliminarButtonClick(View v) {
+    // Este metodo debe ser público para que sea reconocido en el XML
+    public void onEliminarButtonClick(View v) {
         if (cedulaActual != null) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL("DELETE FROM ventas WHERE cedula = ?", new Object[]{cedulaActual});
@@ -73,7 +68,8 @@ public class ConsultVentaActivity extends AppCompatActivity {
         }
     }
 
-    private void onEditarButtonClick(View v) {
+    // Este metodo debe ser público para que sea reconocido en el XML
+    public void onEditarButtonClick(View v) {
         if (cedulaActual != null) {
             String nombreActual = txtNombre.getText().toString().replace("Nombre: ", "").trim();
             String productosActuales = txtProductos.getText().toString().replace("Productos: ", "").trim();
@@ -151,12 +147,10 @@ public class ConsultVentaActivity extends AppCompatActivity {
         lblProductos.setText("\nSelecciona los productos:");
         layout.addView(lblProductos);
 
-        // Contenedor de los checkboxes
         LinearLayout checkBoxContainer = new LinearLayout(this);
         checkBoxContainer.setOrientation(LinearLayout.VERTICAL);
         layout.addView(checkBoxContainer);
 
-        // Sección de Total dinámico
         TextView txtTotalDinamico = new TextView(this);
         txtTotalDinamico.setText("\nTotal: $0.00");
         layout.addView(txtTotalDinamico);
@@ -164,7 +158,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
         java.util.List<CheckBox> checkBoxes = new java.util.ArrayList<>();
         java.util.Map<CheckBox, Double> preciosMap = new java.util.HashMap<>();
 
-        // Leer productos de la BD
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT nombre, precio_caja FROM cultivos", null);
 
@@ -191,7 +184,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
             checkBoxes.add(checkBox);
             checkBoxContainer.addView(checkBox);
 
-            // Listener para actualizar el total cuando cambie la selección
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 double total = 0;
                 for (CheckBox cb : checkBoxes) {
@@ -206,7 +198,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
         cursor.close();
         db.close();
 
-        // Calcular total inicial
         double totalInicial = 0;
         for (CheckBox cb : checkBoxes) {
             if (cb.isChecked()) {
@@ -231,7 +222,6 @@ public class ConsultVentaActivity extends AppCompatActivity {
 
             if (!nuevoNombre.isEmpty() && !productosSeleccionados.isEmpty() && cedulaActual != null) {
                 String nuevosProductos = String.join(";", productosSeleccionados);
-
 
                 double nuevoTotal = 0;
                 for (CheckBox cb : checkBoxes) {

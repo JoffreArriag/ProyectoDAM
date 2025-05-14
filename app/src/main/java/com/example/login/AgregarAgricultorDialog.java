@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,7 +25,6 @@ public class AgregarAgricultorDialog extends DialogFragment {
     private AgricultorListener listener;
     private Agricultor agricultorExistente;
     private int editarPos = -1;
-
 
     private EditText editNombre;
     private EditText editEdad;
@@ -54,8 +54,12 @@ public class AgregarAgricultorDialog extends DialogFragment {
         Button btnGuardar = view.findViewById(R.id.btnGuardar);
         Button btnVolver = view.findViewById(R.id.btnVolver);
 
-        // Spinner setup
-        String[] opciones = {"Cuidado de cultivos", "Manejo de maquinaria", "Gestión de recursos agrícolas", "Venta y comercialización de productos"};
+        String[] opciones = {
+                "Cuidado de cultivos",
+                "Manejo de maquinaria",
+                "Gestión de recursos agrícolas",
+                "Venta y comercialización de productos"
+        };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
         spinnerExperiencia.setAdapter(adapter);
 
@@ -86,11 +90,13 @@ public class AgregarAgricultorDialog extends DialogFragment {
         try {
             int edad = Integer.parseInt(edadStr);
             Agricultor nuevo = new Agricultor(nombre, edad, zona, experiencia);
+
             if (editarPos >= 0 && listener != null) {
                 listener.onAgricultorEditado(nuevo, editarPos);
             } else if (listener != null) {
                 listener.onAgricultorAgregado(nuevo);
             }
+
             dismiss();
         } catch (NumberFormatException e) {
             Toast.makeText(getContext(), "Edad debe ser numérica", Toast.LENGTH_SHORT).show();

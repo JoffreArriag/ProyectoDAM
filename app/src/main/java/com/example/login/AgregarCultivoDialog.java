@@ -106,10 +106,8 @@ public class AgregarCultivoDialog extends DialogFragment {
 
             long resultado;
             if (cultivoExistente != null) {
-                // ACTUALIZACIÓN
                 resultado = db.update("cultivos", valores, "nombre = ?", new String[]{cultivoExistente.getNombre()});
             } else {
-                // INSERCIÓN
                 Cursor cursor = db.rawQuery(
                         "SELECT * FROM cultivos WHERE nombre = ? AND fecha_inicio = ?",
                         new String[]{nombre, fecha}

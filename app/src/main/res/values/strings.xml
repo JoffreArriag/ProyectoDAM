@@ -90,6 +90,8 @@
     <string name="btnAgregarAgricultor">Agregar Agricultor</string>
     <string name="btnDelete">Eliminar</string>
     <string name="btnEdit">Editar</string>
+    <string name="desc_back_button">Regresar a la pantalla anterior</string>
+
 
     <!-- Pantalla Inventario Agricola -->
     <string name="editCantidad">Cantidad</string>

@@ -2,23 +2,14 @@ package com.example.login;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.database.sqlite.SQLiteDatabase;
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.content.ContentValues;
 
 public class CultivosActivity extends AppCompatActivity {
 
@@ -28,97 +19,7 @@ public class CultivosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cultivos);
-
         cargarCultivosDesdeBD();
-
-        ImageButton btnCereales = findViewById(R.id.btnCereales);
-        ImageButton btnLeguminosas = findViewById(R.id.btnLeguminosas);
-        ImageButton btnIndustriales = findViewById(R.id.btnIndustriales);
-        ImageButton btnHortalizas = findViewById(R.id.btnHortalizas);
-        ImageButton btnFrutales = findViewById(R.id.btnFrutales);
-        ImageView backButton = findViewById(R.id.backButton);
-        Button btnAgregarCultivo = findViewById(R.id.btnAgregarCultivo);
-
-        backButton.setOnClickListener(v -> startActivity(new Intent(CultivosActivity.this, HomeActivity.class)));
-
-        btnAgregarCultivo.setOnClickListener(v -> {
-            AgregarCultivoDialog dialog = new AgregarCultivoDialog();
-            dialog.setCultivoListener(cultivo -> {
-                String categoria = cultivo.getCategoria();
-                cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
-                Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
-            });
-            dialog.show(getSupportFragmentManager(), "AgregarCultivo");
-        });
-
-        btnCereales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Cereales"));
-        btnLeguminosas.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Leguminosas"));
-        btnIndustriales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Industriales"));
-        btnHortalizas.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Hortalizas"));
-        btnFrutales.setOnClickListener(v -> mostrarCultivosPorCategoria(v, "Frutales"));
-
-        Button btnBuscarCultivo = findViewById(R.id.btnBuscarCultivo);
-        btnBuscarCultivo.setOnClickListener(view -> {
-            EditText inputBusqueda = new EditText(CultivosActivity.this);
-            inputBusqueda.setHint("Ingrese nombre o ubicación del cultivo");
-
-            new androidx.appcompat.app.AlertDialog.Builder(CultivosActivity.this)
-                    .setTitle("Buscar Cultivo")
-                    .setView(inputBusqueda)
-                    .setPositiveButton("Buscar", (dialog, which) -> {
-                        String criterio = inputBusqueda.getText().toString().trim();
-
-                        if (criterio.isEmpty()) {
-                            Toast.makeText(this, "Debe ingresar nombre o ubicación", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
-                        Cursor cursor = db.rawQuery(
-                                "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ? LIMIT 1",
-                                new String[]{"%" + criterio + "%", "%" + criterio + "%"}
-                        );
-
-                        if (cursor.moveToFirst()) {
-                            Cultivo cultivo = new Cultivo(
-                                    cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
-                                    cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
-                                    cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
-                                    cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
-                                    cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
-                            );
-
-                            cursor.close();
-                            db.close();
-
-                            String mensaje = "Nombre: " + cultivo.getNombre()
-                                    + "\nCategoría: " + cultivo.getCategoria()
-                                    + "\nFecha inicio: " + cultivo.getFechaInicio()
-                                    + "\nUbicación: " + cultivo.getUbicacion()
-                                    + "\nPrecio por caja: $" + String.format("%.2f", cultivo.getPrecioCaja());
-
-                            new androidx.appcompat.app.AlertDialog.Builder(this)
-                                    .setTitle("Datos del Cultivo")
-                                    .setMessage(mensaje)
-                                    .setPositiveButton("Regresar", null)
-                                    .show();
-
-                        } else {
-                            cursor.close();
-                            db.close();
-
-                            new androidx.appcompat.app.AlertDialog.Builder(this)
-                                    .setTitle("Sin resultados")
-                                    .setMessage("No se encontró ningún cultivo con ese nombre o ubicación.")
-                                    .setPositiveButton("Cerrar", null)
-                                    .show();
-                        }
-
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-        });
-
     }
 
     private void cargarCultivosDesdeBD() {
@@ -142,6 +43,102 @@ public class CultivosActivity extends AppCompatActivity {
         db.close();
     }
 
+    public void irAHome(View v) {
+        startActivity(new Intent(CultivosActivity.this, HomeActivity.class));
+        finish();
+    }
+
+    public void agregarCultivo(View v) {
+        AgregarCultivoDialog dialog = new AgregarCultivoDialog();
+        dialog.setCultivoListener(cultivo -> {
+            String categoria = cultivo.getCategoria();
+            cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
+            Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
+        });
+        dialog.show(getSupportFragmentManager(), "AgregarCultivo");
+    }
+
+    public void buscarCultivo(View v) {
+        EditText inputBusqueda = new EditText(CultivosActivity.this);
+        inputBusqueda.setHint("Ingrese nombre o ubicación del cultivo");
+
+        new androidx.appcompat.app.AlertDialog.Builder(CultivosActivity.this)
+                .setTitle("Buscar Cultivo")
+                .setView(inputBusqueda)
+                .setPositiveButton("Buscar", (dialog, which) -> {
+                    String criterio = inputBusqueda.getText().toString().trim();
+
+                    if (criterio.isEmpty()) {
+                        Toast.makeText(this, "Debe ingresar nombre o ubicación", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
+                    Cursor cursor = db.rawQuery(
+                            "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ? LIMIT 1",
+                            new String[]{"%" + criterio + "%", "%" + criterio + "%"}
+                    );
+
+                    if (cursor.moveToFirst()) {
+                        Cultivo cultivo = new Cultivo(
+                                cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                                cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
+                                cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
+                                cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
+                                cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
+                        );
+
+                        cursor.close();
+                        db.close();
+
+                        String mensaje = "Nombre: " + cultivo.getNombre()
+                                + "\nCategoría: " + cultivo.getCategoria()
+                                + "\nFecha inicio: " + cultivo.getFechaInicio()
+                                + "\nUbicación: " + cultivo.getUbicacion()
+                                + "\nPrecio por caja: $" + String.format("%.2f", cultivo.getPrecioCaja());
+
+                        new androidx.appcompat.app.AlertDialog.Builder(this)
+                                .setTitle("Datos del Cultivo")
+                                .setMessage(mensaje)
+                                .setPositiveButton("Regresar", null)
+                                .show();
+
+                    } else {
+                        cursor.close();
+                        db.close();
+                        new androidx.appcompat.app.AlertDialog.Builder(this)
+                                .setTitle("Sin resultados")
+                                .setMessage("No se encontró ningún cultivo con ese nombre o ubicación.")
+                                .setPositiveButton("Cerrar", null)
+                                .show();
+                    }
+
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    public void clickCategoria(View v) {
+        String categoria = "";
+
+        if (v.getId() == R.id.btnCereales) {
+            categoria = "Cereales";
+        } else if (v.getId() == R.id.btnLeguminosas) {
+            categoria = "Leguminosas";
+        } else if (v.getId() == R.id.btnIndustriales) {
+            categoria = "Industriales";
+        } else if (v.getId() == R.id.btnHortalizas) {
+            categoria = "Hortalizas";
+        } else if (v.getId() == R.id.btnFrutales) {
+            categoria = "Frutales";
+        }
+
+        if (!categoria.isEmpty()) {
+            mostrarCultivosPorCategoria(v, categoria);
+        }
+    }
+
+
     private void mostrarCultivosPorCategoria(View view, String categoria) {
         List<Cultivo> cultivos = cultivosPorCategoria.get(categoria);
         if (cultivos == null || cultivos.isEmpty()) {
@@ -164,7 +161,7 @@ public class CultivosActivity extends AppCompatActivity {
             tvInfo.setText(getString(R.string.cultivo_info, cultivo.getNombre(), cultivo.getFechaInicio(), cultivo.getUbicacion(), cultivo.getPrecioCaja()));
             int index = i;
 
-            btnEliminar.setOnClickListener(v -> {
+            btnEliminar.setOnClickListener(v1 -> {
                 cultivos.remove(index);
 
                 SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
@@ -181,10 +178,9 @@ public class CultivosActivity extends AppCompatActivity {
                 mostrarCultivosPorCategoria(view, categoria);
             });
 
-            btnEditar.setOnClickListener(v -> {
+            btnEditar.setOnClickListener(v2 -> {
                 AgregarCultivoDialog dialog = new AgregarCultivoDialog();
                 dialog.setCultivo(cultivo);
-
                 dialog.setCultivoListener(cultivoEditado -> {
                     SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
 

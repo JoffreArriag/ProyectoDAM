@@ -32,9 +32,6 @@ public class Agricultores extends AppCompatActivity {
         dbHelper = new BDOpenHelper(this);
         cargarAgricultoresDesdeBD();
 
-        ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(this::irAHome);
-
         recyclerView = findViewById(R.id.recyclerAgricultores);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -80,9 +77,6 @@ public class Agricultores extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
-
-        Button btnAgregarAgricultor = findViewById(R.id.btnAgregarAgricultor);
-        btnAgregarAgricultor.setOnClickListener(this::agregarAgricultor);
     }
 
     private void cargarAgricultoresDesdeBD() {

@@ -24,15 +24,6 @@ public class AgregarInsumoDialog extends DialogFragment {
     private Spinner spinnerNombreInsumo;
     private EditText editDescripcion, editCantidad;
 
-    public void setInsumoListener(InsumoListener listener) {
-        this.listener = listener;
-    }
-
-    public void setInsumoEditar(InsumoAgricola insumo, int position) {
-        this.insumoExistente = insumo;
-        this.editarPos = position;
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -61,10 +52,20 @@ public class AgregarInsumoDialog extends DialogFragment {
             editCantidad.setText(String.valueOf(insumoExistente.getCantidad()));
         }
 
+        // ✅ Aquí se usa setOnClickListener para que el IDE reconozca el uso
         btnGuardar.setOnClickListener(this::guardarInsumo);
         btnCancelar.setOnClickListener(this::cancelar);
 
         return builder.create();
+    }
+
+    public void setInsumoListener(InsumoListener listener) {
+        this.listener = listener;
+    }
+
+    public void setInsumoEditar(InsumoAgricola insumo, int position) {
+        this.insumoExistente = insumo;
+        this.editarPos = position;
     }
 
     public void guardarInsumo(View v) {
@@ -81,9 +82,9 @@ public class AgregarInsumoDialog extends DialogFragment {
             int cantidad = Integer.parseInt(cantidadStr);
             InsumoAgricola insumo = new InsumoAgricola(nombre, descripcion, cantidad);
 
-            if (editarPos >= 0) {
+            if (editarPos >= 0 && listener != null) {
                 listener.onInsumoEditado(insumo, editarPos);
-            } else {
+            } else if (listener != null) {
                 listener.onInsumoAgregado(insumo);
             }
             dismiss();
