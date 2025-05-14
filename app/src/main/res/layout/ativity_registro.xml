@@ -118,8 +118,9 @@
             android:id="@+id/btnSeleccionarFecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:hint="@string/seleccionar_fecha"
-            android:layout_marginBottom="12dp" />
+            android:onClick="seleccionarFecha" />
 
         <TextView
             android:id="@+id/txtFechaSeleccionada"
@@ -168,20 +169,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_borrar"
-                android:textSize="14sp"
+                android:minHeight="48dp"
+                android:onClick="borrarCampos"
                 android:padding="10dp"
-                android:minHeight="48dp" />
+                android:text="@string/btn_borrar"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/btnCancelar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_cancelar"
-                android:textSize="14sp"
+                android:minHeight="48dp"
+                android:onClick="cancelarRegistro"
                 android:padding="10dp"
-                android:minHeight="48dp" />
+                android:text="@string/btn_cancelar"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <Button

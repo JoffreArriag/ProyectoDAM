@@ -41,7 +41,7 @@ public class ConsultarUsuario extends AppCompatActivity {
     private EditText txtEditFechaNacimiento;
     private TextView lblRatingIngles;
     private EditText txtEditRatingIngles;
-    private Button btnEditar;
+    private Button btnEditar; // Referencia al botón de editar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +53,10 @@ public class ConsultarUsuario extends AppCompatActivity {
             return insets;
         });
         inicializarVistas();
+
     }
     private void inicializarVistas() {
-
+        // Inicializar TextViews
         lblCedula = findViewById(R.id.cons_lblCedula);
         lblNombres = findViewById(R.id.cons_lblNombres);
         lblApellidos = findViewById(R.id.cons_lblApellidos);
@@ -66,7 +67,7 @@ public class ConsultarUsuario extends AppCompatActivity {
         lblFechaNacimiento = findViewById(R.id.cons_lblFechaNacimiento);
         lblRatingIngles = findViewById(R.id.cons_lblRatingIngles);
 
-
+        // Inicializar EditTexts (los nuevos que añadiste en el XML)
         txtEditCedula = findViewById(R.id.cons_txtEditCedula);
         txtEditNombres = findViewById(R.id.cons_txtEditNombres);
         txtEditApellidos = findViewById(R.id.cons_txtEditApellidos);
@@ -77,9 +78,11 @@ public class ConsultarUsuario extends AppCompatActivity {
         txtEditFechaNacimiento = findViewById(R.id.cons_txtEditFechaNacimiento);
         txtEditRatingIngles = findViewById(R.id.cons_txtEditRatingIngles);
 
-
+        // Inicializar el botón de editar
         btnEditar = findViewById(R.id.btnEditarUsuario);
 
+        // Inicialmente, los EditTexts deben estar ocultos (esto ya lo hiciste en el XML)
+        // y el botón debe decir "Editar"
         modoEdicion = false;
         btnEditar.setText("Editar");
     }
@@ -90,6 +93,8 @@ public class ConsultarUsuario extends AppCompatActivity {
         final SQLiteDatabase BDagriculturaSelect = BDagricultura.getReadableDatabase();
 
         EditText cedula = findViewById(R.id.cons_txtCedula);
+
+
         String cedulas = cedula.getText().toString();
 
         Cursor data = BDagriculturaSelect.rawQuery("SELECT id, cedula, nombres, "+
@@ -100,6 +105,7 @@ public class ConsultarUsuario extends AppCompatActivity {
             if(data.getCount()==0){
                 Toast.makeText(this, "No hay registros encontrados",
                         Toast.LENGTH_LONG).show();
+
             }else{
                 data.moveToFirst();
                 identificador = data.getInt(data.getColumnIndex("id"));
@@ -116,6 +122,7 @@ public class ConsultarUsuario extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
+
     }
     private void editarUsuario(int idUsuario) {
         if (idUsuario == 0) {
@@ -142,8 +149,10 @@ public class ConsultarUsuario extends AppCompatActivity {
             Toast.makeText(this, "El rating de inglés debe ser un número válido.", Toast.LENGTH_SHORT).show();
             BDagriculturaWrite.close();
             BDagricultura.close();
+
             return;
         }
+
 
         // Crear un objeto ContentValues con los nuevos datos
         ContentValues values = new ContentValues();
@@ -157,29 +166,29 @@ public class ConsultarUsuario extends AppCompatActivity {
         values.put("fecha_nacimiento", nuevaFechaNacimiento);
         values.put("ratingIngles", nuevoRatingIngles);
 
-
+        // Definir la cláusula WHERE para identificar al usuario por su ID
         String selection = "id = ?";
         String[] selectionArgs = { String.valueOf(idUsuario) };
 
-
+        // Ejecutar la sentencia UPDATE
         int rowsAffected = BDagriculturaWrite.update(
-                "usuario",
-                values,
-                selection,
-                selectionArgs
+                "usuario", // La tabla a actualizar
+                values,     // Los nuevos valores
+                selection,  // La cláusula WHERE
+                selectionArgs // Los argumentos para la cláusula WHERE
         );
 
         BDagriculturaWrite.close();
         BDagricultura.close();
 
-
+        // Mostrar un mensaje basado en el resultado de la actualización
         if (rowsAffected > 0) {
             Toast.makeText(this, "Usuario actualizado correctamente.", Toast.LENGTH_SHORT).show();
+
         } else {
             Toast.makeText(this, "Error al actualizar el usuario.", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void eliminarUsuario(int idUsuario) {
         if (idUsuario == 0) {
             Toast.makeText(this, "No se puede eliminar, usuario no válido.", Toast.LENGTH_SHORT).show();
@@ -189,41 +198,41 @@ public class ConsultarUsuario extends AppCompatActivity {
         BDOpenHelper BDagricultura = new BDOpenHelper(this);
         SQLiteDatabase BDagriculturaWrite = BDagricultura.getWritableDatabase();
 
-
+        // Definir la cláusula WHERE para identificar al usuario por su ID
         String selection = "id = ?";
         String[] selectionArgs = { String.valueOf(idUsuario) };
 
-
-
+        // Ejecutar la sentencia DELETE
+        // delete() devuelve el número de filas afectadas
         int rowsAffected = BDagriculturaWrite.delete(
-                "usuario",
-                selection,
-                selectionArgs
+                "usuario",      // La tabla de la que eliminar
+                selection,      // La cláusula WHERE
+                selectionArgs   // Los argumentos para la cláusula WHERE
         );
 
-        BDagriculturaWrite.close();
+        BDagriculturaWrite.close(); // Cerrar la base de datos
         BDagricultura.close();
 
-
+        // Mostrar un mensaje basado en el resultado de la eliminación
         if (rowsAffected > 0) {
             Toast.makeText(this, "Usuario eliminado correctamente.", Toast.LENGTH_SHORT).show();
             limpiarCampos();
             identificador = 0;
-            Button btnEditar = findViewById(R.id.btnEditarUsuario);
+            Button btnEditar = findViewById(R.id.btnEditarUsuario); // Asumiendo que este botón también se usa para eliminar o que hay otro botón de eliminar
             btnEditar.setEnabled(false);
+
         } else {
             Toast.makeText(this, "Error al eliminar el usuario.", Toast.LENGTH_SHORT).show();
         }
     }
-
     public void eliminarUsuario(View v) {
         eliminarUsuario(identificador);
     }
-
     public void toggleModoEdicion(View v) {
+        // Cambiar el estado
         modoEdicion = !modoEdicion;
         if(modoEdicion){
-            btnEditar.setText("Guardar");
+            btnEditar.setText( "Guardar");
             cambiarAEditText(lblCedula, txtEditCedula);
             cambiarAEditText(lblNombres, txtEditNombres);
             cambiarAEditText(lblApellidos, txtEditApellidos);
@@ -245,11 +254,12 @@ public class ConsultarUsuario extends AppCompatActivity {
             cambiarATextView(lblEstadoCivil, txtEditEstadoCivil);
             cambiarATextView(lblFechaNacimiento, txtEditFechaNacimiento);
             cambiarATextView(lblRatingIngles, txtEditRatingIngles);
+
         }
+
     }
-
     private void cambiarAEditText(TextView textView, EditText editText) {
-
+        // Copiar el texto del TextView al EditText
         editText.setText(textView.getText());
 
         editText.setLayoutParams(textView.getLayoutParams());
@@ -263,9 +273,10 @@ public class ConsultarUsuario extends AppCompatActivity {
                 textView.getPaddingBottom()
         );
 
+
         editText.setGravity(textView.getGravity());
 
-
+        // Ocultar el TextView y mostrar el EditText
         textView.setVisibility(View.GONE);
         editText.setVisibility(View.VISIBLE);
 
@@ -273,13 +284,12 @@ public class ConsultarUsuario extends AppCompatActivity {
     }
 
     private void cambiarATextView(TextView textView, EditText editText) {
-
+        // Copiar el texto del EditText al TextView
         textView.setText(editText.getText().toString());
-
+        // Ocultar el EditText y mostrar el TextView
         editText.setVisibility(View.GONE);
         textView.setVisibility(View.VISIBLE);
     }
-
     private void limpiarCampos() {
         lblCedula.setText("");
         lblNombres.setText("");
@@ -302,7 +312,8 @@ public class ConsultarUsuario extends AppCompatActivity {
         txtEditRatingIngles.setText("");
 
         if (modoEdicion) {
-            toggleModoEdicion(null);
+            toggleModoEdicion(null); // Cambiar a modo visualización
         }
     }
+
 }

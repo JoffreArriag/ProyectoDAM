@@ -60,22 +60,7 @@ public class RegistroActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterGenero = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, generos);
         spinnerGenero.setAdapter(adapterGenero);
 
-        btnSeleccionarFecha.setOnClickListener(view -> {
-            Calendar calendario = Calendar.getInstance();
-            int año = calendario.get(Calendar.YEAR);
-            int mes = calendario.get(Calendar.MONTH);
-            int dia = calendario.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePicker = new DatePickerDialog(
-                    RegistroActivity.this,
-                    (view1, year, month, dayOfMonth) -> {
-                        fechaNacimiento = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        txtFechaSeleccionada.setText(fechaNacimiento);
-                    },
-                    año, mes, dia
-            );
-            datePicker.show();
-        });
 
         // Botón Registrar
         btnRegistrar.setOnClickListener(view -> {
@@ -114,7 +99,7 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
-    // Método para borrar los campos
+    // Metodo para borrar los campos
     public void borrarCampos(View v) {
         cedula.setText("");
         nombres.setText("");
@@ -127,14 +112,14 @@ public class RegistroActivity extends AppCompatActivity {
         spinnerGenero.setSelection(0);
     }
 
-    // Método para cancelar el registro
+    // Metodo para cancelar el registro
     public void cancelarRegistro(View v) {
         Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    // Método para mostrar los datos
+    // Metodo para mostrar los datos
     public void mostrarDatosBD(View v) {
         Intent intent = new Intent(RegistroActivity.this, ConsultarUsuario.class);
         startActivity(intent);
@@ -162,4 +147,21 @@ public class RegistroActivity extends AppCompatActivity {
             return false;
         }
     }
+    public void seleccionarFecha(View v) {
+        Calendar calendario = Calendar.getInstance();
+        int año = calendario.get(Calendar.YEAR);
+        int mes = calendario.get(Calendar.MONTH);
+        int dia = calendario.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePicker = new DatePickerDialog(
+                RegistroActivity.this,
+                (view1, year, month, dayOfMonth) -> {
+                    fechaNacimiento = dayOfMonth + "/" + (month + 1) + "/" + year;
+                    txtFechaSeleccionada.setText(fechaNacimiento);
+                },
+                año, mes, dia
+        );
+        datePicker.show();
+    }
+
 }
