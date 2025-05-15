@@ -1,18 +1,20 @@
 package com.example.login;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +24,15 @@ public class Agricultores extends AppCompatActivity {
     private List<Agricultor> listaAgricultores = new ArrayList<>();
     private RecyclerView recyclerView;
     private AgricultoresAdapter adapter;
-    private BDOpenHelper dbHelper;
+    private DatabaseReference dbRef;
+    private EditText editBuscarAgricultor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agricultores);
 
-        dbHelper = new BDOpenHelper(this);
-        cargarAgricultoresDesdeBD();
+        dbRef = FirebaseDatabase.getInstance().getReference("agricultores");
 
         recyclerView = findViewById(R.id.recyclerAgricultores);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -45,17 +47,9 @@ public class Agricultores extends AppCompatActivity {
 
                     @Override
                     public void onAgricultorEditado(Agricultor editado, int pos) {
-                        Agricultor original = listaAgricultores.get(pos);
-                        editado.setId(original.getId());
-
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        values.put("nombre", editado.getNombre());
-                        values.put("edad", editado.getEdad());
-                        values.put("zona", editado.getZona());
-                        values.put("experiencia", editado.getExperiencia());
-                        db.update("agricultores", values, "id = ?", new String[]{String.valueOf(editado.getId())});
-
+                        String id = agricultor.getId();
+                        editado.setId(id);
+                        dbRef.child(id).setValue(editado);
                         listaAgricultores.set(pos, editado);
                         adapter.notifyItemChanged(pos);
                         Toast.makeText(Agricultores.this, "Agricultor editado", Toast.LENGTH_SHORT).show();
@@ -68,8 +62,7 @@ public class Agricultores extends AppCompatActivity {
             @Override
             public void onEliminar(int position) {
                 Agricultor agricultor = listaAgricultores.get(position);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.delete("agricultores", "id = ?", new String[]{String.valueOf(agricultor.getId())});
+                dbRef.child(agricultor.getId()).removeValue();
                 listaAgricultores.remove(position);
                 adapter.notifyItemRemoved(position);
                 Toast.makeText(Agricultores.this, "Agricultor eliminado", Toast.LENGTH_SHORT).show();
@@ -77,23 +70,49 @@ public class Agricultores extends AppCompatActivity {
         });
 
         recyclerView.setAdapter(adapter);
+
+        editBuscarAgricultor = findViewById(R.id.editBuscarAgricultor);
+        editBuscarAgricultor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarAgricultoresPorNombre(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        cargarAgricultoresDesdeFirebase();
     }
 
-    private void cargarAgricultoresDesdeBD() {
-        listaAgricultores.clear();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM agricultores", null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                int edad = cursor.getInt(cursor.getColumnIndexOrThrow("edad"));
-                String zona = cursor.getString(cursor.getColumnIndexOrThrow("zona"));
-                String experiencia = cursor.getString(cursor.getColumnIndexOrThrow("experiencia"));
-                listaAgricultores.add(new Agricultor(id, nombre, edad, zona, experiencia));
-            } while (cursor.moveToNext());
+    private void cargarAgricultoresDesdeFirebase() {
+        dbRef.get().addOnCompleteListener(task -> {
+            listaAgricultores.clear();
+            if (task.isSuccessful()) {
+                for (DataSnapshot snap : task.getResult().getChildren()) {
+                    Agricultor agricultor = snap.getValue(Agricultor.class);
+                    if (agricultor != null) {
+                        listaAgricultores.add(agricultor);
+                    }
+                }
+                adapter.actualizarLista(listaAgricultores); // actualiza con la lista completa
+            } else {
+                Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void filtrarAgricultoresPorNombre(String texto) {
+        List<Agricultor> listaFiltrada = new ArrayList<>();
+        for (Agricultor ag : listaAgricultores) {
+            if (ag.getNombre() != null && ag.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                listaFiltrada.add(ag);
+            }
         }
-        cursor.close();
+        adapter.actualizarLista(listaFiltrada);
     }
 
     public void irAHome(View v) {
@@ -107,17 +126,7 @@ public class Agricultores extends AppCompatActivity {
         dialog.setAgricultorListener(new AgregarAgricultorDialog.AgricultorListener() {
             @Override
             public void onAgricultorAgregado(Agricultor agricultor) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("nombre", agricultor.getNombre());
-                values.put("edad", agricultor.getEdad());
-                values.put("zona", agricultor.getZona());
-                values.put("experiencia", agricultor.getExperiencia());
-                long id = db.insert("agricultores", null, values);
-                agricultor.setId((int) id);
-
-                listaAgricultores.add(agricultor);
-                adapter.notifyItemInserted(listaAgricultores.size() - 1);
+                cargarAgricultoresDesdeFirebase();
                 Toast.makeText(Agricultores.this, "Agricultor agregado", Toast.LENGTH_SHORT).show();
             }
 

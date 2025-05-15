@@ -1,8 +1,6 @@
 package com.example.login;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MercadoActivity extends AppCompatActivity {
 
@@ -33,36 +36,40 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Cultivo> cultivos = cargarCultivosDesdeBD();
-        adapter = new CultivoAdapter(cultivos);
-        recyclerView.setAdapter(adapter);
+        // Cargar cultivos desde Firebase
+        cargarCultivosDesdeFirebase();
     }
 
-    private List<Cultivo> cargarCultivosDesdeBD() {
-        List<Cultivo> listaCultivos = new ArrayList<>();
-        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cultivos", null);
+    private void cargarCultivosDesdeFirebase() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cultivos");
 
-        if (cursor.moveToFirst()) {
-            do {
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
-                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
-                String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
-                double precioCaja = cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"));
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Cultivo> listaCultivos = new ArrayList<>();
+                for (DataSnapshot cultivoSnapshot : snapshot.getChildren()) {
+                    Cultivo cultivo = cultivoSnapshot.getValue(Cultivo.class);
+                    if (cultivo != null) {
+                        listaCultivos.add(cultivo);
+                    }
+                }
+                adapter = new CultivoAdapter(listaCultivos);
+                recyclerView.setAdapter(adapter);
+            }
 
-                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion, precioCaja);
-                listaCultivos.add(cultivo);
-            } while (cursor.moveToNext());
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(MercadoActivity.this, "Error al cargar cultivos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void mostrarDialogoVenta(View v) {
+        if (adapter == null) {
+            Toast.makeText(this, "Los cultivos aún no están cargados", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        cursor.close();
-        db.close();
-        return listaCultivos;
-    }
-
-    // Metodo para mostrar el diálogo de venta
-    public void mostrarDialogoVenta(View v) {
         cultivosSeleccionados = adapter.getCultivosSeleccionados();
 
         if (cultivosSeleccionados.isEmpty()) {
@@ -93,12 +100,11 @@ public class MercadoActivity extends AppCompatActivity {
         currentDialog.show();
     }
 
-    // Metodo llamado desde el botón en el layout del diálogo
     public void generarVenta(View v) {
-        View dialogView = currentDialogView;
+        if (currentDialogView == null) return;
 
-        EditText etNombre = dialogView.findViewById(R.id.etNombreCliente);
-        EditText etCedula = dialogView.findViewById(R.id.etCedulaCliente);
+        EditText etNombre = currentDialogView.findViewById(R.id.etNombreCliente);
+        EditText etCedula = currentDialogView.findViewById(R.id.etCedulaCliente);
 
         String nombre = etNombre.getText().toString().trim();
         String cedula = etCedula.getText().toString().trim();
@@ -121,15 +127,16 @@ public class MercadoActivity extends AppCompatActivity {
             total += c.getPrecioCaja();
         }
 
-        SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
-        db.execSQL("INSERT INTO ventas (cedula, nombre, productos, total) VALUES (?, ?, ?, ?)",
-                new Object[]{cedula, nombre, productos.toString(), total});
-        db.close();
-
-        Toast.makeText(this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
-        currentDialog.dismiss(); // <- más seguro
+        // Guardar en Firebase
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ventas");
+        Venta venta = new Venta(nombre, productos.toString(), total);
+        ref.child(cedula).setValue(venta)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
+                    if (currentDialog != null) currentDialog.dismiss();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar venta", Toast.LENGTH_SHORT).show());
     }
-
 
     public void consultarVenta(View view) {
         startActivity(new Intent(this, ConsultVentaActivity.class));

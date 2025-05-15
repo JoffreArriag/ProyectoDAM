@@ -91,7 +91,7 @@
     <string name="btnDelete">Eliminar</string>
     <string name="btnEdit">Editar</string>
     <string name="desc_back_button">Regresar a la pantalla anterior</string>
-
+    <string name="buscadorAgricultor">Buscar agricultor por nombre</string>
 
     <!-- Pantalla Inventario Agricola -->
     <string name="editCantidad">Cantidad</string>
@@ -100,6 +100,15 @@
     <string name="btnAgregarInsumo">Agregar Insumo</string>
     <string name="recyclerInsumos">Lista de insumos agrícolas</string>
     <string name="titleInventario">Inventario Agrícola</string>
+    <string name="buscadorInsumo">Buscar insumo por nombre</string>
+    <string-array name="opciones_insumos">
+        <item>Fertilizante</item>
+        <item>Semilla</item>
+        <item>Herbicida</item>
+        <item>Insecticida</item>
+        <item>Herramienta</item>
+    </string-array>
+
 
     <!-- Pantalla Mecado y ventas -->
     <string name="btnAgregarProducto">Agregar Producto</string>

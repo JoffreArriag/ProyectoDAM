@@ -1,36 +1,36 @@
 package com.example.login;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.*;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.Editable;
+import android.text.TextWatcher;
+import com.google.firebase.database.*;
 import java.util.*;
 
 public class InventarioActivity extends AppCompatActivity {
 
-    private List<InsumoAgricola> listaInsumos = new ArrayList<>();
+    private final List<InsumoAgricola> listaInsumos = new ArrayList<>();
+    private final List<InsumoAgricola> listaFiltrada = new ArrayList<>();
     private InsumoAdapter adapter;
-    private BDOpenHelper dbHelper;
+    private DatabaseReference databaseRef;
+    private EditText editBuscarInsumo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventario);
 
-        dbHelper = new BDOpenHelper(this);
+        databaseRef = FirebaseDatabase.getInstance().getReference("insumos");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerInsumos);
-        cargarInsumosDesdeBD();
+        editBuscarInsumo = findViewById(R.id.editBuscarInsumo);
 
-        adapter = new InsumoAdapter(listaInsumos, new InsumoAdapter.OnInsumoAccionListener() {
+        adapter = new InsumoAdapter(listaFiltrada, new InsumoAdapter.OnInsumoAccionListener() {
             @Override
             public void onEditar(InsumoAgricola insumo, int position) {
                 AgregarInsumoDialog dialog = new AgregarInsumoDialog();
@@ -41,18 +41,10 @@ public class InventarioActivity extends AppCompatActivity {
 
                     @Override
                     public void onInsumoEditado(InsumoAgricola i, int pos) {
-                        InsumoAgricola original = listaInsumos.get(pos);
-                        i.setId(original.getId());
-
-                        SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        values.put("nombre", i.getNombre());
-                        values.put("descripcion", i.getDescripcion());
-                        values.put("cantidad", i.getCantidad());
-                        db.update("insumos", values, "id = ?", new String[]{String.valueOf(i.getId())});
-
+                        String key = String.valueOf(i.getId());
+                        databaseRef.child(key).setValue(i);
                         listaInsumos.set(pos, i);
-                        adapter.notifyItemChanged(pos);
+                        filtrarInsumos(editBuscarInsumo.getText().toString());
                         Toast.makeText(InventarioActivity.this, "Insumo editado", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -61,10 +53,11 @@ public class InventarioActivity extends AppCompatActivity {
 
             @Override
             public void onEliminar(int position) {
-                InsumoAgricola insumo = listaInsumos.get(position);
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.delete("insumos", "id = ?", new String[]{String.valueOf(insumo.getId())});
-                listaInsumos.remove(position);
+                InsumoAgricola insumo = listaFiltrada.get(position);
+                String key = String.valueOf(insumo.getId());
+                databaseRef.child(key).removeValue();
+                listaInsumos.remove(insumo);
+                listaFiltrada.remove(position);
                 adapter.notifyItemRemoved(position);
                 Toast.makeText(InventarioActivity.this, "Insumo eliminado", Toast.LENGTH_SHORT).show();
             }
@@ -72,24 +65,53 @@ public class InventarioActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        cargarInsumosDesdeFirebase();
+
+        editBuscarInsumo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarInsumos(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
-    private void cargarInsumosDesdeBD() {
-        listaInsumos.clear();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM insumos", null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"));
-                int cantidad = cursor.getInt(cursor.getColumnIndexOrThrow("cantidad"));
-                listaInsumos.add(new InsumoAgricola(id, nombre, descripcion, cantidad));
-            } while (cursor.moveToNext());
+    private void cargarInsumosDesdeFirebase() {
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                listaInsumos.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    InsumoAgricola insumo = data.getValue(InsumoAgricola.class);
+                    listaInsumos.add(insumo);
+                }
+                filtrarInsumos(editBuscarInsumo.getText().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(InventarioActivity.this, "Error al cargar datos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void filtrarInsumos(String texto) {
+        listaFiltrada.clear();
+        if (texto.isEmpty()) {
+            listaFiltrada.addAll(listaInsumos);
+        } else {
+            texto = texto.toLowerCase();
+            for (InsumoAgricola insumo : listaInsumos) {
+                if (insumo.getNombre().toLowerCase().contains(texto)) {
+                    listaFiltrada.add(insumo);
+                }
+            }
         }
-        cursor.close();
+        adapter.actualizarLista(new ArrayList<>(listaFiltrada));
     }
-
 
     public void volverAInicio(View v) {
         Intent intent = new Intent(this, HomeActivity.class);
@@ -103,16 +125,13 @@ public class InventarioActivity extends AppCompatActivity {
         dialog.setInsumoListener(new AgregarInsumoDialog.InsumoListener() {
             @Override
             public void onInsumoAgregado(InsumoAgricola insumo) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("nombre", insumo.getNombre());
-                values.put("descripcion", insumo.getDescripcion());
-                values.put("cantidad", insumo.getCantidad());
-                long id = db.insert("insumos", null, values);
-                insumo.setId((int) id);
+                int nuevoId = (int) (System.currentTimeMillis() / 1000);
+                insumo.setId(nuevoId);
+                databaseRef.child(String.valueOf(nuevoId)).setValue(insumo);
 
                 listaInsumos.add(insumo);
-                adapter.notifyItemInserted(listaInsumos.size() - 1);
+                filtrarInsumos(editBuscarInsumo.getText().toString());
+
                 Toast.makeText(InventarioActivity.this, "Insumo agregado", Toast.LENGTH_SHORT).show();
             }
 

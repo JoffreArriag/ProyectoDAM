@@ -42,56 +42,39 @@ public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder
 
             int imagenId = R.drawable.ic_inventar;
             switch (insumo.getNombre()) {
-                case "Fertilizantes":
-                    imagenId = R.drawable.ic_fertilizante;
-                    break;
-                case "Pesticidas":
-                    imagenId = R.drawable.ic_pesticida;
-                    break;
-                case "Semillas":
-                    imagenId = R.drawable.ic_semilla;
-                    break;
-                case "Agua de riego":
-                    imagenId = R.drawable.ic_agua;
-                    break;
-                case "Maquinaria agrícola":
-                    imagenId = R.drawable.ic_maquinaria;
-                    break;
+                case "Fertilizantes": imagenId = R.drawable.ic_fertilizante; break;
+                case "Pesticidas": imagenId = R.drawable.ic_pesticida; break;
+                case "Semillas": imagenId = R.drawable.ic_semilla; break;
+                case "Agua de riego": imagenId = R.drawable.ic_agua; break;
+                case "Maquinaria agrícola": imagenId = R.drawable.ic_maquinaria; break;
             }
 
             ImageView icono = itemView.findViewById(R.id.imageInsumo);
             icono.setImageResource(imagenId);
 
-
-            btnEditar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onEditar(insumo, position);
-                }
-            });
-
-            btnEliminar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onEliminar(position);
-                }
-            });
+            btnEditar.setOnClickListener(v -> listener.onEditar(insumo, position));
+            btnEliminar.setOnClickListener(v -> listener.onEliminar(position));
         }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InsumoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_insumo, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(InsumoAdapter.ViewHolder holder, int position) {
         holder.bind(lista.get(position), position, listener);
     }
 
     @Override
     public int getItemCount() {
         return lista.size();
+    }
+
+    public void actualizarLista(List<InsumoAgricola> nuevaLista) {
+        lista = nuevaLista;
+        notifyDataSetChanged();
     }
 }

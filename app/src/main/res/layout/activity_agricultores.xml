@@ -37,6 +37,18 @@
                 />
         </LinearLayout>
 
+        <!-- Campo de búsqueda por nombre -->
+        <EditText
+            android:id="@+id/editBuscarAgricultor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/buscadorAgricultor"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginTop="16dp"
+            />
+
         <!-- Botón para agregar un nuevo agricultor -->
         <Button
             android:id="@+id/btnAgregarAgricultor"

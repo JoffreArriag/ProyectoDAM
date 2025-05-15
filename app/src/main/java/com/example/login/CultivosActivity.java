@@ -7,41 +7,51 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.*;
 import android.view.LayoutInflater;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.Cursor;
-import android.content.ContentValues;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 
 public class CultivosActivity extends AppCompatActivity {
 
     private final Map<String, List<Cultivo>> cultivosPorCategoria = new HashMap<>();
+    private DatabaseReference cultivosRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cultivos);
-        cargarCultivosDesdeBD();
+
+        cultivosRef = FirebaseDatabase.getInstance().getReference("cultivos");
+        cargarCultivosDesdeFirebase();
     }
 
-    private void cargarCultivosDesdeBD() {
-        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cultivos", null);
+    private void cargarCultivosDesdeFirebase() {
+        cultivosPorCategoria.clear();
 
-        if (cursor.moveToFirst()) {
-            do {
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
-                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
-                String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
-                double precioCaja = cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"));
+        cultivosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    Cultivo cultivo = child.getValue(Cultivo.class);
+                    if (cultivo != null) {
+                        cultivo.setIdFirebase(child.getKey());
+                        String categoria = cultivo.getCategoria();
+                        cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
+                    }
+                }
+            }
 
-                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion, precioCaja);
-                cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(CultivosActivity.this, "Error al cargar cultivos", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     public void irAHome(View v) {
         startActivity(new Intent(CultivosActivity.this, HomeActivity.class));
@@ -51,12 +61,17 @@ public class CultivosActivity extends AppCompatActivity {
     public void agregarCultivo(View v) {
         AgregarCultivoDialog dialog = new AgregarCultivoDialog();
         dialog.setCultivoListener(cultivo -> {
-            String categoria = cultivo.getCategoria();
-            cultivosPorCategoria.computeIfAbsent(categoria, k -> new ArrayList<>()).add(cultivo);
-            Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
+            String key = cultivosRef.push().getKey();
+            if (key != null) {
+                cultivo.setIdFirebase(key);
+                cultivosRef.child(key).setValue(cultivo);
+                cultivosPorCategoria.computeIfAbsent(cultivo.getCategoria(), k -> new ArrayList<>()).add(cultivo);
+                Toast.makeText(CultivosActivity.this, "Cultivo agregado", Toast.LENGTH_SHORT).show();
+            }
         });
         dialog.show(getSupportFragmentManager(), "AgregarCultivo");
     }
+
 
     public void buscarCultivo(View v) {
         EditText inputBusqueda = new EditText(CultivosActivity.this);
@@ -67,51 +82,48 @@ public class CultivosActivity extends AppCompatActivity {
                 .setView(inputBusqueda)
                 .setPositiveButton("Buscar", (dialog, which) -> {
                     String criterio = inputBusqueda.getText().toString().trim();
-
                     if (criterio.isEmpty()) {
                         Toast.makeText(this, "Debe ingresar nombre o ubicación", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
-                    Cursor cursor = db.rawQuery(
-                            "SELECT * FROM cultivos WHERE nombre LIKE ? OR ubicacion LIKE ? LIMIT 1",
-                            new String[]{"%" + criterio + "%", "%" + criterio + "%"}
-                    );
 
-                    if (cursor.moveToFirst()) {
-                        Cultivo cultivo = new Cultivo(
-                                cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
-                                cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
-                                cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio")),
-                                cursor.getString(cursor.getColumnIndexOrThrow("ubicacion")),
-                                cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"))
-                        );
+                    cultivosRef.get().addOnSuccessListener(snapshot -> {
+                        Cultivo cultivoEncontrado = null;
 
-                        cursor.close();
-                        db.close();
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            Cultivo c = child.getValue(Cultivo.class);
+                            if (c != null) {
+                                if (c.getNombre().toLowerCase().contains(criterio.toLowerCase()) ||
+                                        c.getUbicacion().toLowerCase().contains(criterio.toLowerCase())) {
+                                    cultivoEncontrado = c;
+                                    break;
+                                }
+                            }
+                        }
 
-                        String mensaje = "Nombre: " + cultivo.getNombre()
-                                + "\nCategoría: " + cultivo.getCategoria()
-                                + "\nFecha inicio: " + cultivo.getFechaInicio()
-                                + "\nUbicación: " + cultivo.getUbicacion()
-                                + "\nPrecio por caja: $" + String.format("%.2f", cultivo.getPrecioCaja());
+                        if (cultivoEncontrado != null) {
+                            String mensaje = "Nombre: " + cultivoEncontrado.getNombre()
+                                    + "\nCategoría: " + cultivoEncontrado.getCategoria()
+                                    + "\nFecha inicio: " + cultivoEncontrado.getFechaInicio()
+                                    + "\nUbicación: " + cultivoEncontrado.getUbicacion()
+                                    + "\nPrecio por caja: $" + String.format("%.2f", cultivoEncontrado.getPrecioCaja());
 
-                        new androidx.appcompat.app.AlertDialog.Builder(this)
-                                .setTitle("Datos del Cultivo")
-                                .setMessage(mensaje)
-                                .setPositiveButton("Regresar", null)
-                                .show();
-
-                    } else {
-                        cursor.close();
-                        db.close();
-                        new androidx.appcompat.app.AlertDialog.Builder(this)
-                                .setTitle("Sin resultados")
-                                .setMessage("No se encontró ningún cultivo con ese nombre o ubicación.")
-                                .setPositiveButton("Cerrar", null)
-                                .show();
-                    }
+                            new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    .setTitle("Datos del Cultivo")
+                                    .setMessage(mensaje)
+                                    .setPositiveButton("Regresar", null)
+                                    .show();
+                        } else {
+                            new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    .setTitle("Sin resultados")
+                                    .setMessage("No se encontró ningún cultivo con ese nombre o ubicación.")
+                                    .setPositiveButton("Cerrar", null)
+                                    .show();
+                        }
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al buscar cultivo", Toast.LENGTH_SHORT).show();
+                    });
 
                 })
                 .setNegativeButton("Cancelar", null)
@@ -138,7 +150,6 @@ public class CultivosActivity extends AppCompatActivity {
         }
     }
 
-
     private void mostrarCultivosPorCategoria(View view, String categoria) {
         List<Cultivo> cultivos = cultivosPorCategoria.get(categoria);
         if (cultivos == null || cultivos.isEmpty()) {
@@ -163,18 +174,11 @@ public class CultivosActivity extends AppCompatActivity {
 
             btnEliminar.setOnClickListener(v1 -> {
                 cultivos.remove(index);
-
-                SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
-                int resultado = db.delete("cultivos", "nombre = ? AND fecha_inicio = ?",
-                        new String[]{cultivo.getNombre(), cultivo.getFechaInicio()});
-                db.close();
-
-                if (resultado > 0) {
-                    Toast.makeText(this, "Cultivo eliminado", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Error al eliminar cultivo", Toast.LENGTH_SHORT).show();
+                String keyFirebase = cultivo.getIdFirebase();
+                if (keyFirebase != null) {
+                    cultivosRef.child(keyFirebase).removeValue();
                 }
-
+                Toast.makeText(this, "Cultivo eliminado", Toast.LENGTH_SHORT).show();
                 mostrarCultivosPorCategoria(view, categoria);
             });
 
@@ -182,27 +186,14 @@ public class CultivosActivity extends AppCompatActivity {
                 AgregarCultivoDialog dialog = new AgregarCultivoDialog();
                 dialog.setCultivo(cultivo);
                 dialog.setCultivoListener(cultivoEditado -> {
-                    SQLiteDatabase db = new BDOpenHelper(this).getWritableDatabase();
-
-                    ContentValues valores = new ContentValues();
-                    valores.put("nombre", cultivoEditado.getNombre());
-                    valores.put("categoria", cultivoEditado.getCategoria());
-                    valores.put("fecha_inicio", cultivoEditado.getFechaInicio());
-                    valores.put("ubicacion", cultivoEditado.getUbicacion());
-                    valores.put("precio_caja", cultivoEditado.getPrecioCaja());
-
-                    int resultado = db.update("cultivos", valores, "nombre = ? AND categoria = ? AND fecha_inicio = ?",
-                            new String[]{cultivo.getNombre(), cultivo.getCategoria(), cultivo.getFechaInicio()});
-                    db.close();
-
-                    if (resultado > 0) {
-                        cultivosPorCategoria.get(categoria).set(index, cultivoEditado);
-                        Toast.makeText(this, "Cultivo editado", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Error al editar el cultivo", Toast.LENGTH_SHORT).show();
+                    String keyFirebase = cultivo.getIdFirebase();
+                    if (keyFirebase != null) {
+                        cultivoEditado.setIdFirebase(keyFirebase); // conserva la key
+                        cultivosRef.child(keyFirebase).setValue(cultivoEditado);
                     }
+                    cultivosPorCategoria.get(categoria).set(index, cultivoEditado);
+                    Toast.makeText(this, "Cultivo editado", Toast.LENGTH_SHORT).show();
                 });
-
                 dialog.show(getSupportFragmentManager(), "editarCultivo");
             });
 

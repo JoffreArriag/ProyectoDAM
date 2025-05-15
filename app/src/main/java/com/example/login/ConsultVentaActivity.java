@@ -1,8 +1,6 @@
 package com.example.login;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,21 +13,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ConsultVentaActivity extends AppCompatActivity {
 
     private EditText etBuscarVenta;
     private TextView txtNombre, txtCedula, txtProductos, txtTotal;
-    private BDOpenHelper dbHelper;
     private String cedulaActual;
+
+    private Button btnEliminar, btnEditar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultarventa);
-
-        dbHelper = new BDOpenHelper(this);
 
         etBuscarVenta = findViewById(R.id.etBuscarVenta);
         txtNombre = findViewById(R.id.txtNombreCliente);
@@ -37,89 +45,82 @@ public class ConsultVentaActivity extends AppCompatActivity {
         txtProductos = findViewById(R.id.txtProductosSeleccionados);
         txtTotal = findViewById(R.id.txtTotalVenta);
 
-        ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(this::onBackButtonClick);
+        btnEliminar = findViewById(R.id.btnEliminar);
+        btnEditar = findViewById(R.id.btnEditar);
+
+        btnEliminar.setEnabled(false);
+        btnEditar.setEnabled(false);
 
         etBuscarVenta.addTextChangedListener(new TextWatcher() {
+            @Override
             public void afterTextChanged(Editable s) {
-                buscarVenta(s.toString());
+                buscarVenta(s.toString().trim());
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
     }
 
-    // Este metodo debe ser público para que sea reconocido en el XML
     public void onBackButtonClick(View v) {
         startActivity(new Intent(this, HomeActivity.class));
+        finish();
     }
 
-    // Este metodo debe ser público para que sea reconocido en el XML
     public void onEliminarButtonClick(View v) {
         if (cedulaActual != null) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            db.execSQL("DELETE FROM ventas WHERE cedula = ?", new Object[]{cedulaActual});
-            db.close();
-            Toast.makeText(this, "Venta eliminada", Toast.LENGTH_SHORT).show();
-            limpiarCampos();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ventas").child(cedulaActual);
+            ref.removeValue()
+                    .addOnSuccessListener(unused -> {
+                        Toast.makeText(this, "Venta eliminada", Toast.LENGTH_SHORT).show();
+                        limpiarCampos();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Error al eliminar venta", Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Este metodo debe ser público para que sea reconocido en el XML
     public void onEditarButtonClick(View v) {
         if (cedulaActual != null) {
-            String nombreActual = txtNombre.getText().toString().replace("Nombre: ", "").trim();
-            String productosActuales = txtProductos.getText().toString().replace("Productos: ", "").trim();
-            mostrarDialogoEditar(nombreActual, productosActuales);
+            mostrarDialogoEditarVenta();
         } else {
             Toast.makeText(this, "Primero busque una venta", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void buscarVenta(String cedula) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT nombre, productos FROM ventas WHERE cedula = ?", new String[]{cedula});
-
-        if (cursor.moveToFirst()) {
-            cedulaActual = cedula;
-            String nombre = cursor.getString(0);
-            String productosTexto = cursor.getString(1);
-
-            txtCedula.setText("Cédula: " + cedula);
-            txtNombre.setText("Nombre: " + nombre);
-            txtProductos.setText("Productos: " + productosTexto);
-
-            double total = calcularTotal(productosTexto);
-            txtTotal.setText("Total a pagar: $" + String.format("%.2f", total));
-        } else {
+        if (cedula.isEmpty()) {
             limpiarCampos();
+            return;
         }
 
-        cursor.close();
-        db.close();
-    }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ventas").child(cedula);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    cedulaActual = cedula;
+                    Venta venta = snapshot.getValue(Venta.class);
 
-    private double calcularTotal(String productosTexto) {
-        double total = 0.0;
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    txtCedula.setText("Cédula: " + cedula);
+                    txtNombre.setText("Nombre: " + venta.getNombre());
+                    txtProductos.setText("Productos: " + venta.getProductos());
+                    txtTotal.setText("Total a pagar: $" + String.format("%.2f", venta.getTotal()));
 
-        String[] productos = productosTexto.split(";");
-        for (String nombreProd : productos) {
-            nombreProd = nombreProd.trim();
-            if (!nombreProd.isEmpty()) {
-                Cursor c = db.rawQuery("SELECT precio_caja FROM cultivos WHERE nombre = ?", new String[]{nombreProd});
-                if (c.moveToFirst()) {
-                    total += c.getDouble(0);
+                    btnEliminar.setEnabled(true);
+                    btnEditar.setEnabled(true);
+                } else {
+                    Toast.makeText(ConsultVentaActivity.this, "No se encontró la venta", Toast.LENGTH_SHORT).show();
+                    limpiarCampos();
                 }
-                c.close();
             }
-        }
 
-        db.close();
-        return total;
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(ConsultVentaActivity.this, "Error al buscar venta", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void limpiarCampos() {
@@ -128,122 +129,130 @@ public class ConsultVentaActivity extends AppCompatActivity {
         txtProductos.setText("Productos:");
         txtTotal.setText("Total a pagar:");
         cedulaActual = null;
+
+        btnEliminar.setEnabled(false);
+        btnEditar.setEnabled(false);
     }
 
-    private void mostrarDialogoEditar(String nombreActual, String productosActuales) {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Editar Venta");
+    private void mostrarDialogoEditarVenta() {
+        if (cedulaActual == null) return;
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(50, 40, 50, 10);
-
-        final EditText inputNombre = new EditText(this);
-        inputNombre.setHint("Nombre del cliente");
-        inputNombre.setText(nombreActual);
-        layout.addView(inputNombre);
-
-        TextView lblProductos = new TextView(this);
-        lblProductos.setText("\nSelecciona los productos:");
-        layout.addView(lblProductos);
-
-        LinearLayout checkBoxContainer = new LinearLayout(this);
-        checkBoxContainer.setOrientation(LinearLayout.VERTICAL);
-        layout.addView(checkBoxContainer);
-
-        TextView txtTotalDinamico = new TextView(this);
-        txtTotalDinamico.setText("\nTotal: $0.00");
-        layout.addView(txtTotalDinamico);
-
-        java.util.List<CheckBox> checkBoxes = new java.util.ArrayList<>();
-        java.util.Map<CheckBox, Double> preciosMap = new java.util.HashMap<>();
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT nombre, precio_caja FROM cultivos", null);
-
-        String[] seleccionados = productosActuales.split(";");
-        for (int i = 0; i < seleccionados.length; i++) {
-            seleccionados[i] = seleccionados[i].trim();
+        String nombreActual = txtNombre.getText().toString().replace("Nombre: ", "");
+        String productosActual = txtProductos.getText().toString().replace("Productos: ", "");
+        List<String> productosSeleccionados = new ArrayList<>();
+        for (String producto : productosActual.split(",")) {
+            productosSeleccionados.add(producto.trim().toLowerCase());
         }
 
-        while (cursor.moveToNext()) {
-            String nombre = cursor.getString(0);
-            double precio = cursor.getDouble(1);
 
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(nombre + " - $" + precio);
+        View dialogView = getLayoutInflater().inflate(R.layout.layout_editar_venta, null);
+        EditText etNombre = dialogView.findViewById(R.id.etNombreEditar);
+        EditText etCedula = dialogView.findViewById(R.id.etCedulaEditar);
+        TextView txtTotal = dialogView.findViewById(R.id.txtTotalEditar);
+        LinearLayout layoutCheckboxCultivos = dialogView.findViewById(R.id.layoutCheckboxCultivos);
+        Button btnGuardarCambios = dialogView.findViewById(R.id.btnGuardarCambios);
 
-            for (String sel : seleccionados) {
-                if (sel.equalsIgnoreCase(nombre)) {
-                    checkBox.setChecked(true);
-                    break;
-                }
-            }
+        etNombre.setText(nombreActual);
+        etCedula.setText(cedulaActual);
+        txtTotal.setText("Total: $0.00");
 
-            preciosMap.put(checkBox, precio);
-            checkBoxes.add(checkBox);
-            checkBoxContainer.addView(checkBox);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Editar Venta")
+                .setView(dialogView)
+                .create();
 
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                double total = 0;
-                for (CheckBox cb : checkBoxes) {
-                    if (cb.isChecked()) {
-                        total += preciosMap.get(cb);
+        DatabaseReference cultivosRef = FirebaseDatabase.getInstance().getReference("cultivos");
+
+        cultivosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<Cultivo> listaCultivos = new ArrayList<>();
+            final double[] totalVenta = {0.0};
+
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot cultivoSnap : snapshot.getChildren()) {
+                    Cultivo cultivo = cultivoSnap.getValue(Cultivo.class);
+                    if (cultivo == null) continue;
+                    cultivo.setIdFirebase(cultivoSnap.getKey());
+                    listaCultivos.add(cultivo);
+
+                    CheckBox checkBox = new CheckBox(ConsultVentaActivity.this);
+                    String label = cultivo.getNombre() + " ($" + cultivo.getPrecioCaja() + ")";
+                    checkBox.setText(label);
+
+                    for (String producto : productosSeleccionados) {
+                        if (producto.equalsIgnoreCase(cultivo.getNombre().trim())) {
+                            checkBox.setChecked(true);
+                            totalVenta[0] += cultivo.getPrecioCaja();
+                            break;
+                        }
                     }
+
+
+                    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            totalVenta[0] += cultivo.getPrecioCaja();
+                        } else {
+                            totalVenta[0] -= cultivo.getPrecioCaja();
+                        }
+                        txtTotal.setText("Total: $" + String.format("%.2f", totalVenta[0]));
+                    });
+
+                    layoutCheckboxCultivos.addView(checkBox);
                 }
-                txtTotalDinamico.setText("Total: $" + String.format("%.2f", total));
-            });
-        }
 
-        cursor.close();
-        db.close();
+                txtTotal.setText("Total: $" + String.format("%.2f", totalVenta[0]));
 
-        double totalInicial = 0;
-        for (CheckBox cb : checkBoxes) {
-            if (cb.isChecked()) {
-                totalInicial += preciosMap.get(cb);
-            }
-        }
-        txtTotalDinamico.setText("Total: $" + String.format("%.2f", totalInicial));
+                btnGuardarCambios.setOnClickListener(v -> {
+                    String nuevoNombre = etNombre.getText().toString().trim();
+                    String nuevosProductos = "";
+                    double nuevoTotal = 0.0;
 
-        builder.setView(layout);
+                    for (int i = 0; i < layoutCheckboxCultivos.getChildCount(); i++) {
+                        View child = layoutCheckboxCultivos.getChildAt(i);
+                        if (child instanceof CheckBox) {
+                            CheckBox cb = (CheckBox) child;
+                            if (cb.isChecked()) {
+                                String texto = cb.getText().toString();
+                                String nombreCultivo = texto.split(" \\(")[0];
+                                nuevosProductos += nombreCultivo + ", ";
 
-        builder.setPositiveButton("Guardar", (dialog, which) -> {
-            String nuevoNombre = inputNombre.getText().toString().trim();
-            java.util.List<String> productosSeleccionados = new java.util.ArrayList<>();
-
-            for (CheckBox cb : checkBoxes) {
-                if (cb.isChecked()) {
-                    String texto = cb.getText().toString();
-                    String nombreProducto = texto.split(" - ")[0].trim();
-                    productosSeleccionados.add(nombreProducto);
-                }
-            }
-
-            if (!nuevoNombre.isEmpty() && !productosSeleccionados.isEmpty() && cedulaActual != null) {
-                String nuevosProductos = String.join(";", productosSeleccionados);
-
-                double nuevoTotal = 0;
-                for (CheckBox cb : checkBoxes) {
-                    if (cb.isChecked()) {
-                        nuevoTotal += preciosMap.get(cb);
+                                for (Cultivo c : listaCultivos) {
+                                    if (c.getNombre().equals(nombreCultivo)) {
+                                        nuevoTotal += c.getPrecioCaja();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
 
-                SQLiteDatabase dbEdit = dbHelper.getWritableDatabase();
-                dbEdit.execSQL("UPDATE ventas SET nombre = ?, productos = ?, total = ? WHERE cedula = ?",
-                        new Object[]{nuevoNombre, nuevosProductos, nuevoTotal, cedulaActual});
-                dbEdit.close();
+                    if (!nuevosProductos.isEmpty()) {
+                        nuevosProductos = nuevosProductos.substring(0, nuevosProductos.length() - 2);
+                    }
 
-                Toast.makeText(this, "Venta actualizada correctamente", Toast.LENGTH_SHORT).show();
-                buscarVenta(cedulaActual);
-            } else {
-                Toast.makeText(this, "Campos inválidos o sin productos seleccionados", Toast.LENGTH_SHORT).show();
+                    if (nuevoNombre.isEmpty() || nuevosProductos.isEmpty()) {
+                        Toast.makeText(ConsultVentaActivity.this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Venta ventaEditada = new Venta(nuevoNombre, nuevosProductos, nuevoTotal);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ventas").child(cedulaActual);
+                    ref.setValue(ventaEditada)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(ConsultVentaActivity.this, "Venta actualizada", Toast.LENGTH_SHORT).show();
+                                buscarVenta(cedulaActual);
+                                dialog.dismiss();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(ConsultVentaActivity.this, "Error al actualizar", Toast.LENGTH_SHORT).show());
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(ConsultVentaActivity.this, "Error al cargar cultivos", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-
-        builder.show();
+        dialog.show();
     }
 }

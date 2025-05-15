@@ -24,41 +24,6 @@ public class AgregarInsumoDialog extends DialogFragment {
     private Spinner spinnerNombreInsumo;
     private EditText editDescripcion, editCantidad;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_agregar_insumo, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()).setView(view);
-
-        spinnerNombreInsumo = view.findViewById(R.id.spinnerNombreInsumo);
-        editDescripcion = view.findViewById(R.id.editDescripcion);
-        editCantidad = view.findViewById(R.id.editCantidad);
-        Button btnGuardar = view.findViewById(R.id.btnGuardarInsumo);
-        Button btnCancelar = view.findViewById(R.id.btnCancelarInsumo);
-
-        String[] nombresInsumo = {
-                "Fertilizantes",
-                "Pesticidas",
-                "Semillas",
-                "Agua de riego",
-                "Maquinaria agrícola"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, nombresInsumo);
-        spinnerNombreInsumo.setAdapter(adapter);
-
-        if (insumoExistente != null) {
-            spinnerNombreInsumo.setSelection(adapter.getPosition(insumoExistente.getNombre()));
-            editDescripcion.setText(insumoExistente.getDescripcion());
-            editCantidad.setText(String.valueOf(insumoExistente.getCantidad()));
-        }
-
-        // ✅ Aquí se usa setOnClickListener para que el IDE reconozca el uso
-        btnGuardar.setOnClickListener(this::guardarInsumo);
-        btnCancelar.setOnClickListener(this::cancelar);
-
-        return builder.create();
-    }
-
     public void setInsumoListener(InsumoListener listener) {
         this.listener = listener;
     }
@@ -68,32 +33,68 @@ public class AgregarInsumoDialog extends DialogFragment {
         this.editarPos = position;
     }
 
-    public void guardarInsumo(View v) {
-        String nombre = spinnerNombreInsumo.getSelectedItem().toString();
-        String descripcion = editDescripcion.getText().toString().trim();
-        String cantidadStr = editCantidad.getText().toString().trim();
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_agregar_insumo, null);
 
-        if (descripcion.isEmpty() || cantidadStr.isEmpty()) {
-            Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
-            return;
+        spinnerNombreInsumo = view.findViewById(R.id.spinnerNombreInsumo);
+        editDescripcion = view.findViewById(R.id.editDescripcion);
+        editCantidad = view.findViewById(R.id.editCantidad);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.opciones_insumos, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNombreInsumo.setAdapter(adapter);
+
+        if (insumoExistente != null) {
+            spinnerNombreInsumo.setSelection(adapter.getPosition(insumoExistente.getNombre()));
+            editDescripcion.setText(insumoExistente.getDescripcion());
+            editCantidad.setText(String.valueOf(insumoExistente.getCantidad()));
         }
 
-        try {
-            int cantidad = Integer.parseInt(cantidadStr);
-            InsumoAgricola insumo = new InsumoAgricola(nombre, descripcion, cantidad);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(insumoExistente == null ? "Agregar Insumo" : "Editar Insumo");
+        builder.setView(view);
 
-            if (editarPos >= 0 && listener != null) {
-                listener.onInsumoEditado(insumo, editarPos);
-            } else if (listener != null) {
-                listener.onInsumoAgregado(insumo);
+        AlertDialog dialog = builder.create();
+
+        Button btnGuardar = view.findViewById(R.id.btnGuardarInsumo);
+        Button btnCancelar = view.findViewById(R.id.btnCancelarInsumo);
+
+        btnGuardar.setOnClickListener(v -> {
+            String nombre = spinnerNombreInsumo.getSelectedItem().toString();
+            String descripcion = editDescripcion.getText().toString();
+            String cantidadTexto = editCantidad.getText().toString();
+
+            if (cantidadTexto.isEmpty()) {
+                editCantidad.setError("Ingrese una cantidad");
+                return;
             }
-            dismiss();
-        } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Cantidad debe ser numérica", Toast.LENGTH_SHORT).show();
-        }
+
+            int cantidad;
+            try {
+                cantidad = Integer.parseInt(cantidadTexto);
+            } catch (NumberFormatException e) {
+                editCantidad.setError("Cantidad inválida");
+                return;
+            }
+
+            if (insumoExistente == null) {
+                InsumoAgricola nuevo = new InsumoAgricola(nombre, descripcion, cantidad);
+                if (listener != null) listener.onInsumoAgregado(nuevo);
+            } else {
+                insumoExistente.setNombre(nombre);
+                insumoExistente.setDescripcion(descripcion);
+                insumoExistente.setCantidad(cantidad);
+                if (listener != null) listener.onInsumoEditado(insumoExistente, editarPos);
+            }
+            dialog.dismiss();
+        });
+
+        btnCancelar.setOnClickListener(v -> dialog.dismiss());
+
+        return dialog;
     }
 
-    public void cancelar(View v) {
-        dismiss();
-    }
 }

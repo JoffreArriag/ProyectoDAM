@@ -1,11 +1,16 @@
 package com.example.login;
 
 public class Cultivo {
+    private String idFirebase;
     private String nombre;
     private String categoria;
     private String fechaInicio;
     private String ubicacion;
     private double precioCaja;
+
+
+    public Cultivo() {}
+
 
     public Cultivo(String nombre, String categoria, String fechaInicio, String ubicacion, double precioCaja) {
         this.nombre = nombre;
@@ -15,10 +20,18 @@ public class Cultivo {
         this.precioCaja = precioCaja;
     }
 
+    // Getter y setter para idFirebase
+    public String getIdFirebase() {
+        return idFirebase;
+    }
+    public void setIdFirebase(String idFirebase) {
+        this.idFirebase = idFirebase;
+    }
+
+    // Getters y setters para los otros campos
     public String getNombre() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -26,7 +39,6 @@ public class Cultivo {
     public String getCategoria() {
         return categoria;
     }
-
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
@@ -34,7 +46,6 @@ public class Cultivo {
     public String getFechaInicio() {
         return fechaInicio;
     }
-
     public void setFechaInicio(String fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
@@ -42,7 +53,6 @@ public class Cultivo {
     public String getUbicacion() {
         return ubicacion;
     }
-
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
     }
@@ -50,8 +60,8 @@ public class Cultivo {
     public double getPrecioCaja() {
         return precioCaja;
     }
-
     public void setPrecioCaja(double precioCaja) {
         this.precioCaja = precioCaja;
     }
 }
+

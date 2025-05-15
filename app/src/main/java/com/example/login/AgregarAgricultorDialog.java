@@ -15,6 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.UUID;
+
 public class AgregarAgricultorDialog extends DialogFragment {
 
     public interface AgricultorListener {
@@ -30,6 +35,8 @@ public class AgregarAgricultorDialog extends DialogFragment {
     private EditText editEdad;
     private EditText editZona;
     private Spinner spinnerExperiencia;
+
+    private DatabaseReference agricultoresRef;
 
     public void setAgricultorListener(AgricultorListener listener) {
         this.listener = listener;
@@ -70,8 +77,11 @@ public class AgregarAgricultorDialog extends DialogFragment {
             spinnerExperiencia.setSelection(adapter.getPosition(agricultorExistente.getExperiencia()));
         }
 
+        // Inicializar referencia a Firebase
+        agricultoresRef = FirebaseDatabase.getInstance().getReference("agricultores");
+
         btnGuardar.setOnClickListener(this::guardarAgricultor);
-        btnVolver.setOnClickListener(this::volver);
+        btnVolver.setOnClickListener(v -> dismiss());
 
         return builder.create();
     }
@@ -89,21 +99,32 @@ public class AgregarAgricultorDialog extends DialogFragment {
 
         try {
             int edad = Integer.parseInt(edadStr);
-            Agricultor nuevo = new Agricultor(nombre, edad, zona, experiencia);
+            String id = agricultorExistente != null ? agricultorExistente.getId() : UUID.randomUUID().toString();
+            Agricultor nuevo = new Agricultor(id, nombre, edad, zona, experiencia);
 
             if (editarPos >= 0 && listener != null) {
-                listener.onAgricultorEditado(nuevo, editarPos);
-            } else if (listener != null) {
-                listener.onAgricultorAgregado(nuevo);
+                // Editar en Firebase
+                agricultoresRef.child(id).setValue(nuevo)
+                        .addOnSuccessListener(task -> {
+                            listener.onAgricultorEditado(nuevo, editarPos);
+                            dismiss();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(getContext(), "Error al editar agricultor", Toast.LENGTH_SHORT).show()
+                        );
+            } else {
+                // Agregar nuevo a Firebase
+                agricultoresRef.child(id).setValue(nuevo)
+                        .addOnSuccessListener(task -> {
+                            listener.onAgricultorAgregado(nuevo);
+                            dismiss();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(getContext(), "Error al guardar agricultor", Toast.LENGTH_SHORT).show()
+                        );
             }
-
-            dismiss();
         } catch (NumberFormatException e) {
             Toast.makeText(getContext(), "Edad debe ser numérica", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void volver(View v) {
-        dismiss();
     }
 }
