@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo">
 
+    <!-- Cabecera: flecha y título -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -19,7 +20,10 @@
             android:layout_height="48dp"
             android:src="@drawable/ic_flecha"
             android:contentDescription="@string/btn_volver"
-            android:onClick="onBackButtonClick" />
+            android:onClick="onBackButtonClick"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
         <TextView
             android:id="@+id/ventasRegistradasTitle"
@@ -28,7 +32,8 @@
             android:text="@string/ventasRegistradasTitle"
             android:textSize="18sp"
             android:layout_marginStart="12dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#000" />
     </LinearLayout>
 
     <!-- Buscador -->
@@ -71,7 +76,7 @@
         android:text="Total a pagar:"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <!-- Botones de Eliminar y Editar -->
     <LinearLayout
@@ -87,7 +92,7 @@
             android:layout_height="wrap_content"
             android:text="@string/btnEliminarVenta"
             android:onClick="onEliminarButtonClick"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp" />
 
         <Button
             android:id="@+id/btnEditar"

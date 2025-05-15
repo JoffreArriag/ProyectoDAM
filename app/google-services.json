@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "395700179270",
+    "firebase_url": "https://proyectodam-agricultura-default-rtdb.firebaseio.com",
+    "project_id": "proyectodam-agricultura",
+    "storage_bucket": "proyectodam-agricultura.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395700179270:android:143d4c8a6ec4c16f6a5547",
+        "android_client_info": {
+          "package_name": "com.example.login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpOKFOp3TiGz-xE93HK-4jNkBYAQ5_VYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

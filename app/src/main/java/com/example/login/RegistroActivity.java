@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.Cursor;
-import android.content.ContentValues;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
@@ -31,8 +31,6 @@ public class RegistroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ativity_registro);
-
-        BDOpenHelper dbHelper = new BDOpenHelper(this);
 
         // Referencias a vistas
         cedula = findViewById(R.id.cedula);
@@ -59,8 +57,6 @@ public class RegistroActivity extends AppCompatActivity {
         String[] generos = {"Seleccione género", "Masculino", "Femenino", "Otro"};
         ArrayAdapter<String> adapterGenero = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, generos);
         spinnerGenero.setAdapter(adapterGenero);
-
-
 
         // Botón Registrar
         btnRegistrar.setOnClickListener(view -> {
@@ -90,16 +86,26 @@ public class RegistroActivity extends AppCompatActivity {
                 Toast.makeText(this, "Debe llenar todos los campos obligatorios", Toast.LENGTH_LONG).show();
                 return;
             }
-            //Guardar en BD
-            if(guardarBD(vCedula, vNombres, vApellidos, vEdad, vNacionalidad, vGenero, vEstadoCivil, vFechaNacimiento, vNivelIngles)){
-                Toast.makeText(this, "Datos registrados correctamente", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Datos NO registrados", Toast.LENGTH_LONG).show();
-            }
+
+            guardarEnFirebase(vCedula, vNombres, vApellidos, vEdad, vNacionalidad, vGenero, vEstadoCivil, vFechaNacimiento, vNivelIngles);
         });
     }
 
-    // Metodo para borrar los campos
+    // Método para guardar en Firebase
+    public void guardarEnFirebase(String cedula, String nombres, String apellidos,
+                                  String edad, String nacionalidad, String genero,
+                                  String estadoCivil, String fechaNacimiento, float ratingIngles) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("usuarios");
+
+        Usuario usuario = new Usuario(cedula, nombres, apellidos, edad,
+                nacionalidad, genero, estadoCivil, fechaNacimiento, ratingIngles);
+
+        ref.child(cedula).setValue(usuario)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Datos guardados en Firebase", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar en Firebase", Toast.LENGTH_SHORT).show());
+    }
+
     public void borrarCampos(View v) {
         cedula.setText("");
         nombres.setText("");
@@ -112,41 +118,17 @@ public class RegistroActivity extends AppCompatActivity {
         spinnerGenero.setSelection(0);
     }
 
-    // Metodo para cancelar el registro
     public void cancelarRegistro(View v) {
         Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    // Metodo para mostrar los datos
     public void mostrarDatosBD(View v) {
         Intent intent = new Intent(RegistroActivity.this, ConsultarUsuario.class);
         startActivity(intent);
     }
 
-    public boolean guardarBD(String cedula, String nombres, String apellidos,
-                             String edad, String nacionalidad, String genero, String estadoCivil,
-                             String fechaNacimiento, float ratingIngles) {
-        BDOpenHelper dbAgricola = new BDOpenHelper(this);
-        final SQLiteDatabase dbAgricolaEdit = dbAgricola.getWritableDatabase();
-        if (dbAgricolaEdit != null) {
-            ContentValues valores = new ContentValues();
-            valores.put("cedula", cedula);
-            valores.put("nombres", nombres);
-            valores.put("apellidos", apellidos);
-            valores.put("edad", edad);
-            valores.put("nacionalidad", nacionalidad);
-            valores.put("genero", genero);
-            valores.put("estado_civil", estadoCivil);
-            valores.put("fecha_nacimiento", fechaNacimiento);
-            valores.put("ratingIngles", ratingIngles);
-            dbAgricolaEdit.insert("usuario", null, valores);
-            return true;
-        } else {
-            return false;
-        }
-    }
     public void seleccionarFecha(View v) {
         Calendar calendario = Calendar.getInstance();
         int año = calendario.get(Calendar.YEAR);
@@ -163,5 +145,4 @@ public class RegistroActivity extends AppCompatActivity {
         );
         datePicker.show();
     }
-
 }
