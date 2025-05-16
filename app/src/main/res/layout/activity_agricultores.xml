@@ -19,10 +19,13 @@
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_flecha"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:onClick="irAHome"
+                android:contentDescription="Volver"
+                />
 
             <TextView
                 android:id="@+id/title"
@@ -30,8 +33,21 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_agricultores"
                 android:textColor="#0B0A0A"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                />
         </LinearLayout>
+
+        <!-- Campo de búsqueda por nombre -->
+        <EditText
+            android:id="@+id/editBuscarAgricultor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/buscadorAgricultor"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginTop="16dp"
+            />
 
         <!-- Botón para agregar un nuevo agricultor -->
         <Button
@@ -39,7 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btnAgregarAgricultor"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:onClick="agregarAgricultor" />
 
         <!-- RecyclerView para mostrar la lista de agricultores -->
         <androidx.recyclerview.widget.RecyclerView

@@ -41,7 +41,8 @@
             android:id="@+id/btnCancelarInsumo"
             android:text="@string/btn_cancelar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
 
         <Button
             android:id="@+id/btnGuardarInsumo"

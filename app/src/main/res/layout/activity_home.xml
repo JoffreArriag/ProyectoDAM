@@ -29,31 +29,61 @@
                 android:textStyle="bold"
                 android:textColor="@color/black" />
 
-            <ImageView
-                android:id="@+id/deleteIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_delete"
-                android:contentDescription="@string/borrar_datos"
-                />
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="borrarPreferencias">
 
-            <ImageView
-                android:id="@+id/ic"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_info"
-                android:contentDescription="@string/informacion"
-                />
+                <ImageView
+                    android:id="@+id/deleteIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_delete"
+                    android:contentDescription="@string/borrar_datos" />
+            </FrameLayout>
 
-            <ImageView
-                android:id="@+id/logoutIcon"
-                android:layout_width="42dp"
-                android:layout_height="52dp"
-                android:src="@drawable/ic_logout"
-                android:contentDescription="@string/cerrar_sesion"
-                />
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="abrirAcercaDe">
+
+                <ImageView
+                    android:id="@+id/ic"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_info"
+                    android:contentDescription="@string/informacion" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="cerrarSesion">
+
+                <ImageView
+                    android:id="@+id/logoutIcon"
+                    android:layout_width="41dp"
+                    android:layout_height="41dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_logout"
+                    android:contentDescription="@string/cerrar_sesion" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <!-- Card: Agricultores -->
@@ -63,7 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:onClick="irAgricultores">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,7 +141,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:onClick="irCultivos">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,7 +189,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:onClick="irInventario">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,7 +237,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:onClick="irRiego">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -251,7 +285,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp">
+            app:cardElevation="8dp"
+            android:onClick="irMercado">
 
             <LinearLayout
                 android:layout_width="match_parent"

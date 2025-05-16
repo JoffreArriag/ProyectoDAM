@@ -1,7 +1,6 @@
 package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.cardview.widget.CardView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -21,13 +19,13 @@ public class HomeActivity extends AppCompatActivity {
     ImageView ic_info, logoutIcon, deleteIcon;
     CardView cardCultivos, cardAgricultores, cardInventario, cardRiego, cardMercado;
 
-    @SuppressLint("MissingInflatedId")
+    AlertDialog modalAcercaDe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Referencias UI
         usernameTextView = findViewById(R.id.usernameTextView);
         ic_info = findViewById(R.id.ic);
         logoutIcon = findViewById(R.id.logoutIcon);
@@ -39,102 +37,67 @@ public class HomeActivity extends AppCompatActivity {
         cardRiego = findViewById(R.id.cardRiego);
         cardMercado = findViewById(R.id.cardMercado);
 
-        // Mostrar nombre del usuario
         String username = getIntent().getStringExtra("nombreUsuario");
         if (username != null) {
             usernameTextView.setText("Bienvenido, " + username);
         }
+    }
 
-        // Acción para mostrar el modal de información del equipo
-        View.OnClickListener mostrarModalAcercaDe = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
-                View modalView = inflater.inflate(R.layout.activity_acerca_de, null);
+    public void abrirAcercaDe(View v) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View modalView = inflater.inflate(R.layout.activity_acerca_de, null);
 
-                AlertDialog dialog = new AlertDialog.Builder(HomeActivity.this)
-                        .setView(modalView)
-                        .create();
+        modalAcercaDe = new AlertDialog.Builder(this)
+                .setView(modalView)
+                .create();
 
-                Button btnRegresar = modalView.findViewById(R.id.btnRegresar);
-                btnRegresar.setOnClickListener(btn -> dialog.dismiss());
+        Button btnRegresar = modalView.findViewById(R.id.btnRegresar);
+        btnRegresar.setOnClickListener(view -> modalAcercaDe.dismiss());
 
-                dialog.show();
-            }
-        };
+        modalAcercaDe.show();
+    }
 
-        ic_info.setOnClickListener(mostrarModalAcercaDe);
+    public void cerrarSesion(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
-        // Acción para eliminar las preferencias
-        deleteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                builder.setMessage("¿Estás seguro de que deseas eliminar esta preferencia?")
-                        .setCancelable(false)
-                        .setPositiveButton("Sí", (dialog, id) -> {
-                            SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.remove("usuario");
-                            editor.remove("contraseña");
-                            editor.remove("mantenerSesion");
-                            editor.apply();
+    public void borrarPreferencias(View v) {
+        new AlertDialog.Builder(this)
+                .setMessage("¿Estás seguro de que deseas eliminar esta preferencia?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", (dialog, id) -> {
+                    SharedPreferences preferences = getSharedPreferences("MisPreferencias", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.remove("usuario");
+                    editor.remove("contraseña");
+                    editor.remove("mantenerSesion");
+                    editor.apply();
+                    Toast.makeText(this, "Preferencias eliminadas", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No", (dialog, id) -> dialog.dismiss())
+                .show();
+    }
 
-                            Toast.makeText(HomeActivity.this, "Preferencias eliminadas", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("No", (dialog, id) -> {
-                            dialog.dismiss();
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
+    public void irAgricultores(View v) {
+        startActivity(new Intent(this, Agricultores.class));
+    }
 
-        // Acción para logout
-        logoutIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
+    public void irCultivos(View v) {
+        startActivity(new Intent(this, CultivosActivity.class));
+    }
 
-        // Acciones de las tarjetas
-        cardCultivos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, CultivosActivity.class));
-            }
-        });
+    public void irInventario(View v) {
+        startActivity(new Intent(this, InventarioActivity.class));
+    }
 
-        cardAgricultores.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, Agricultores.class));
-            }
-        });
+    public void irRiego(View v) {
+        startActivity(new Intent(this, TareaRiegoFertilizacion.class));
+    }
 
-        cardInventario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, InventarioActivity.class));
-            }
-        });
-
-        cardRiego.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, TareaRiegoFertilizacion.class));
-            }
-        });
-
-        cardMercado.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, MercadoActivity.class));
-            }
-        });
+    public void irMercado(View v) {
+        startActivity(new Intent(this, MercadoActivity.class));
     }
 }

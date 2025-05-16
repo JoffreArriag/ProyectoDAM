@@ -12,26 +12,28 @@
         android:paddingBottom="80dp"
         android:orientation="vertical">
 
-        <!-- Header -->
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0403A9F4"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:background="#0403A9F4">
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_flecha" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_flecha"
+                android:layout_marginEnd="8dp"
+                android:onClick="irAHome"
+                android:contentDescription="Volver" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:text="@string/title_cultivo"
                 android:textColor="#0B0A0A"
                 android:textSize="20sp" />
@@ -46,7 +48,8 @@
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/btn_agregar_cultivo"
             android:textColor="@android:color/white"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:onClick="agregarCultivo"/>
 
 
         <!-- Contenedor de categorías -->
@@ -82,7 +85,8 @@
                         android:src="@drawable/ic_cereales"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/categoria_cereales"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="clickCategoria"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -109,7 +113,8 @@
                         android:src="@drawable/ic_leguminosas"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/categoria_leguminosas"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="clickCategoria"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -144,7 +149,8 @@
                         android:src="@drawable/ic_industriales"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/categoria_industriales"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="clickCategoria"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,7 +177,8 @@
                         android:src="@drawable/ic_hortalizas"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/categoria_hortalizas"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="clickCategoria"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -205,7 +212,8 @@
                         android:src="@drawable/ic_frutales"
                         android:scaleType="centerInside"
                         android:contentDescription="@string/categoria_frutales"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="clickCategoria"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -227,6 +235,7 @@
             android:backgroundTint="@color/colorPrimary"
             android:text="@string/btnBuscarCultivo"
             android:textColor="@android:color/white"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:onClick="buscarCultivo"/>
     </LinearLayout>
 </ScrollView>

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo">
 
+    <!-- Cabecera: flecha y título -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -15,10 +16,14 @@
 
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_flecha"
-            android:contentDescription="@string/btn_volver" />
+            android:contentDescription="@string/btn_volver"
+            android:onClick="onBackButtonClick"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
         <TextView
             android:id="@+id/ventasRegistradasTitle"
@@ -27,7 +32,8 @@
             android:text="@string/ventasRegistradasTitle"
             android:textSize="18sp"
             android:layout_marginStart="12dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#000" />
     </LinearLayout>
 
     <!-- Buscador -->
@@ -70,8 +76,7 @@
         android:text="Total a pagar:"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"/>
-
+        android:textStyle="bold" />
 
     <!-- Botones de Eliminar y Editar -->
     <LinearLayout
@@ -86,12 +91,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btnEliminarVenta"
-            android:layout_marginEnd="16dp"/>
+            android:onClick="onEliminarButtonClick"
+            android:layout_marginEnd="16dp" />
 
         <Button
             android:id="@+id/btnEditar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnEditarVenta" />
+            android:text="@string/btnEditarVenta"
+            android:onClick="onEditarButtonClick" />
     </LinearLayout>
 </LinearLayout>

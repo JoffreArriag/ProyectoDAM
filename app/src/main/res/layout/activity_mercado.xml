@@ -15,10 +15,11 @@
 
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_flecha"
-            android:contentDescription="@string/btn_volver" />
+            android:contentDescription="@string/btn_volver"
+            android:onClick="irAHome" />
 
         <TextView
             android:id="@+id/btntitleMecardo"
@@ -50,14 +51,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/btnGenerarVenta" />
+            android:text="@string/btnGenerarVenta"
+            android:onClick="mostrarDialogoVenta" />
 
         <Button
             android:id="@+id/btnConsultarVenta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/btnConsultarVenta" />
+            android:text="@string/btnConsultarVenta"
+            android:onClick="consultarVenta" />
     </LinearLayout>
 
 </LinearLayout>

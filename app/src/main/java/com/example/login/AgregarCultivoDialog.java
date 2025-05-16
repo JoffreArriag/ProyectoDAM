@@ -2,9 +2,6 @@ package com.example.login;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,54 +90,26 @@ public class AgregarCultivoDialog extends DialogFragment {
         String categoria = spinnerCategoria.getSelectedItem().toString();
         String precioStr = etPrecioCaja.getText().toString().trim();
 
-        if (!nombre.isEmpty() && !fecha.isEmpty() && !ubicacion.isEmpty() && !precioStr.isEmpty()) {
-            double precioCaja = Double.parseDouble(precioStr);
-            SQLiteDatabase db = new BDOpenHelper(getContext()).getWritableDatabase();
-            ContentValues valores = new ContentValues();
-
-            valores.put("nombre", nombre);
-            valores.put("categoria", categoria);
-            valores.put("fecha_inicio", fecha);
-            valores.put("ubicacion", ubicacion);
-            valores.put("precio_caja", precioCaja);
-
-            long resultado;
-            if (cultivoExistente != null) {
-                // ACTUALIZACIÓN
-                resultado = db.update("cultivos", valores, "nombre = ?", new String[]{cultivoExistente.getNombre()});
-            } else {
-                // INSERCIÓN
-                Cursor cursor = db.rawQuery(
-                        "SELECT * FROM cultivos WHERE nombre = ? AND fecha_inicio = ?",
-                        new String[]{nombre, fecha}
-                );
-
-                if (cursor.getCount() > 0) {
-                    cursor.close();
-                    db.close();
-                    Toast.makeText(getContext(), "Ya existe un cultivo con ese nombre y fecha", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                cursor.close();
-                resultado = db.insert("cultivos", null, valores);
-            }
-
-            db.close();
-
-            if (resultado != -1) {
-                if (listener != null) {
-                    Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion, precioCaja);
-                    listener.onCultivoAgregado(cultivo);
-                }
-                Toast.makeText(getContext(), "Cultivo guardado correctamente", Toast.LENGTH_SHORT).show();
-                dismiss();
-            } else {
-                Toast.makeText(getContext(), "Error al guardar el cultivo", Toast.LENGTH_SHORT).show();
-            }
-
-        } else {
-            Toast.makeText(getContext(), "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+        if (nombre.isEmpty() || fecha.isEmpty() || ubicacion.isEmpty() || precioStr.isEmpty()) {
+            Toast.makeText(requireContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        double precio;
+        try {
+            precio = Double.parseDouble(precioStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(requireContext(), "Precio inválido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Cultivo cultivo = new Cultivo(nombre, categoria, fecha, ubicacion, precio);
+
+        if (listener != null) {
+            listener.onCultivoAgregado(cultivo);
+        }
+
+        dismiss();
     }
 
     public void volver(View v) {

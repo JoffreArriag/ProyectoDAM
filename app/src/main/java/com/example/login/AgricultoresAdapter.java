@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapter.AgricultorViewHolder> {
 
-    private final List<Agricultor> listaAgricultores;
+    private List<Agricultor> listaAgricultores;
     private final OnAgricultorAccionListener accionListener;
 
     public interface OnAgricultorAccionListener {
@@ -42,7 +42,13 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
         return listaAgricultores.size();
     }
 
-    public class AgricultorViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    public void actualizarLista(List<Agricultor> nuevaLista) {
+        this.listaAgricultores = nuevaLista;
+        notifyDataSetChanged();
+    }
+
+    public class AgricultorViewHolder extends RecyclerView.ViewHolder {
 
         TextView textNombre, textEdad, textZona, textExperiencia;
         ImageView imageAgricultor, btnEditar, btnEliminar;
@@ -83,11 +89,6 @@ public class AgricultoresAdapter extends RecyclerView.Adapter<AgricultoresAdapte
             if (position != RecyclerView.NO_POSITION) {
                 accionListener.onEliminar(position);
             }
-        }
-
-        @Override
-        public void onClick(View v) {
-
         }
     }
 }

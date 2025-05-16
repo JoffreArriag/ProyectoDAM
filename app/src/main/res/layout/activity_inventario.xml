@@ -20,10 +20,12 @@
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_flecha"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:onClick="volverAInicio"
+                android:contentDescription="Volver"/>
 
             <TextView
                 android:id="@+id/titleInventario"
@@ -34,13 +36,26 @@
                 android:textSize="20sp" />
         </LinearLayout>
 
+        <!-- Campo de búsqueda -->
+        <EditText
+            android:id="@+id/editBuscarInsumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/buscadorInsumo"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginTop="16dp"
+            />
+
         <!-- Botón para agregar nuevo insumo -->
         <Button
             android:id="@+id/btnAgregarInsumo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btnAgregarInsumo"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:onClick="agregarInsumo"/>
 
         <!-- RecyclerView para mostrar el inventario -->
         <androidx.recyclerview.widget.RecyclerView

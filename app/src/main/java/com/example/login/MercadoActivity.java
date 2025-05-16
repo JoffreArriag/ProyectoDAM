@@ -1,13 +1,9 @@
 package com.example.login;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -16,11 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MercadoActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private CultivoAdapter adapter;
+
+    private View currentDialogView;
+    private AlertDialog currentDialog;
+    private List<Cultivo> cultivosSeleccionados;
+    private double totalVenta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,122 +36,113 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Cultivo> cultivos = cargarCultivosDesdeBD();
+        // Cargar cultivos desde Firebase
+        cargarCultivosDesdeFirebase();
+    }
 
-        adapter = new CultivoAdapter(cultivos);
-        recyclerView.setAdapter(adapter);
+    private void cargarCultivosDesdeFirebase() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("cultivos");
 
-        Button btnCrearVenta = findViewById(R.id.btnCrearVenta);
-        btnCrearVenta.setOnClickListener(new View.OnClickListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                mostrarDialogoVenta();
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Cultivo> listaCultivos = new ArrayList<>();
+                for (DataSnapshot cultivoSnapshot : snapshot.getChildren()) {
+                    Cultivo cultivo = cultivoSnapshot.getValue(Cultivo.class);
+                    if (cultivo != null) {
+                        listaCultivos.add(cultivo);
+                    }
+                }
+                adapter = new CultivoAdapter(listaCultivos);
+                recyclerView.setAdapter(adapter);
             }
-        });
 
-        Button btnConsultarVenta = findViewById(R.id.btnConsultarVenta);
-        btnConsultarVenta.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MercadoActivity.this, ConsultVentaActivity.class));
-            }
-        });
-
-        ImageView backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MercadoActivity.this, HomeActivity.class));
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(MercadoActivity.this, "Error al cargar cultivos", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private List<Cultivo> cargarCultivosDesdeBD() {
-        List<Cultivo> listaCultivos = new ArrayList<>();
-        SQLiteDatabase db = new BDOpenHelper(this).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM cultivos", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"));
-                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fecha_inicio"));
-                String ubicacion = cursor.getString(cursor.getColumnIndexOrThrow("ubicacion"));
-                double precioCaja = cursor.getDouble(cursor.getColumnIndexOrThrow("precio_caja"));
-
-                Cultivo cultivo = new Cultivo(nombre, categoria, fechaInicio, ubicacion, precioCaja);
-                listaCultivos.add(cultivo);
-            } while (cursor.moveToNext());
+    public void mostrarDialogoVenta(View v) {
+        if (adapter == null) {
+            Toast.makeText(this, "Los cultivos aún no están cargados", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        cursor.close();
-        db.close();
-        return listaCultivos;
-    }
+        cultivosSeleccionados = adapter.getCultivosSeleccionados();
 
-    private void mostrarDialogoVenta() {
-        List<Cultivo> seleccionados = adapter.getCultivosSeleccionados();
-
-        if (seleccionados.isEmpty()) {
+        if (cultivosSeleccionados.isEmpty()) {
             Toast.makeText(this, "Selecciona al menos un cultivo", Toast.LENGTH_SHORT).show();
             return;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = getLayoutInflater().inflate(R.layout.layout_dialog_venta, null);
-        builder.setView(dialogView);
+        currentDialogView = getLayoutInflater().inflate(R.layout.layout_dialog_venta, null);
+        builder.setView(currentDialogView);
 
-        TextView listaProductos = dialogView.findViewById(R.id.listaProductos);
-        TextView txtTotalPagar = dialogView.findViewById(R.id.txtTotalPagar);
-        Button btnGenerar = dialogView.findViewById(R.id.btnGenerarVenta);
+        TextView listaProductos = currentDialogView.findViewById(R.id.listaProductos);
+        TextView txtTotalPagar = currentDialogView.findViewById(R.id.txtTotalPagar);
 
         StringBuilder nombres = new StringBuilder();
+        totalVenta = 0.0;
 
-        final double[] total = {0.0};
-
-
-        for (Cultivo c : seleccionados) {
+        for (Cultivo c : cultivosSeleccionados) {
             nombres.append("- ").append(c.getNombre())
                     .append(" ($").append(String.format("%.2f", c.getPrecioCaja())).append(")\n");
-            total[0] += c.getPrecioCaja();
+            totalVenta += c.getPrecioCaja();
         }
 
         listaProductos.setText(nombres.toString());
-        txtTotalPagar.setText("Total a pagar: $" + String.format("%.2f", total[0]));
+        txtTotalPagar.setText("Total a pagar: $" + String.format("%.2f", totalVenta));
 
-        AlertDialog dialog = builder.create();
+        currentDialog = builder.create();
+        currentDialog.show();
+    }
 
-        btnGenerar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText etNombre = dialogView.findViewById(R.id.etNombreCliente);
-                EditText etCedula = dialogView.findViewById(R.id.etCedulaCliente);
+    public void generarVenta(View v) {
+        if (currentDialogView == null) return;
 
-                String nombre = etNombre.getText().toString().trim();
-                String cedula = etCedula.getText().toString().trim();
+        EditText etNombre = currentDialogView.findViewById(R.id.etNombreCliente);
+        EditText etCedula = currentDialogView.findViewById(R.id.etCedulaCliente);
 
-                if (nombre.isEmpty() || cedula.isEmpty()) {
-                    Toast.makeText(MercadoActivity.this, "Debe ingresar nombre y cédula", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        String nombre = etNombre.getText().toString().trim();
+        String cedula = etCedula.getText().toString().trim();
 
+        if (nombre.isEmpty() || cedula.isEmpty()) {
+            Toast.makeText(this, "Debe ingresar nombre y cédula", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                StringBuilder productos = new StringBuilder();
-                for (Cultivo c : seleccionados) {
-                    productos.append(c.getNombre()).append("; ");
-                }
+        List<Cultivo> seleccionados = adapter.getCultivosSeleccionados();
+        if (seleccionados.isEmpty()) {
+            Toast.makeText(this, "No hay cultivos seleccionados", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        double total = 0.0;
+        StringBuilder productos = new StringBuilder();
+        for (Cultivo c : seleccionados) {
+            productos.append(c.getNombre()).append("; ");
+            total += c.getPrecioCaja();
+        }
 
-                SQLiteDatabase db = new BDOpenHelper(MercadoActivity.this).getWritableDatabase();
-                db.execSQL("INSERT INTO ventas (cedula, nombre, productos, total) VALUES (?, ?, ?, ?)",
-                        new Object[]{cedula, nombre, productos.toString(), total[0]});
-                db.close();
+        // Guardar en Firebase
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ventas");
+        Venta venta = new Venta(nombre, productos.toString(), total);
+        ref.child(cedula).setValue(venta)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
+                    if (currentDialog != null) currentDialog.dismiss();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar venta", Toast.LENGTH_SHORT).show());
+    }
 
-                Toast.makeText(MercadoActivity.this, "Venta generada con éxito", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        });
+    public void consultarVenta(View view) {
+        startActivity(new Intent(this, ConsultVentaActivity.class));
+    }
 
-        dialog.show();
+    public void irAHome(View view) {
+        startActivity(new Intent(this, HomeActivity.class));
     }
 }

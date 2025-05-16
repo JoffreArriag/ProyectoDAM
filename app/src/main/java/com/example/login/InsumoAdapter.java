@@ -22,6 +22,26 @@ public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder
         this.listener = listener;
     }
 
+
+    public static int obtenerImagenPorNombre(String nombre) {
+        if (nombre == null) return R.drawable.ic_inventar;
+
+        switch (nombre.trim().toLowerCase()) {
+            case "fertilizantes":
+                return R.drawable.ic_fertilizante;
+            case "pesticidas":
+                return R.drawable.ic_pesticida;
+            case "semillas":
+                return R.drawable.ic_semilla;
+            case "agua de riego":
+                return R.drawable.ic_agua;
+            case "maquinaria agrícola":
+                return R.drawable.ic_maquinaria;
+            default:
+                return R.drawable.ic_inventar;
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textNombre, textDescripcion, textCantidad;
         ImageView btnEditar, btnEliminar;
@@ -40,58 +60,34 @@ public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder
             textDescripcion.setText(insumo.getDescripcion());
             textCantidad.setText("Cantidad: " + insumo.getCantidad());
 
-            int imagenId = R.drawable.ic_inventar;
-            switch (insumo.getNombre()) {
-                case "Fertilizantes":
-                    imagenId = R.drawable.ic_fertilizante;
-                    break;
-                case "Pesticidas":
-                    imagenId = R.drawable.ic_pesticida;
-                    break;
-                case "Semillas":
-                    imagenId = R.drawable.ic_semilla;
-                    break;
-                case "Agua de riego":
-                    imagenId = R.drawable.ic_agua;
-                    break;
-                case "Maquinaria agrícola":
-                    imagenId = R.drawable.ic_maquinaria;
-                    break;
-            }
+            int imagenId = InsumoAdapter.obtenerImagenPorNombre(insumo.getNombre());
 
             ImageView icono = itemView.findViewById(R.id.imageInsumo);
             icono.setImageResource(imagenId);
 
-
-            btnEditar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onEditar(insumo, position);
-                }
-            });
-
-            btnEliminar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onEliminar(position);
-                }
-            });
+            btnEditar.setOnClickListener(v -> listener.onEditar(insumo, position));
+            btnEliminar.setOnClickListener(v -> listener.onEliminar(position));
         }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InsumoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_insumo, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(InsumoAdapter.ViewHolder holder, int position) {
         holder.bind(lista.get(position), position, listener);
     }
 
     @Override
     public int getItemCount() {
         return lista.size();
+    }
+
+    public void actualizarLista(List<InsumoAgricola> nuevaLista) {
+        lista = nuevaLista;
+        notifyDataSetChanged();
     }
 }
