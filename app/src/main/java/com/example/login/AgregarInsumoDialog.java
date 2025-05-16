@@ -20,6 +20,8 @@ public class AgregarInsumoDialog extends DialogFragment {
     private InsumoListener listener;
     private InsumoAgricola insumoExistente;
     private int editarPos = -1;
+    private ImageView imagePreview;
+
 
     private Spinner spinnerNombreInsumo;
     private EditText editDescripcion, editCantidad;

@@ -102,11 +102,11 @@
     <string name="titleInventario">Inventario Agrícola</string>
     <string name="buscadorInsumo">Buscar insumo por nombre</string>
     <string-array name="opciones_insumos">
-        <item>Fertilizante</item>
-        <item>Semilla</item>
-        <item>Herbicida</item>
-        <item>Insecticida</item>
-        <item>Herramienta</item>
+        <item>Fertilizantes</item>
+        <item>Pesticidas</item>
+        <item>Semillas</item>
+        <item>Agua de riego</item>
+        <item>Maquinaria agrícola</item>
     </string-array>
 
 
