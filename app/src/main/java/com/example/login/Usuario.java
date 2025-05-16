@@ -14,7 +14,7 @@ public class Usuario {
 
     public Usuario() {}
 
-    // Constructor con parámetros
+
     public Usuario(String cedula, String nombres, String apellidos, String edad,
                    String nacionalidad, String genero, String estadoCivil,
                    String fechaNacimiento, float ratingIngles) {
@@ -29,7 +29,7 @@ public class Usuario {
         this.ratingIngles = ratingIngles;
     }
 
-    // Getters y Setters
+
     public String getCedula() {
         return cedula;
     }

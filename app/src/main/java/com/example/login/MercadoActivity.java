@@ -36,7 +36,7 @@ public class MercadoActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Cargar cultivos desde Firebase
+
         cargarCultivosDesdeFirebase();
     }
 

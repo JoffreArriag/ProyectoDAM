@@ -32,7 +32,7 @@ public class RegistroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ativity_registro);
 
-        // Referencias a vistas
+
         cedula = findViewById(R.id.cedula);
         nombres = findViewById(R.id.nombres);
         apellidos = findViewById(R.id.apellidos);
@@ -58,7 +58,7 @@ public class RegistroActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterGenero = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, generos);
         spinnerGenero.setAdapter(adapterGenero);
 
-        // Botón Registrar
+
         btnRegistrar.setOnClickListener(view -> {
             String vCedula = cedula.getText().toString();
             String vNombres = nombres.getText().toString();
@@ -91,7 +91,7 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
-    // Método para guardar en Firebase
+
     public void guardarEnFirebase(String cedula, String nombres, String apellidos,
                                   String edad, String nacionalidad, String genero,
                                   String estadoCivil, String fechaNacimiento, float ratingIngles) {

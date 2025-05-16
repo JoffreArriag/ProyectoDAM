@@ -98,7 +98,7 @@ public class Agricultores extends AppCompatActivity {
                         listaAgricultores.add(agricultor);
                     }
                 }
-                adapter.actualizarLista(listaAgricultores); // actualiza con la lista completa
+                adapter.actualizarLista(listaAgricultores);
             } else {
                 Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show();
             }

@@ -10,7 +10,7 @@ public class Agricultor {
 
     public Agricultor() {}
 
-    // Constructor con ID (leer de Firebase)
+
     public Agricultor(String id, String nombre, int edad, String zona, String experiencia) {
         this.id = id;
         this.nombre = nombre;
@@ -20,7 +20,7 @@ public class Agricultor {
     }
 
 
-    // Getters y setters
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

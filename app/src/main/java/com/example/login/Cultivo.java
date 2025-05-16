@@ -20,7 +20,7 @@ public class Cultivo {
         this.precioCaja = precioCaja;
     }
 
-    // Getter y setter para idFirebase
+
     public String getIdFirebase() {
         return idFirebase;
     }
@@ -28,7 +28,7 @@ public class Cultivo {
         this.idFirebase = idFirebase;
     }
 
-    // Getters y setters para los otros campos
+
     public String getNombre() {
         return nombre;
     }
