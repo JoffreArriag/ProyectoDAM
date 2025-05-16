@@ -13,6 +13,12 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 
+import com.example.login.agricultor.Agricultores;
+import com.example.login.cultivo.CultivosActivity;
+import com.example.login.inventario.InventarioActivity;
+import com.example.login.mercado.MercadoActivity;
+import com.example.login.tarea.TareaRiegoFertilizacion;
+
 public class HomeActivity extends AppCompatActivity {
 
     TextView usernameTextView;

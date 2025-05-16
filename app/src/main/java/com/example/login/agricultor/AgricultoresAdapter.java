@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.agricultor;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.login.R;
 
 import java.util.List;
 

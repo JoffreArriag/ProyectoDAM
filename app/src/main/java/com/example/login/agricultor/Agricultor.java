@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.agricultor;
 
 public class Agricultor {
     private String id;

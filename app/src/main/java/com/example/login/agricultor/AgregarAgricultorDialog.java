@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.agricultor;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.login.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

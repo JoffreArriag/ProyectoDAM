@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.cultivo;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.login.R;
 
 import java.util.ArrayList;
 import java.util.List;

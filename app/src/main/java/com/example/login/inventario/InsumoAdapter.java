@@ -1,10 +1,13 @@
-package com.example.login;
+package com.example.login.inventario;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.login.R;
+
 import java.util.List;
 
 public class InsumoAdapter extends RecyclerView.Adapter<InsumoAdapter.ViewHolder> {
