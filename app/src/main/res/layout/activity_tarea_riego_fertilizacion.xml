@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo"
     android:isScrollContainer="true"
-    tools:context=".TareaRiegoFertilizacion">
+    tools:context=".tarea.TareaRiegoFertilizacion">
 
     <LinearLayout
         android:layout_width="match_parent"

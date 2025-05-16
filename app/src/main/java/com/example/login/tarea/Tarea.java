@@ -1,6 +1,4 @@
-package com.example.login;
-
-import java.util.Date;
+package com.example.login.tarea;
 
 public class Tarea {
 

@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.inventario;
 
 public class InsumoAgricola {
     private int id;

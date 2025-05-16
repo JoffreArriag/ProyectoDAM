@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.inventario;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import com.example.login.HomeActivity;
+import com.example.login.R;
 import com.google.firebase.database.*;
 import java.util.*;
 
@@ -23,11 +26,11 @@ public class InventarioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventario);
+        setContentView(com.example.login.R.layout.activity_inventario);
 
         databaseRef = FirebaseDatabase.getInstance().getReference("insumos");
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerInsumos);
+        RecyclerView recyclerView = findViewById(com.example.login.R.id.recyclerInsumos);
         editBuscarInsumo = findViewById(R.id.editBuscarInsumo);
 
         adapter = new InsumoAdapter(listaFiltrada, new InsumoAdapter.OnInsumoAccionListener() {

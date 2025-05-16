@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.mercado;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.login.HomeActivity;
+import com.example.login.R;
+import com.example.login.cultivo.Cultivo;
+import com.example.login.cultivo.CultivoAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

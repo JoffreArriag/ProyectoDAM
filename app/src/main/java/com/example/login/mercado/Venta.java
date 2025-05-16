@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.mercado;
 
 public class Venta {
     private String nombre;

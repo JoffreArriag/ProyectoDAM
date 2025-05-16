@@ -13,14 +13,14 @@
         tools:targetApi="31">
 
         <activity android:name=".ConsultarUsuario" android:exported="false" />
-        <activity android:name=".MercadoActivity" android:exported="false" />
-        <activity android:name=".InventarioActivity" android:exported="false" />
-        <activity android:name=".ConsultVentaActivity" android:exported="false" />
-        <activity android:name=".TareaRiegoFertilizacion" android:exported="false" />
-        <activity android:name=".Agricultores" android:exported="false" />
+        <activity android:name=".mercado.MercadoActivity" android:exported="false" />
+        <activity android:name=".inventario.InventarioActivity" android:exported="false" />
+        <activity android:name=".mercado.ConsultVentaActivity" android:exported="false" />
+        <activity android:name=".tarea.TareaRiegoFertilizacion" android:exported="false" />
+        <activity android:name=".agricultor.Agricultores" android:exported="false" />
         <activity android:name=".RegistroActivity" android:exported="false" />
         <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".CultivosActivity" android:exported="true" />
+        <activity android:name=".cultivo.CultivosActivity" android:exported="true" />
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

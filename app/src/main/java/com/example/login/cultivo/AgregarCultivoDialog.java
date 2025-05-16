@@ -1,4 +1,4 @@
-package com.example.login;
+package com.example.login.cultivo;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.example.login.R;
 
 import java.util.Calendar;
 
