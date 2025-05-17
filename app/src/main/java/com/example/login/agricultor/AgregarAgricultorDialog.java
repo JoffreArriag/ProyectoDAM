@@ -78,7 +78,7 @@ public class AgregarAgricultorDialog extends DialogFragment {
             spinnerExperiencia.setSelection(adapter.getPosition(agricultorExistente.getExperiencia()));
         }
 
-        // Inicializar referencia a Firebase
+
         agricultoresRef = FirebaseDatabase.getInstance().getReference("agricultores");
 
         btnGuardar.setOnClickListener(this::guardarAgricultor);
@@ -104,7 +104,7 @@ public class AgregarAgricultorDialog extends DialogFragment {
             Agricultor nuevo = new Agricultor(id, nombre, edad, zona, experiencia);
 
             if (editarPos >= 0 && listener != null) {
-                // Editar en Firebase
+
                 agricultoresRef.child(id).setValue(nuevo)
                         .addOnSuccessListener(task -> {
                             listener.onAgricultorEditado(nuevo, editarPos);
@@ -114,7 +114,7 @@ public class AgregarAgricultorDialog extends DialogFragment {
                                 Toast.makeText(getContext(), "Error al editar agricultor", Toast.LENGTH_SHORT).show()
                         );
             } else {
-                // Agregar nuevo a Firebase
+
                 agricultoresRef.child(id).setValue(nuevo)
                         .addOnSuccessListener(task -> {
                             listener.onAgricultorAgregado(nuevo);
