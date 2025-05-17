@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:saveEnabled="false">
 
     <EditText
         android:id="@+id/editNombre"
@@ -27,7 +28,7 @@
         android:id="@+id/editDescripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/editDescripcion"
+        android:hint="@string/txtDescripcionTarea"
         android:minHeight="48dp"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp" />
@@ -43,8 +44,10 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:clickable="true"
             android:ems="10"
-            android:hint="@string/hint_fecha_inicio"
+            android:focusable="false"
+            android:hint="@string/txtFechaInicio"
             android:inputType="date" />
 
         <EditText
@@ -52,45 +55,57 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_weight="1"
+            android:clickable="true"
             android:ems="10"
-            android:hint="Fecha fin"
+            android:focusable="false"
+            android:hint="@string/txtFechaFin"
             android:inputType="date" />
     </LinearLayout>
 
-    <HorizontalScrollView
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="@string/txtAgricultoresTarea" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAgricultores"
+        android:layout_width="match_parent"
+        android:layout_height="178dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </HorizontalScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Insumos" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerInsumos"
+        android:layout_width="match_parent"
+        android:layout_height="153dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
         android:gravity="end"
-        android:layout_marginTop="16dp">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnVolver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="Regresar"
             android:text="@string/btn_volver" />
 
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_guardar"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:text="@string/btn_guardar" />
     </LinearLayout>
 
 </LinearLayout>

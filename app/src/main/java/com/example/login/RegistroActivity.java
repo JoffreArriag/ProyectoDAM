@@ -91,7 +91,7 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
-    // Método para guardar en Firebase
+    // Metodo para guardar en Firebase
     public void guardarEnFirebase(String cedula, String nombres, String apellidos,
                                   String edad, String nacionalidad, String genero,
                                   String estadoCivil, String fechaNacimiento, float ratingIngles) {

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.login.R;
+import com.example.login.agricultor.Agricultor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,10 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
         return cultivos.size();
     }
 
+    public int getPosition(String cultivo) {
+        return cultivos.indexOf(cultivo);
+    }
+
     public static class CultivoViewHolder extends RecyclerView.ViewHolder {
 
         TextView nombre, categoria, fechaInicio, ubicacion, precioCaja;
@@ -70,6 +75,9 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
             checkbox = itemView.findViewById(R.id.checkboxSelect);
             precioCaja = itemView.findViewById(R.id.precioCajaCultivo);
         }
+    }
+    public List<Cultivo> getListaCultivos(){
+        return cultivos;
     }
 
     public List<Cultivo> getCultivosSeleccionados() {

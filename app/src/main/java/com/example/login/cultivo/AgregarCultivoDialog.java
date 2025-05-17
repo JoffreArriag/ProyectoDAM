@@ -12,14 +12,24 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.login.R;
+import com.example.login.agricultor.Agricultor;
+import com.example.login.mercado.MercadoActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class AgregarCultivoDialog extends DialogFragment {
 
     private EditText etNombre, etFecha, etUbicacion, etPrecioCaja;
     private Spinner spinnerCategoria;
     private Button btnGuardar, btnVolver;
+
 
     public interface CultivoListener {
         void onCultivoAgregado(Cultivo cultivo);
@@ -84,6 +94,7 @@ public class AgregarCultivoDialog extends DialogFragment {
         }, año, mes, dia);
         datePicker.show();
     }
+
 
     public void guardarCultivo(View v) {
         String nombre = etNombre.getText().toString().trim();

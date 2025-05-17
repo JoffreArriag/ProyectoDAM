@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +31,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
+                android:onClick="regresar"
                 android:src="@drawable/ic_flecha" />
 
             <TextView
@@ -45,37 +46,30 @@
         <!-- Botón para agregar una nueva tarea -->
 
         <!-- RecyclerView para mostrar la lista de tareas -->
+
+        <EditText
+            android:id="@+id/editBuscarTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@android:drawable/editbox_background"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:hint="@string/buscadorTarea"
+            android:padding="12dp" />
+
         <Button
             android:id="@+id/btnAgregarTarea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:onClick="agregarTarea"
             android:text="@string/btnAgregarTarea" />
 
-        <CalendarView
-            android:id="@+id/calendarView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTareas"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#F8EFEF" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="245dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerTareas"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                </androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-        </ScrollView>
+            android:layout_height="352dp"
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
 

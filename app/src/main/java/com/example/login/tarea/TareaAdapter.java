@@ -13,12 +13,19 @@ import com.example.login.R;
 import java.util.List;
 
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
-    private final List<Tarea> listaTarea;
+    private  List<Tarea> listaTarea;
     private final TareaAdapter.OnTareaAccionListener accionListener;
+
+    public void actualizarLista(List<Tarea> nuevaLista) {
+        this.listaTarea = nuevaLista;
+        notifyDataSetChanged();
+    }
+
     public interface OnTareaAccionListener {
         void onEditar(Tarea tarea, int position);
         void onEliminar(int position);
     }
+
 
     public TareaAdapter(List<Tarea> listaTarea, TareaAdapter.OnTareaAccionListener listener) {
         this.listaTarea = listaTarea;
@@ -44,7 +51,7 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
 
     public class TareaViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textNombre, textCultivo, textFechaInicio, textFechaFin;
+        TextView textNombre, textCultivo, textFechaInicio, textFechaFin, textAgricultores, textInsumosTarea;
         ImageView imageTarea, btnEditar, btnEliminar;
 
         public TareaViewHolder(View itemView) {
@@ -56,6 +63,8 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             textFechaFin = itemView.findViewById(R.id.textFechaFin);
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
+            textAgricultores = itemView.findViewById(R.id.textAgricultores);
+            textInsumosTarea = itemView.findViewById(R.id.textInsumosTarea);
         }
 
         public void bind(Tarea tarea, int position) {
@@ -64,6 +73,8 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
             textFechaInicio.setText(tarea.getFecha_inico());
             textFechaFin.setText(tarea.getFecha_fin());
             imageTarea.setImageResource(R.drawable.ic_inventar);
+            textAgricultores.setText(tarea.getAgricultores());
+            textInsumosTarea.setText(tarea.getInsumos());
 
             btnEditar.setOnClickListener(v -> accionListener.onEditar(tarea, position));
             btnEliminar.setOnClickListener(v -> accionListener.onEliminar(position));

@@ -145,11 +145,16 @@
     <string name="etBuscarVenta">Buscar por Cédula o Nombre</string>
 
 
-    <!-- Pantalla  -->
-    <string name="titleTarea">Ingrese el precio del producto</string>
-    <string name="btnAgregarTarea">Ingrese la cantidad del producto</string>
+    <!-- Pantalla Tarea -->
+    <string name="titleTarea">Tareas de Riego y Fertilización</string>
+    <string name="btnAgregarTarea">Ingrese una nueva Tarea</string>
     <string name="txtTarea">Nombre de la tarea</string>
     <string name="txtCultivoTarea">Nombre de cultivo tarea</string>
+    <string name="buscadorTarea">Buscar tarea por nombre</string>">
+    <string name="txtDescripcionTarea">Descripción de la tarea</string>
+    <string name="txtFechaInicio">Fecha de inicio</string>
+    <string name="txtFechaFin">Fecha de fin</string>
+    <string name="txtAgricultoresTarea">Agricultores</string>
 
 
     <!-- Arrays -->
