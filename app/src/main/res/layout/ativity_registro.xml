@@ -119,8 +119,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/seleccionar_fecha"
-            android:onClick="seleccionarFecha" />
+            android:onClick="seleccionarFecha"
+            android:text="@string/seleccionar_fecha" />
 
         <TextView
             android:id="@+id/txtFechaSeleccionada"
